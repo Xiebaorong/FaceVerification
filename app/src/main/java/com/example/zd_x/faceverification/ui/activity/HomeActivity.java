@@ -5,24 +5,15 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
-import android.util.Log;
 import android.widget.Button;
 
 import com.example.zd_x.faceverification.R;
 import com.example.zd_x.faceverification.base.BaseActivity;
-import com.example.zd_x.faceverification.callBack.LoadCallBack;
 import com.example.zd_x.faceverification.utils.ConstsUtils;
 import com.example.zd_x.faceverification.utils.LogUtils;
-import com.example.zd_x.faceverification.utils.OkHttpManager;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.Call;
-import okhttp3.Response;
 
 public class HomeActivity extends BaseActivity {
     private static final String TAG = "HomeActivity";

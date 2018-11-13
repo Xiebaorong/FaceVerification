@@ -15,6 +15,7 @@ import android.view.SurfaceView;
 import android.view.TextureView;
 
 import com.example.zd_x.faceverification.application.FaceVerificationApplication;
+import com.example.zd_x.faceverification.callBack.PictureCallBack;
 import com.example.zd_x.faceverification.utils.FileUtils;
 
 import java.io.File;
@@ -40,7 +41,7 @@ public class HanvonfaceCamera2ShowView extends TextureView implements TextureVie
     public HanvonfaceCamera2ShowView(Context context, AttributeSet attrs) {
         super(context, attrs);
         hanvonfaceShowView = this;
-        setSurfaceTextureListener(this);
+        startListener();
     }
 
     public HanvonfaceCamera2ShowView(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -69,6 +70,17 @@ public class HanvonfaceCamera2ShowView extends TextureView implements TextureVie
 
     }
 
+    public boolean getAvailable() {
+        if (this.isAvailable()) {
+            Camera2Helper.camera2Helper.takePreview(this, onImageAvailableListener);
+        }
+        return this.isAvailable();
+    }
+
+    public void startListener() {
+        setSurfaceTextureListener(this);
+    }
+
     /**
      * 设置显示和绘制SurfaceView
      *
@@ -85,62 +97,16 @@ public class HanvonfaceCamera2ShowView extends TextureView implements TextureVie
     private final ImageReader.OnImageAvailableListener onImageAvailableListener = new ImageReader.OnImageAvailableListener() {
         @Override
         public void onImageAvailable(ImageReader reader) {
+            Log.e(TAG, "onImageAvailable: "+Camera2Helper.isTakePicture );
             if (Camera2Helper.isTakePicture) {
-                imageSaver(reader.acquireNextImage());
-            }else {
+                FileUtils.imageSaver(reader.acquireNextImage());
+            } else {
                 Image image = reader.acquireNextImage();
                 image.close();
             }
 
-
         }
     };
 
-    public void imageSaver(final Image mImage) {
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-
-                Log.e(TAG, "onImageAvailable: 21");
-                ByteBuffer buffer = mImage.getPlanes()[0].getBuffer();
-                byte[] data = new byte[buffer.remaining()];
-                Log.e(TAG, "FileOutputStream: " + data.length);
-                buffer.get(data);
-                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                String fileName = "IMG_" + timeStamp + ".jpg";
-
-                Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                Bitmap bitmap1 = Bitmap.createBitmap(bitmap, 0, 0, 600, 600);
-                FileUtils.saveBitmap(FaceVerificationApplication.getmApplication(), bitmap1, "camera/", fileName );
-                mImage.close();
-//                FileOutputStream fos = null;
-//                try {
-//                    File file = FileUtils.createFile(FaceVerificationApplication.getmApplication(), false, "camera", fileName, 1074000000);
-//                    fos = new FileOutputStream(file);
-//                    fos.write(data, 0, data.length);
-//                } catch (FileUtils.NoExternalStoragePermissionException e) {
-//                    e.printStackTrace();
-//                } catch (FileUtils.NoExternalStorageMountedException e) {
-//                    e.printStackTrace();
-//                } catch (FileUtils.DirHasNoFreeSpaceException e) {
-//                    e.printStackTrace();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                } finally {
-//                    mImage.close();
-//                    if (fos != null) {
-//                        try {
-//                            fos.close();
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }
-            }
-        }).start();
-
-    }
 
 }

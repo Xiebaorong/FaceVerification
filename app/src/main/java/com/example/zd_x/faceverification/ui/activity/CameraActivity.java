@@ -1,6 +1,7 @@
 package com.example.zd_x.faceverification.ui.activity;
 
 import android.app.Activity;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -12,6 +13,7 @@ import android.widget.ImageView;
 
 import com.example.zd_x.faceverification.R;
 import com.example.zd_x.faceverification.base.BaseActivity;
+import com.example.zd_x.faceverification.callBack.PictureCallBack;
 import com.example.zd_x.faceverification.mvp.p.CameraPresenterCompl;
 import com.example.zd_x.faceverification.mvp.view.ICameraView;
 import com.example.zd_x.faceverification.utils.ConstsUtils;
@@ -71,6 +73,7 @@ public class CameraActivity extends BaseActivity implements ICameraView {
     protected void OnActCreate(Bundle savedInstanceState) {
         iCameraPresenter = new CameraPresenterCompl(this);
         cameraId = getIntent().getExtras().getString("cameraId");
+
         ConstsUtils.CAMERA_ID = cameraId;
         int result = Camera2Helper.camera2Helper.initCamera(this);
         if (result == ConstsUtils.OK) {
@@ -85,19 +88,18 @@ public class CameraActivity extends BaseActivity implements ICameraView {
     protected void initEvent() {
 //        hanvonfaceCameraShowView.setSurfaceView(sfvFaceShowCamera, handler);
 //        HWCoreHelper.initHWCore(this, handler);
-        Log.e(TAG, "initEvent: ");
         hcsvCamera2PreviewCamera.setSurfaceView(sfvFaceShowCamera, handler);
-
     }
 
     @OnClick({R.id.iv_photograph_camera, R.id.iv_switchoverCamera_camera})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_photograph_camera:
+
                 iCameraPresenter.takePicture(this);
                 break;
             case R.id.iv_switchoverCamera_camera:
-
+                iCameraPresenter.cameraSwitch(this);
                 break;
         }
     }
@@ -110,7 +112,7 @@ public class CameraActivity extends BaseActivity implements ICameraView {
             LogUtils.d(TAG, "未检测到人脸");
         } else if (result == ConstsUtils.SUCCEED) {
             LogUtils.d(TAG, "发送");
-            iCameraPresenter.requestContrast(this);
+
         }
     }
 
@@ -135,4 +137,6 @@ public class CameraActivity extends BaseActivity implements ICameraView {
         Camera2Helper.camera2Helper.stopCamera();
         handler.removeCallbacksAndMessages(null);
     }
+
+
 }

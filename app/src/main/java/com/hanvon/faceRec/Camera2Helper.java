@@ -17,7 +17,6 @@ import android.hardware.camera2.CaptureFailure;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
-import android.media.Image;
 import android.media.ImageReader;
 import android.os.Build;
 import android.os.Handler;
@@ -46,16 +45,14 @@ public class Camera2Helper {
     public static int PIXEL_WIDTH = 1920;// 1920,1280,(1280),(960),(640),576,480,384,352
     public static int PIXEL_HEIGHT = 1080;// 1080,720,(960),(720),(480),432,320,288,288
     public static Camera2Helper camera2Helper = new Camera2Helper();
-    private String mCameraId = ConstsUtils.CAMERA_ID;
     public static Size mPreviewSize, mCaptureSize;
-    private CameraManager mCameraManager;
+
     private CameraDevice cameraDevice;
     private StreamConfigurationMap map;
-    private CaptureRequest.Builder captureRequest, captureRequestBuilder;//拍照使用  captureRequestBuilder
+    private CaptureRequest.Builder previewCaptureRequestBuilder, pictureCaptureRequestBuilder;//拍照使用  captureRequestBuilder
     private HandlerThread mCameraThread;
-    private Handler mCameraHandler;
     private CameraCaptureSession captureSession;
-    private ImageReader imageReader;
+    private ImageReader previewImageReader, pictureImageReader;
     // 定义用于预览照片的捕获请求
     private CaptureRequest previewRequest;
     public static Boolean isTakePicture = false;
@@ -66,6 +63,8 @@ public class Camera2Helper {
         ORIENTATIONS.append(Surface.ROTATION_180, 270);
         ORIENTATIONS.append(Surface.ROTATION_270, 180);
     }
+
+    private Handler mCameraHandler;
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public int initCamera(Activity mContext) {
@@ -85,8 +84,8 @@ public class Camera2Helper {
                     }
                 });
                 startCameraThread();
-                imageReader = ImageReader.newInstance(Camera2Helper.PIXEL_WIDTH, Camera2Helper.PIXEL_HEIGHT, ImageFormat.JPEG, 2);
-
+                previewImageReader = ImageReader.newInstance(Camera2Helper.PIXEL_WIDTH, Camera2Helper.PIXEL_HEIGHT, ImageFormat.YUV_420_888, 2);
+                pictureImageReader = ImageReader.newInstance(Camera2Helper.PIXEL_WIDTH, Camera2Helper.PIXEL_HEIGHT, ImageFormat.JPEG, 2);
                 break;
             }
         } catch (CameraAccessException e) {
@@ -105,18 +104,19 @@ public class Camera2Helper {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void openCamera(Context context) {
         try {
-            mCameraManager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
+            CameraManager mCameraManager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                 return;
             } else {
                 mCameraManager.openCamera(ConstsUtils.CAMERA_ID, stateCallback, mCameraHandler);
             }
+
+
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private final CameraDevice.StateCallback stateCallback = new CameraDevice.StateCallback() {
         @Override
         public void onOpened(@NonNull CameraDevice camera) {
@@ -133,7 +133,6 @@ public class Camera2Helper {
         public void onError(@NonNull CameraDevice camera, int error) {
             cameraDevice.close();
             cameraDevice = null;
-
         }
     };
 
@@ -144,20 +143,23 @@ public class Camera2Helper {
      * @param onImageAvailableListener
      */
     public void takePreview(TextureView textureView, ImageReader.OnImageAvailableListener onImageAvailableListener) {
+        if (cameraDevice == null) {
+            Log.e(TAG, "takePreview: null");
+            return;
+        }
         try {
+            previewCaptureRequestBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
             SurfaceTexture texture = textureView.getSurfaceTexture();
             //根据TextureView的尺寸设置预览尺寸
             mPreviewSize = getOptimalSize(map.getOutputSizes(SurfaceTexture.class), textureView.getWidth(), textureView.getHeight());
             texture.setDefaultBufferSize(Camera2Helper.mPreviewSize.getWidth(), Camera2Helper.camera2Helper.mPreviewSize.getHeight());
             Surface surface = new Surface(texture);
 
-            imageReader.setOnImageAvailableListener(onImageAvailableListener, mCameraHandler);
-            captureRequest = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
-            captureRequest.set(CaptureRequest.JPEG_ORIENTATION
-                    , 270);
-            captureRequest.addTarget(surface);
-            captureRequest.addTarget(imageReader.getSurface());
-            cameraDevice.createCaptureSession(Arrays.asList(surface, imageReader.getSurface()), new CameraCaptureSession.StateCallback() {
+            previewImageReader.setOnImageAvailableListener(onImageAvailableListener, mCameraHandler);
+
+            previewCaptureRequestBuilder.addTarget(surface);
+            previewCaptureRequestBuilder.addTarget(previewImageReader.getSurface());
+            cameraDevice.createCaptureSession(Arrays.asList(surface, previewImageReader.getSurface(), pictureImageReader.getSurface()), new CameraCaptureSession.StateCallback() {
                 @Override
                 public void onConfigured(@NonNull CameraCaptureSession session) {
                     if (null == cameraDevice) {
@@ -167,13 +169,13 @@ public class Camera2Helper {
                     captureSession = session;
                     try {
                         // 设置自动对焦模式
-                        captureRequest.set(CaptureRequest.CONTROL_AF_MODE,
+                        previewCaptureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE,
                                 CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
                         // 设置自动曝光模式
-                        captureRequest.set(CaptureRequest.CONTROL_AE_MODE,
+                        previewCaptureRequestBuilder.set(CaptureRequest.CONTROL_AE_MODE,
                                 CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH);
                         // 开始显示相机预览
-                        previewRequest = captureRequest.build();
+                        previewRequest = previewCaptureRequestBuilder.build();
                         // 设置预览时连续捕获图像数据
                         captureSession.setRepeatingRequest(previewRequest,
                                 null, null);
@@ -201,15 +203,28 @@ public class Camera2Helper {
         if (cameraDevice == null) {
             return;
         }
-
         // 创建拍照请求
         try {
-            captureRequest.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
+            pictureCaptureRequestBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
+            pictureCaptureRequestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
+            pictureCaptureRequestBuilder.addTarget(pictureImageReader.getSurface());
+            if (ConstsUtils.CAMERA_ID.equals(String.valueOf(ConstsUtils.FRONT_CAMERA))) {
+                pictureCaptureRequestBuilder.set(CaptureRequest.JPEG_ORIENTATION
+                        , 270);
+            } else {
+                pictureCaptureRequestBuilder.set(CaptureRequest.JPEG_ORIENTATION
+                        , 90);
+            }
+            pictureImageReader.setOnImageAvailableListener(new ImageReader.OnImageAvailableListener() {
+                @Override
+                public void onImageAvailable(ImageReader reader) {
+                    Log.e(TAG, "onImageAvailable: 11111" );
+                }
+            }, mCameraHandler);
             // 停止连续取景
             captureSession.stopRepeating();
-            isTakePicture = true;
 //            //拍照
-            CaptureRequest capture  = captureRequest.build();
+            CaptureRequest capture = previewCaptureRequestBuilder.build();
 //            //设置拍照监听
             captureSession.capture(capture, captureCallback, mCameraHandler);
         } catch (CameraAccessException e) {
@@ -221,12 +236,11 @@ public class Camera2Helper {
     private final CameraCaptureSession.CaptureCallback captureCallback = new CameraCaptureSession.CaptureCallback() {
         @Override
         public void onCaptureCompleted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull TotalCaptureResult result) {
-            isTakePicture = false;
             // 重设自动对焦模式
-            captureRequest.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_CANCEL);
+            previewCaptureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_CANCEL);
             // 设置自动曝光模式
-            captureRequest.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH);
-
+            previewCaptureRequestBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH);
+            mCameraHandler.sendEmptyMessage(1);
 //            try {
 //                captureSession.setRepeatingRequest(previewRequest, null, null);
 //            } catch (CameraAccessException e) {
@@ -237,10 +251,15 @@ public class Camera2Helper {
         @Override
         public void onCaptureFailed(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull CaptureFailure failure) {
             super.onCaptureFailed(session, request, failure);
-            isTakePicture = false;
         }
     };
 
+    /**
+     * @param sizeMap
+     * @param width
+     * @param height
+     * @return
+     */
     private Size getOptimalSize(Size[] sizeMap, int width, int height) {
         List<Size> sizeList = new ArrayList<>();
         for (Size option : sizeMap) {
@@ -266,11 +285,36 @@ public class Camera2Helper {
     }
 
     /**
+     * TODO 切換相关方法
+     *
+     * @param context
+     */
+    public void cameraSwitch(Context context) {
+        if (ConstsUtils.CAMERA_ID.equals(String.valueOf(ConstsUtils.FRONT_CAMERA))) {
+            //前置转后置
+            ConstsUtils.CAMERA_ID = String.valueOf(ConstsUtils.REAR_CAMERA);
+            stopCamera();
+            reopenCamera(context);
+        }
+    }
+
+    /**
+     * TODO 切換相关方法
+     *
+     * @param context
+     */
+    private void reopenCamera(Context context) {
+        if (HanvonfaceCamera2ShowView.hanvonfaceShowView.getAvailable()) {
+            openCamera(context);
+        } else {
+            HanvonfaceCamera2ShowView.hanvonfaceShowView.startListener();
+        }
+    }
+
+    /**
      * 停止拍照释放资源
      */
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void stopCamera() {
-        isTakePicture = false;
         if (captureSession != null) {
             captureSession.close();
             captureSession = null;
@@ -281,9 +325,11 @@ public class Camera2Helper {
             cameraDevice = null;
         }
 
-        if (imageReader != null) {
-            imageReader.close();
-            imageReader = null;
+        if (previewImageReader != null) {
+            previewImageReader.close();
+            previewImageReader = null;
         }
+
+
     }
 }

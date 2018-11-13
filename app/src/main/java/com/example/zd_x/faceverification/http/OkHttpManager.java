@@ -1,4 +1,4 @@
-package com.example.zd_x.faceverification.utils;
+package com.example.zd_x.faceverification.http;
 
 import com.example.zd_x.faceverification.callBack.BaseCallBack;
 import com.google.gson.Gson;

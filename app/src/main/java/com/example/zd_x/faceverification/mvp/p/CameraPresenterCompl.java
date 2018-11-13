@@ -3,27 +3,19 @@ package com.example.zd_x.faceverification.mvp.p;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.hardware.Camera;
-import android.hardware.camera2.CameraCaptureSession;
-import android.hardware.camera2.CaptureRequest;
-import android.hardware.camera2.TotalCaptureResult;
-import android.support.annotation.NonNull;
+import android.media.Image;
 import android.util.Base64;
 import android.util.Log;
 
-import com.example.zd_x.faceverification.application.FaceVerificationApplication;
 import com.example.zd_x.faceverification.callBack.LoadCallBack;
+import com.example.zd_x.faceverification.callBack.PictureCallBack;
 import com.example.zd_x.faceverification.mvp.view.ICameraView;
 import com.example.zd_x.faceverification.utils.APPUrl;
-import com.example.zd_x.faceverification.utils.ConstsUtils;
 import com.example.zd_x.faceverification.utils.FileUtils;
 import com.example.zd_x.faceverification.utils.LogUtils;
-import com.example.zd_x.faceverification.utils.OkHttpManager;
+import com.example.zd_x.faceverification.http.OkHttpManager;
 import com.example.zd_x.faceverification.utils.PictureMsgUtils;
 import com.hanvon.faceRec.Camera2Helper;
-import com.hanvon.faceRec.CameraHelper;
-import com.hanvon.faceRec.HWFaceIDCardCompareLib;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -33,7 +25,7 @@ import java.util.Map;
 import okhttp3.Call;
 import okhttp3.Response;
 
-public class CameraPresenterCompl implements ICameraPresenter {
+public class CameraPresenterCompl implements ICameraPresenter  {
     private static final String TAG = "CameraPresenterCompl";
     private ICameraView iCameraView;
 
@@ -51,18 +43,22 @@ public class CameraPresenterCompl implements ICameraPresenter {
 //        }
 
         Camera2Helper.camera2Helper.takePicture((Activity) context);
+
+//        iCameraView.getPhotoResults(ConstsUtils.SUCCEED);
     }
 
+    /**
+     * TODO 切換相关方法
+     * @param context
+     */
     @Override
-    public void cameraSwitch() {
-        Camera camera = CameraHelper.cameraHelper.cameraSwitch();
-        if (camera != null) {
-
-        }
+    public void cameraSwitch(Context context ) {
+        Camera2Helper.camera2Helper.cameraSwitch(context);
     }
 
+
     @Override
-    public void requestContrast(Context context) {
+    public void requestContrast(Context context ) {
         String pictureImageId = PictureMsgUtils.getInstance().getPictureImageId();
         LogUtils.d(TAG, pictureImageId);
         Map<String, String> params = new HashMap<>();
@@ -115,39 +111,7 @@ public class CameraPresenterCompl implements ICameraPresenter {
 //        }
 //    }
 
-    /**
-     * bitmap转为base64
-     *
-     * @param bitmap
-     * @return
-     */
-    public static String bitmapToBase64(Bitmap bitmap) {
 
-        String result = null;
-        ByteArrayOutputStream baos = null;
-        try {
-            if (bitmap != null) {
-                baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
 
-                baos.flush();
-                baos.close();
 
-                byte[] bitmapBytes = baos.toByteArray();
-                result = Base64.encodeToString(bitmapBytes, Base64.DEFAULT);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (baos != null) {
-                    baos.flush();
-                    baos.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return result;
-    }
 }

@@ -4,10 +4,14 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.os.Environment;
 import android.support.v4.content.ContextCompat;
+import android.util.Base64;
 import android.util.Log;
+
+import com.example.zd_x.faceverification.application.FaceVerificationApplication;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -17,6 +21,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * 文件辅助工具，提供注视点标定数据的保存、读取和BMP文件流的封装。
@@ -238,13 +245,13 @@ public class FileUtils {
             Log.i(TAG, "1111");
         } catch (NoExternalStoragePermissionException e) {
             e.printStackTrace();
-            Log.e(TAG, "saveBitmap: "+e.getMessage() );
+            Log.e(TAG, "saveBitmap: " + e.getMessage());
         } catch (NoExternalStorageMountedException e) {
             e.printStackTrace();
-            Log.e(TAG, "saveBitmap: "+e.getMessage() );
+            Log.e(TAG, "saveBitmap: " + e.getMessage());
         } catch (DirHasNoFreeSpaceException e) {
             e.printStackTrace();
-            Log.e(TAG, "saveBitmap: "+e.getMessage() );
+            Log.e(TAG, "saveBitmap: " + e.getMessage());
         } catch (IOException e) {
             e.printStackTrace();
 
@@ -252,4 +259,65 @@ public class FileUtils {
     }
 
 
+    public static void imageSaver(final Image mImage) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (this){
+                    ByteBuffer buffer = mImage.getPlanes()[0].getBuffer();
+                    byte[] data = new byte[buffer.remaining()];
+                    buffer.get(data);
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                    if (bitmap != null) {
+                        mImage.close();
+                    }
+                    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                    String fileName = "IMG_" + timeStamp + ".jpg";
+                    String base64 = bitmapToBase64(bitmap);
+                    Log.e(TAG, "run: 1111");
+//                Log.e(TAG, "run: "+base64 );
+//                LogUtils.d(TAG,base64);
+//                Bitmap bitmap1 = Bitmap.createBitmap(bitmap, 0, 0, 800, 800);
+                    FileUtils.saveBitmap(FaceVerificationApplication.getmApplication(), bitmap, "camera/", fileName);
+                }
+            }
+        }).start();
+
+    }
+
+    /**
+     * bitmap转为base64
+     *
+     * @param bitmap
+     * @return
+     */
+    public static String bitmapToBase64(Bitmap bitmap) {
+
+        String result = null;
+        ByteArrayOutputStream baos = null;
+        try {
+            if (bitmap != null) {
+                baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+
+                baos.flush();
+                baos.close();
+
+                byte[] bitmapBytes = baos.toByteArray();
+                result = Base64.encodeToString(bitmapBytes, Base64.DEFAULT);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (baos != null) {
+                    baos.flush();
+                    baos.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
 }
