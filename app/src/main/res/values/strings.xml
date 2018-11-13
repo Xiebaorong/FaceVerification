@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">FaceVerification</string>
+    <string name="selectCamera">选择相机</string>
+    <string name="frontCamera">前置相机</string>
+    <string name="rearCamera">后置相机</string>
+</resources>

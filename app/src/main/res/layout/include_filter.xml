@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout_filter"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/color_filter_bg">
+
+    <HorizontalScrollView
+        android:id="@+id/hsv_filter"
+        android:layout_width="match_parent"
+        android:layout_height="53dp"
+        android:scrollbars="none"
+        app:layout_constraintTop_toBottomOf="@+id/rl_title"
+        tools:ignore="UnknownId">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/chb_normal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="30dp"
+                android:padding="10dp"
+                android:text="筛选一"
+                android:textColor="@color/color_filter_text"
+                android:textSize="@dimen/filter_size" />
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/chb_black_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="筛选二"
+                android:textColor="@color/color_filter_text"
+                android:textSize="@dimen/filter_size" />
+
+            <ImageView
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/color_filter_text" />
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/chb_pass"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="30dp"
+                android:padding="10dp"
+                android:text="筛选三"
+                android:textColor="@color/color_filter_text"
+                android:textSize="@dimen/filter_size" />
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/chb_not_pass"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="30dp"
+                android:padding="10dp"
+                android:text="筛选四"
+                android:textColor="@color/color_filter_text"
+                android:textSize="@dimen/filter_size" />
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/chb_UnComparison"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="30dp"
+                android:padding="10dp"
+                android:text="筛选五"
+                android:textColor="@color/color_filter_text"
+                android:textSize="@dimen/filter_size" />
+
+            <Button
+                android:id="@+id/btn_today_total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="30dp"
+                android:padding="10dp"
+                android:text="今日统计" />
+        </LinearLayout>
+    </HorizontalScrollView>
+</android.support.constraint.ConstraintLayout>

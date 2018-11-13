@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="white_d8d8d8">#d8d8d8</color>
+
+
+    <color name="black_color">#000000</color>
+    <color name="color_white">#ffffff</color>
+    <color name="black_20000000">#20000000</color>
+    <color name="black_383838">#383838</color>
+    <color name="black_262626">#262626</color>
+    <color name="black_2a323f">#2a323f</color>
+
+    <color name="blue_38a1ff">#38a1ff</color>
+
+    <color name="yellow_bfb45d">#bfb45d</color>
+
+    <color name="gray_898989">#898989</color>
+    <color name="gray_525f73">#525f73</color>
+
+    <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+    <color name="color_loading">@color/black_20000000</color>
+
+    <color name="color_filter_text">@color/white_d8d8d8</color>
+
+    <color name="color_item_text_name">@color/blue_38a1ff</color>
+    <color name="color_item_text_value">@color/black_262626</color>
+
+    <color name="color_details_text_name">@color/blue_38a1ff</color>
+    <color name="color_details_text_value">@color/black_262626</color>
+
+
+    <color name="color_title_text">@color/yellow_bfb45d</color>
+    <color name="color_filter_bg">@color/gray_898989</color>
+
+    <color name="color_menu_bg">@color/black_2a323f</color>
+    <color name="color_menu_line">@color/gray_525f73</color>
+    <color name="color_menu_text">@color/white_d8d8d8</color>
+</resources>

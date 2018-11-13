@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HomeActivity">
+    <include android:id="@+id/home_header"
+        layout="@layout/include_header"/>
+    <TextView
+        android:id="@+id/tv_select_home"
+        android:layout_below="@id/home_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/selectCamera"
+        />
+    <RelativeLayout
+        android:id="@+id/rl_cameraList_home"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_select_home"
+        >
+        <Button
+            android:id="@+id/bt_frontCamera_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="@string/frontCamera"
+            />
+        <Button
+            android:id="@+id/bt_rearCamera_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/bt_frontCamera_home"
+            android:layout_marginHorizontal="5dp"
+            android:text="@string/rearCamera"
+            />
+        <Button
+            android:id="@+id/bt_usbCamera_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/bt_rearCamera_home"
+            android:visibility="gone"
+            />
+    </RelativeLayout>
+    <include android:id="@+id/inc_screen_home"
+        layout="@layout/include_filter"
+        android:layout_below="@id/rl_cameraList_home"
+        android:layout_height="50dp"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_showImageMsg_home"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/inc_screen_home"
+        >
+
+    </android.support.v7.widget.RecyclerView>
+</RelativeLayout>
