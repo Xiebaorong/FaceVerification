@@ -20,7 +20,7 @@ android {
 
 greendao {
     schemaVersion 1
-    daoPackage 'dao'
+    daoPackage 'com.example.zd_x.faceverification.dao'
     targetGenDir 'src/main/java/'
 }
 

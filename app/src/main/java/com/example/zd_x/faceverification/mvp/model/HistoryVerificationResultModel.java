@@ -1,5 +1,6 @@
 package com.example.zd_x.faceverification.mvp.model;
 
+import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 
@@ -13,6 +14,8 @@ public class HistoryVerificationResultModel {
     private String imageId;
     private String faceBase64;
     private boolean isVerification;
+    private int total;
+    @Convert(columnType = String.class,converter = CompareResultsBean_ConverterModel.class)
     private List<CompareResultsBean> compareResults;
 
     public static class CompareResultsBean {
