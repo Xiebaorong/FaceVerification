@@ -16,7 +16,7 @@ public class DetectionModel {
      * threshold : 80
      */
 
-    private String imageID;
+    private String imageID;//41位 1101 0801 0100 0000 0001 0220 1703 2110 1010 0000 3
     private String deviceID;
     private String deviceName;
     private String faceBase64;
@@ -95,6 +95,18 @@ public class DetectionModel {
     }
 
     public void setRepoIDs(List<String> repoIDs) {
+        this.repoIDs = repoIDs;
+    }
+
+    public DetectionModel(String imageID, String deviceID, String deviceName, String faceBase64, int skip, int limit, String strategy, int threshold, List<String> repoIDs) {
+        this.imageID = imageID;
+        this.deviceID = deviceID;
+        this.deviceName = deviceName;
+        this.faceBase64 = faceBase64;
+        this.skip = skip;
+        this.limit = limit;
+        this.strategy = strategy;
+        this.threshold = threshold;
         this.repoIDs = repoIDs;
     }
 }

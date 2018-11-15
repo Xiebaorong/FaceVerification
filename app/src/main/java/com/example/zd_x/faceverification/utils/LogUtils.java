@@ -47,8 +47,8 @@ public class LogUtils {
 
 
     public static void json(String tag, String msg) {
-        if (sLevel <= ERROR) {
+//        if (sLevel <= ERROR) {
             Logger.t(tag).json(msg);
-        }
+//        }
     }
 }

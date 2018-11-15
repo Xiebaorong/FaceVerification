@@ -35,4 +35,14 @@ public class ConstsUtils {
      * 相机编号
      */
     public static String CAMERA_ID = "0";
+
+    /**
+     * 显示Dialog
+     */
+    public final static boolean SHOW_DIALOG = true;
+
+    /**
+     * 取消Dialog
+     */
+    public final static boolean DIS_DIALOG = false;
 }

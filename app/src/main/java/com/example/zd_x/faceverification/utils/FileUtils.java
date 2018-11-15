@@ -259,29 +259,18 @@ public class FileUtils {
     }
 
 
-    public static void imageSaver(final Image mImage) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                synchronized (this){
-                    ByteBuffer buffer = mImage.getPlanes()[0].getBuffer();
-                    byte[] data = new byte[buffer.remaining()];
-                    buffer.get(data);
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-                    if (bitmap != null) {
-                        mImage.close();
-                    }
-                    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                    String fileName = "IMG_" + timeStamp + ".jpg";
-                    String base64 = bitmapToBase64(bitmap);
-                    Log.e(TAG, "run: 1111");
-//                Log.e(TAG, "run: "+base64 );
-//                LogUtils.d(TAG,base64);
-//                Bitmap bitmap1 = Bitmap.createBitmap(bitmap, 0, 0, 800, 800);
-                    FileUtils.saveBitmap(FaceVerificationApplication.getmApplication(), bitmap, "camera/", fileName);
-                }
-            }
-        }).start();
+    public static Bitmap imageSaver(final Image mImage,String imageID) {
+        ByteBuffer buffer = mImage.getPlanes()[0].getBuffer();
+        byte[] data = new byte[buffer.remaining()];
+        buffer.get(data);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+        if (bitmap != null) {
+            mImage.close();
+        }
+        Log.e(TAG, "run: 1111");
+        Bitmap bitmap1 = Bitmap.createBitmap(bitmap, 0, 0, 100, 100);
+        FileUtils.saveBitmap(FaceVerificationApplication.getmApplication(), bitmap, "camera/", imageID+".jpg");
+        return bitmap1;
 
     }
 
@@ -305,6 +294,8 @@ public class FileUtils {
 
                 byte[] bitmapBytes = baos.toByteArray();
                 result = Base64.encodeToString(bitmapBytes, Base64.DEFAULT);
+            }else {
+                return null;
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -320,4 +311,6 @@ public class FileUtils {
         }
         return result;
     }
+
+
 }

@@ -4,4 +4,6 @@ public interface ICameraView {
     void getPhotoResults(int result);
 
     void getCameraSwitch(boolean flag);
+
+    void showDialog(boolean flag);
 }

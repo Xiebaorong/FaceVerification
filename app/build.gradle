@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'org.greenrobot.greendao'
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -16,6 +16,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+}
+
+greendao {
+    schemaVersion 1
+    daoPackage 'dao'
+    targetGenDir 'src/main/java/'
 }
 
 dependencies {
@@ -37,4 +43,8 @@ dependencies {
 
     // gson
     implementation "com.google.code.gson:gson:$rootProject.gsonVersion"
+
+    //region greenDao
+    implementation "org.greenrobot:greendao:$rootProject.greendaoVersion"
+    implementation "org.greenrobot:greendao-generator:$rootProject.greendaoVersion"
 }

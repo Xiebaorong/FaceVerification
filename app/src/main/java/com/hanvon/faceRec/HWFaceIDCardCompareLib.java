@@ -1,7 +1,9 @@
 package com.hanvon.faceRec;
 
 
+import android.media.Image;
 import android.os.Handler;
+import android.util.Log;
 
 import com.hanvon.face.FaceCoreHelper;
 import com.hanvon.face.HWCoreHelper;
@@ -103,15 +105,16 @@ public class HWFaceIDCardCompareLib {
                 break;
         }
         int iResult = FaceCoreHelper.HWFaceDetectFaces(HWCoreHelper.FACE_HANDLER, bpRotateData, iWidth, iHeight, nFacePosition, faceEyes, nFaceCount);
-        if (iResult == HWConsts.HW_OK) {
-//            mHandler.sendMessage(mHandler.obtainMessage(Consts.SHOW_MSG, "人脸识别已开启"));
-            objRect.iTop = nFacePosition[0];
-            objRect.iBottom = nFacePosition[1];
-            objRect.iLeft = nFacePosition[2];
-            objRect.iRight = nFacePosition[3];
-        } else {
-            setDefaultFacePoint();
-        }
+        Log.e(TAG, "SetCameraPreviewFrame: iResult: "+iResult );
+//        if (iResult == HWConsts.HW_OK) {
+////            mHandler.sendMessage(mHandler.obtainMessage(Consts.SHOW_MSG, "人脸识别已开启"));
+//            objRect.iTop = nFacePosition[0];
+//            objRect.iBottom = nFacePosition[1];
+//            objRect.iLeft = nFacePosition[2];
+//            objRect.iRight = nFacePosition[3];
+//        } else {
+//            setDefaultFacePoint();
+//        }
     }
 
 }

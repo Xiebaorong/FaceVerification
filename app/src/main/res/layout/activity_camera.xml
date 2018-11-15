@@ -12,12 +12,7 @@
         android:layout_height="0dp"
         android:layout_weight="3"
         >
-        <com.hanvon.faceRec.HanvonfaceCameraShowView
-            android:id="@+id/hcsv_cameraPreview_camera"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone"
-            />
+
         <com.hanvon.faceRec.HanvonfaceCamera2ShowView
             android:id="@+id/hcsv_camera2Preview_camera"
             android:layout_width="match_parent"

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="title_size">16sp</dimen>
-    <dimen name="filter_size">15sp</dimen>
+    <dimen name="title_size">18sp</dimen>
+    <dimen name="filter_size">16sp</dimen>
+    <dimen name="text_size">15sp</dimen>
 </resources>

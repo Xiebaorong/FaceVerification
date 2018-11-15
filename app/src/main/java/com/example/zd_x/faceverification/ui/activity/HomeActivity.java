@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.widget.Button;
 
@@ -11,6 +13,8 @@ import com.example.zd_x.faceverification.R;
 import com.example.zd_x.faceverification.base.BaseActivity;
 import com.example.zd_x.faceverification.utils.ConstsUtils;
 import com.example.zd_x.faceverification.utils.LogUtils;
+import com.hanvon.face.HWCoreHelper;
+import com.hanvon.faceRec.Consts;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -28,6 +32,21 @@ public class HomeActivity extends BaseActivity {
     Button btRearCameraHome;
     @BindView(R.id.bt_usbCamera_home)
     Button btUsbCameraHome;
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case Consts.INIT_SUCCESS:
+                    HWCoreHelper.initHWCore(HomeActivity.this, handler);
+                    break;
+                case Consts.SHOW_MSG:
+
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 
 
     @Override
@@ -86,5 +105,10 @@ public class HomeActivity extends BaseActivity {
         Intent intent = new Intent(HomeActivity.this, CameraActivity.class);
         intent.putExtra("cameraId", cameraId+"");
         startActivity(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

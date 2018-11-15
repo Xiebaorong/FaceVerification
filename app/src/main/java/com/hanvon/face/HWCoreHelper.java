@@ -23,19 +23,19 @@ public class HWCoreHelper {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                int Result = HWFaceClient.InitFaceClient(IP, port, context, handler);
+                int Result = HWFaceClient.InitFaceClient(IP, port, context);
                 Log.e(TAG, "InitFaceClient"+Result );
                 if (Result == -1) {
                     handler.sendMessage(handler.obtainMessage(Consts.SHOW_MSG, "服务器连接失败"));
                 } else {
                     handler.sendMessage(handler.obtainMessage(Consts.SHOW_MSG, "服务器连接成功"));
+                    Log.e(TAG, "HWCoreHelper: 服务器连接成功" );
                 }
             }
         }).start();
     }
 
     public static void initHWCore(Context context, Handler handler) {
-        handler.sendMessage(handler.obtainMessage(Consts.SHOW_MSG, "加载中...."));
         initFaceCore(context , handler);
     }
 
@@ -61,7 +61,6 @@ public class HWCoreHelper {
     }
 
     public static void releaseCore() {
-        FaceCoreHelper.HWFaceRelease(CARD_HANDLER);
         FaceCoreHelper.HWFaceRelease(FACE_HANDLER);
         HWFaceClient.ReleaseFaceClient();
     }

@@ -3,4 +3,24 @@
     <string name="selectCamera">选择相机</string>
     <string name="frontCamera">前置相机</string>
     <string name="rearCamera">后置相机</string>
+    <string name="dialogTitle">查验结果</string>
+    <string name="dialogImageIdText">图片编号:</string>
+    <string name="dialoglimitText">对比人数:</string>
+    <string name="listNameText">姓名: </string>
+    <string name="listSexText">性别: </string>
+    <string name="listNationText">民族: </string>
+    <string name="listSimilarityText">相似度: </string>
+
+    <string name="verificationResultText">对比结果: </string>
+    <string name="verificationTimeText">对比时间: </string>
+    <string name="verificationImageIdText">图片编号: </string>
+
+
+    <!--测试-->
+    <string name="dialogImageId">1101081542181099923</string>
+    <string name="dialoglimit">3</string>
+    <string name="dialogErrorMsg">失败，无效的Json数据</string>
+
+
+
 </resources>
