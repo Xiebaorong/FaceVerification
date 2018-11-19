@@ -3,7 +3,6 @@ package com.example.zd_x.faceverification.mvp.p;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Camera;
 import android.media.ImageReader;
 import android.util.Log;
 
@@ -15,14 +14,13 @@ import com.example.zd_x.faceverification.mvp.view.ICameraView;
 import com.example.zd_x.faceverification.utils.APPUrl;
 import com.example.zd_x.faceverification.utils.ConstsUtils;
 import com.example.zd_x.faceverification.utils.FileUtils;
-import com.example.zd_x.faceverification.utils.LogUtils;
+import com.example.zd_x.faceverification.utils.LogUtil;
 import com.example.zd_x.faceverification.http.OkHttpManager;
 import com.example.zd_x.faceverification.utils.PictureMsgUtils;
 import com.google.gson.Gson;
 import com.hanvon.faceRec.Camera2Helper;
 
 import java.io.IOException;
-import java.util.logging.Handler;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -57,7 +55,7 @@ public class CameraPresenterCompl implements ICameraPresenter, ImageReader.OnIma
     @Override
     public void requestContrast(final Context context) {
         String json = gson.toJson(detectionModel);
-        LogUtils.allLog(TAG, json);
+        LogUtil.allLog(json);
         OkHttpManager.getInstance().postRequest(APPUrl.SEND, ConstsUtils.MEDIA_TYPE_JSON, json, new LoadCallBack<String>(context) {
             @Override
             public void onSuccess(Call call, Response response, String result) {

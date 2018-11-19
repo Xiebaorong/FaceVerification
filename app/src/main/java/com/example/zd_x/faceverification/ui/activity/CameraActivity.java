@@ -1,6 +1,5 @@
 package com.example.zd_x.faceverification.ui.activity;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,17 +8,14 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.example.zd_x.faceverification.R;
 import com.example.zd_x.faceverification.base.BaseActivity;
-import com.example.zd_x.faceverification.mvp.model.VerificationModel;
 import com.example.zd_x.faceverification.mvp.p.CameraPresenterCompl;
 import com.example.zd_x.faceverification.mvp.view.ICameraView;
-import com.example.zd_x.faceverification.ui.dialog.VerificationDialog;
 import com.example.zd_x.faceverification.utils.ConstsUtils;
-import com.example.zd_x.faceverification.utils.LogUtils;
+import com.example.zd_x.faceverification.utils.LogUtil;
 import com.hanvon.face.HWCoreHelper;
 import com.hanvon.faceRec.Camera2Helper;
 import com.hanvon.faceRec.Consts;
@@ -46,11 +42,11 @@ public class CameraActivity extends BaseActivity implements ICameraView {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case Consts.INIT_SUCCESS:
+                case ConstsUtils.INIT_SUCCESS:
 //                    HWCoreHelper.initHWCore(CameraActivity.this, handler);
                     break;
-                case Consts.SHOW_MSG:
-
+                case ConstsUtils.SHOW_MSG:
+                    showToast((String) msg.obj);
                     break;
                 default:
                     break;
@@ -69,23 +65,14 @@ public class CameraActivity extends BaseActivity implements ICameraView {
         String cameraId = getIntent().getExtras().getString("cameraId");
         Log.e(TAG, "initEvent: int1---" + cameraId);
         ConstsUtils.CAMERA_ID = cameraId;
-
-//        if (ConstsUtils.CAMERA_ID == String.valueOf(ConstsUtils.FRONT_CAMERA)) {
-//            HWFaceIDCardCompareLib.getInstance().setRotation(270);
-//        } else if (ConstsUtils.CAMERA_ID == String.valueOf(ConstsUtils.REAR_CAMERA)) {
-//            HWFaceIDCardCompareLib.getInstance().setRotation(90);
-//        }
         HWCoreHelper.initHWCore(this, handler);
-
     }
 
     @Override
     protected void initEvent() {
-        Log.e(TAG, "initEvent: int");
         int result = Camera2Helper.camera2Helper.initCamera(this);
         if (result == ConstsUtils.OK) {
             Camera2Helper.camera2Helper.openCamera(this);
-            Log.e(TAG, "initEvent: int2");
         }
         hcsvCamera2PreviewCamera.setSurfaceView(sfvFaceShowCamera, handler);
 
@@ -108,11 +95,11 @@ public class CameraActivity extends BaseActivity implements ICameraView {
     @Override
     public void getPhotoResults(int result) {
         if (result == ConstsUtils.FAIL) {
-            showToast("未检测到人脸");
-            LogUtils.d(TAG, "未检测到人脸");
+
+            LogUtil.d("未检测到人脸");
         } else if (result == ConstsUtils.SUCCEED) {
-            LogUtils.d(TAG, "发送");
-            iCameraPresenter.requestContrast(this);
+            LogUtil.d("发送");
+//            iCameraPresenter.requestContrast(this);
         }
     }
 

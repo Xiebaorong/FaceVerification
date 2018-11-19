@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
 
+import com.example.zd_x.faceverification.utils.ConstsUtils;
 import com.hanvon.faceRec.Consts;
 import com.hanvon.faceRec.HWConsts;
 
@@ -26,9 +27,9 @@ public class HWCoreHelper {
                 int Result = HWFaceClient.InitFaceClient(IP, port, context);
                 Log.e(TAG, "InitFaceClient"+Result );
                 if (Result == -1) {
-                    handler.sendMessage(handler.obtainMessage(Consts.SHOW_MSG, "服务器连接失败"));
+                    handler.sendMessage(handler.obtainMessage(ConstsUtils.SHOW_MSG, "服务器连接失败"));
                 } else {
-                    handler.sendMessage(handler.obtainMessage(Consts.SHOW_MSG, "服务器连接成功"));
+                    handler.sendMessage(handler.obtainMessage(ConstsUtils.SHOW_MSG, "服务器连接成功"));
                     Log.e(TAG, "HWCoreHelper: 服务器连接成功" );
                 }
             }

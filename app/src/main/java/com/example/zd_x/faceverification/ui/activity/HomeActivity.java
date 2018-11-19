@@ -8,23 +8,19 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.widget.Button;
 
 import com.example.zd_x.faceverification.R;
 import com.example.zd_x.faceverification.base.BaseActivity;
 import com.example.zd_x.faceverification.mvp.model.HistoryVerificationResultModel;
-import com.example.zd_x.faceverification.mvp.model.VerificationModel;
 import com.example.zd_x.faceverification.mvp.p.HomePresenterCompl;
 import com.example.zd_x.faceverification.mvp.view.IHomeView;
 import com.example.zd_x.faceverification.ui.adapter.HistoryVerificationListViewAdapter;
 import com.example.zd_x.faceverification.utils.ConstsUtils;
-import com.example.zd_x.faceverification.utils.LogUtils;
+import com.example.zd_x.faceverification.utils.LogUtil;
 import com.hanvon.face.HWCoreHelper;
 import com.hanvon.faceRec.Consts;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -99,18 +95,16 @@ public class HomeActivity extends BaseActivity implements IHomeView {
     public void onClick(Button view) {
         switch (view.getId()) {
             case R.id.bt_frontCamera_home:
-                LogUtils.d(TAG, "bt_frontCamera_home");
+                LogUtil.d("bt_frontCamera_home");
                 startCamera(ConstsUtils.FRONT_CAMERA);
                 break;
             case R.id.bt_rearCamera_home:
-                LogUtils.d(TAG, "bt_rearCamera_home");
+                LogUtil.d("bt_rearCamera_home");
                 startCamera(ConstsUtils.REAR_CAMERA);
                 break;
             case R.id.bt_usbCamera_home:
-                LogUtils.d(TAG, "bt_usbCamera_home");
-
+                LogUtil.d("bt_usbCamera_home");
 //                startCamera(ConstsUtils.USB_CAMERA);
-
                 break;
         }
     }
@@ -124,8 +118,7 @@ public class HomeActivity extends BaseActivity implements IHomeView {
 
     @Override
     public void getHistoryMsg(List<HistoryVerificationResultModel> list) {
-
-        HistoryVerificationListViewAdapter historyAdapter = new HistoryVerificationListViewAdapter(this,list);
+        HistoryVerificationListViewAdapter historyAdapter = new HistoryVerificationListViewAdapter(this, list);
         rvShowImageMsgHome.setAdapter(historyAdapter);
     }
 }

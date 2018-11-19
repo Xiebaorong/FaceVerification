@@ -31,7 +31,7 @@ import android.view.Surface;
 import android.view.TextureView;
 
 import com.example.zd_x.faceverification.utils.ConstsUtils;
-import com.example.zd_x.faceverification.utils.LogUtils;
+import com.example.zd_x.faceverification.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -75,12 +75,6 @@ public class Camera2Helper {
                 CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraId);
                 //获取StreamConfigurationMap，它是管理摄像头支持的所有输出格式和尺寸
                 map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
-                Range<Integer>[] range = map.getHighSpeedVideoFpsRanges();
-                Log.d(TAG, "range:" + range.length);
-                for (int j = 0; j < range.length; j++) {
-                    Range<Integer> r = range[j];
-                    Log.e(TAG, "initCamera: " + r);
-                }
                 //获取相机支持的最大拍照尺寸
                 mCaptureSize = Collections.max(Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)), new Comparator<Size>() {
                     @Override
@@ -193,7 +187,7 @@ public class Camera2Helper {
 
                 @Override
                 public void onConfigureFailed(@NonNull CameraCaptureSession session) {
-                    LogUtils.e(TAG, "配置失败");
+                    LogUtil.e("配置失败");
                 }
             }, mCameraHandler);
         } catch (CameraAccessException e) {

@@ -12,6 +12,7 @@ import android.util.Base64;
 import android.util.Log;
 
 import com.example.zd_x.faceverification.application.FaceVerificationApplication;
+import com.hanvon.faceRec.Camera2Helper;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -267,11 +268,49 @@ public class FileUtils {
         if (bitmap != null) {
             mImage.close();
         }
-        Bitmap bitmap1 = Bitmap.createBitmap(bitmap, ConstsUtils.iLeftTop, ConstsUtils.iLeftBottom, ConstsUtils.iRightTop, ConstsUtils.iRightBottom);
+        //
+        Bitmap bitmap1 = shearBitmap(bitmap);
 
         FileUtils.saveBitmap(FaceVerificationApplication.getmApplication(), bitmap1, "camera/", imageID + ".jpg");
         return bitmap1;
 
+    }
+
+    private static Bitmap shearBitmap(Bitmap bitmap) {
+        int startX = ConstsUtils.iStartX;
+        int startY = ConstsUtils.iStartY;
+        int width = ConstsUtils.iWidth;
+        int height = ConstsUtils.iHeight;
+
+        Bitmap newBitmap = null;
+        try {
+            if (ConstsUtils.iStartX != 0) {
+                if (startX + width * (1 + 0.2) <= bitmap.getWidth() && startY + height * (1 + 0.5) <= bitmap.getHeight()) {
+                    startX = (int) (startX * (0.9));
+                    startY = (int) (startY * (0.8));
+                    width = (int) (width * (1 + 0.2));
+                    height = (int) (height * (1 + 0.5));
+                } else {
+                    LogUtil.e("剪裁区域过大");
+                    startX = 0;
+                    startY = 0;
+                    width = bitmap.getWidth();
+                    height = bitmap.getHeight();
+                }
+            } else {
+                LogUtil.e("shearBitmap 未检测到人脸");
+                startX = 0;
+                startY = 0;
+                width = bitmap.getWidth();
+                height = bitmap.getHeight();
+            }
+            newBitmap = Bitmap.createBitmap(bitmap, startX, startY, width, height);
+        } catch (Exception e) {
+            e.printStackTrace();
+            LogUtil.e("shearBitmap: " + e);
+        }
+
+        return newBitmap;
     }
 
     /**

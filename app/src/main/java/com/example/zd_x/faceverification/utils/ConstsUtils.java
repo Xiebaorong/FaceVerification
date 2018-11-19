@@ -54,19 +54,29 @@ public class ConstsUtils {
     public static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json; charset=utf-8");
 
     /**
-     * 人脸左上点
+     * 起始点X
      */
-    public static int iLeftTop = 0;
+    public static int iStartX = 0;
     /**
-     * 左下
+     * 起始点Y
      */
-    public static int iLeftBottom = 0;
+    public static int iStartY = 0;
     /**
-     * 右上
+     * 剪裁宽度
      */
-    public static int iRightTop = 0;
+    public static int iWidth = 0;
     /**
-     * 右下
+     * 剪裁高度
      */
-    public static int iRightBottom = 0;
+    public static int iHeight = 0;
+    /**
+     * SHOW_MSG 1000 展示信息
+     */
+    public static final int SHOW_MSG = 1000;
+    /**
+     * SHOW_MSG 1000 初始化成功
+     */
+    public static final int INIT_SUCCESS = 2000;
+
+
 }
