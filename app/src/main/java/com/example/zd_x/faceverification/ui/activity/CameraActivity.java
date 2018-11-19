@@ -1,17 +1,23 @@
 package com.example.zd_x.faceverification.ui.activity;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.example.zd_x.faceverification.R;
 import com.example.zd_x.faceverification.base.BaseActivity;
+import com.example.zd_x.faceverification.mvp.model.VerificationModel;
 import com.example.zd_x.faceverification.mvp.p.CameraPresenterCompl;
 import com.example.zd_x.faceverification.mvp.view.ICameraView;
+import com.example.zd_x.faceverification.ui.dialog.VerificationDialog;
 import com.example.zd_x.faceverification.utils.ConstsUtils;
 import com.example.zd_x.faceverification.utils.LogUtils;
 import com.hanvon.face.HWCoreHelper;
@@ -117,7 +123,7 @@ public class CameraActivity extends BaseActivity implements ICameraView {
     }
 
     @Override
-    public void showDialog(boolean flag) {
+    public void showUploadDialog(boolean flag) {
         if (flag) {
             showProgressDialog();
         }else {
@@ -126,12 +132,26 @@ public class CameraActivity extends BaseActivity implements ICameraView {
     }
 
     @Override
+    public void showVerificationMsgDialog(String msg) {
+
+        new AlertDialog.Builder(this)
+                .setTitle("提示:")
+                .setMessage(msg)
+                .setCancelable(false)
+                .setPositiveButton("确定",
+                        new DialogInterface.OnClickListener(){
+                            public void onClick(DialogInterface dialoginterface, int i){
+                                //按钮事件
+                                iCameraPresenter.restartPreview(CameraActivity.this);
+                            }
+                        })
+                .show();
+
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
-        //SDK5.0
-//        CameraHelper.cameraHelper.closeCamera();
-//        hanvonfaceCameraShowView = null;
-//        HanvonfaceCameraShowView.hanvonfaceShowView = null;
         //SDK7.0
         Camera2Helper.camera2Helper.stopCamera();
         handler.removeCallbacksAndMessages(null);

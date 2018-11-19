@@ -16,7 +16,7 @@ public class DetectionModel {
      * threshold : 80
      */
 
-    private String imageID;//41位 1101 0801 0100 0000 0001 0220 1703 2110 1010 0000 3
+    private String imageID;//41位 110108 0101000000 0001 0220 1703 2110 1010 0000 3
     private String deviceID;
     private String deviceName;
     private String faceBase64;

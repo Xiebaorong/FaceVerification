@@ -30,7 +30,7 @@ public class PictureMsgUtils {
 
     public String getPictureImageId(){
         long time = System.currentTimeMillis();
-        return "110108"+time;
+        return "110108"+time+"0000000000000000000000";
     }
 
     public String getDeviceID(){

@@ -2,97 +2,125 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <TextView
         android:id="@+id/tv_title_dialog"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/dialogTitle"
-        android:textSize="@dimen/title_size"
-        android:textColor="@color/color_title_text"
         android:background="@color/colorPrimaryDark"
-        />
+        android:text="@string/dialogTitle"
+        android:textColor="@color/color_title_text"
+        android:textSize="@dimen/title_size" />
+
     <RelativeLayout
         android:id="@+id/rl_nativeImage_dialog"
         android:layout_width="match_parent"
         android:layout_height="35dp"
-        android:gravity="center_vertical"
         android:layout_below="@id/tv_title_dialog"
-        >
+        android:gravity="center_vertical">
+
         <TextView
             android:id="@+id/tv_imageIdText_dialog"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="@string/dialogImageIdText"
-            android:textSize="@dimen/text_size"
-            />
+            android:textSize="@dimen/text_size" />
+
         <TextView
             android:id="@+id/tv_imageId_dialog"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_marginLeft="2dp"
+            android:layout_toRightOf="@id/tv_imageIdText_dialog"
             android:gravity="center"
             android:text="@string/dialogImageId"
-            android:layout_toRightOf="@id/tv_imageIdText_dialog"
-            android:layout_marginLeft="2dp"
-            android:textSize="@dimen/text_size"
-            />
+            android:textSize="@dimen/text_size" />
+
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:layout_toRightOf="@id/tv_imageId_dialog"
-            android:background="@color/colorPrimaryDark"
             android:layout_marginLeft="2dp"
-            />
+            android:layout_toRightOf="@id/tv_imageId_dialog"
+            android:background="@color/colorPrimaryDark" />
 
         <TextView
             android:id="@+id/tv_limitText_dialog"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/tv_imageId_dialog"
             android:gravity="center"
             android:text="@string/dialoglimitText"
-            android:layout_toRightOf="@id/tv_imageId_dialog"
-            android:layout_marginLeft="5dp"
-            android:textSize="@dimen/text_size"
-            />
+            android:textSize="@dimen/text_size" />
+
         <TextView
             android:id="@+id/tv_limit_dialog"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/tv_limitText_dialog"
             android:gravity="center"
             android:text="@string/dialoglimit"
-            android:layout_toRightOf="@id/tv_limitText_dialog"
-            android:layout_marginLeft="5dp"
-            android:textSize="@dimen/text_size"
-            />
+            android:textSize="@dimen/text_size" />
     </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@id/rl_nativeImage_dialog"
-        android:background="@color/colorPrimaryDark"
-        />
-    <RelativeLayout
+        android:background="@color/colorPrimaryDark" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/rl_nativeImage_dialog"
-        >
-        <TextView
-            android:id="@+id/tv_ErrorMsg_dialog"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/dialogErrorMsg"
-            android:textSize="@dimen/text_size"
-            android:gravity="center_horizontal"
-            android:paddingVertical="25dp"
-            android:visibility="gone"
-            />
-        <ListView
-            android:id="@+id/lv_verificationMsgList_dialog"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
+        android:orientation="vertical">
 
-        </ListView>
-    </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/tv_ErrorMsg_dialog"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal"
+                android:paddingVertical="25dp"
+                android:text="@string/dialogErrorMsg"
+                android:textSize="@dimen/text_size"
+                android:visibility="gone" />
+
+            <ListView
+                android:id="@+id/lv_verificationMsgList_dialog"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </ListView>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/bt_cancel_dialog"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:text="@string/dialogCancelText"
+                android:visibility="invisible"
+                />
+            <Button
+                android:id="@+id/bt_confirm_dialog"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:text="@string/dialogConfirmText"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+
 </RelativeLayout>

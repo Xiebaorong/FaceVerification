@@ -3,13 +3,12 @@ package com.example.zd_x.faceverification.mvp.p;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.media.Image;
+import android.graphics.Camera;
 import android.media.ImageReader;
-import android.util.Base64;
 import android.util.Log;
 
 import com.example.zd_x.faceverification.callBack.LoadCallBack;
-import com.example.zd_x.faceverification.callBack.PictureCallBack;
+import com.example.zd_x.faceverification.database.DataManipulation;
 import com.example.zd_x.faceverification.mvp.model.DetectionModel;
 import com.example.zd_x.faceverification.mvp.model.VerificationModel;
 import com.example.zd_x.faceverification.mvp.view.ICameraView;
@@ -21,14 +20,9 @@ import com.example.zd_x.faceverification.http.OkHttpManager;
 import com.example.zd_x.faceverification.utils.PictureMsgUtils;
 import com.google.gson.Gson;
 import com.hanvon.faceRec.Camera2Helper;
-import com.orhanobut.logger.Logger;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.logging.Handler;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -61,21 +55,16 @@ public class CameraPresenterCompl implements ICameraPresenter, ImageReader.OnIma
 
 
     @Override
-    public void requestContrast(Context context) {
-
-
-        Log.e(TAG, "requestContrast: 发送成功");
-        Map<String, String> params = new HashMap<>();
+    public void requestContrast(final Context context) {
         String json = gson.toJson(detectionModel);
-            e(TAG,json);
-        params.put("",json);
-        OkHttpManager.getInstance().postRequest(APPUrl.SEND, params, new LoadCallBack<String>(context) {
+        LogUtils.allLog(TAG, json);
+        OkHttpManager.getInstance().postRequest(APPUrl.SEND, ConstsUtils.MEDIA_TYPE_JSON, json, new LoadCallBack<String>(context) {
             @Override
             public void onSuccess(Call call, Response response, String result) {
-                iCameraView.showDialog(ConstsUtils.DIS_DIALOG);
+                iCameraView.showUploadDialog(ConstsUtils.DIS_DIALOG);
                 Log.e(TAG, "onSuccess: " + result);
                 VerificationModel verificationModel = gson.fromJson(result, VerificationModel.class);
-                verificationResult(verificationModel);
+                verificationResult(context, verificationModel);
 
             }
 
@@ -91,37 +80,36 @@ public class CameraPresenterCompl implements ICameraPresenter, ImageReader.OnIma
         });
     }
 
-    private void verificationResult(VerificationModel verificationModel) {
-        if (verificationModel.getStatus()==1){
-            Log.e(TAG, "对比回调:  "+verificationModel.getMessage() );
+    @Override
+    public void restartPreview(Context context) {
+        Camera2Helper.camera2Helper.restartPreview(context);
+    }
 
-        }else{
+    private void verificationResult(Context context, final VerificationModel verificationModel) {
+        if (verificationModel.getStatus() == 1) {
+            Log.e(TAG, "对比回调:  " + verificationModel.getMessage());
+            //显示数据
+
+            //放入数据库保存
+            DataManipulation.getInstance().insertData(detectionModel, verificationModel);
+
+        } else {
+            final String message = verificationModel.getMessage();
+            ((Activity) context).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    iCameraView.showVerificationMsgDialog(message);
+                }
+            });
 
         }
     }
 
-    public static void e(String TAG, String msg) {
-        int strLength = msg.length();
-        int start = 0;
-        int end = 2000;
-        for (int i = 0; i < 100; i++) {
-            //剩下的文本还是大于规定长度则继续重复截取并输出
-            if (strLength > end) {
-                Log.e(TAG + i, msg.substring(start, end));
-                start = end;
-                end = end + 2000;
-            } else {
-                Log.e(TAG, msg.substring(start, strLength));
-                break;
-            }
-        }
-    }
 
     @Override
     public void onImageAvailable(ImageReader reader) {
-        iCameraView.showDialog(ConstsUtils.SHOW_DIALOG);
+        iCameraView.showUploadDialog(ConstsUtils.SHOW_DIALOG);
         String base64 = null;
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageID = PictureMsgUtils.getInstance().getPictureImageId();
 
         Bitmap bitmap = FileUtils.imageSaver(reader.acquireNextImage(), imageID);

@@ -4,6 +4,7 @@ import com.example.zd_x.faceverification.callBack.BaseCallBack;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -11,10 +12,12 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okio.ByteString;
 
 public class OkHttpManager {
     private static final String TAG = "OkHttpManager";
@@ -52,6 +55,46 @@ public class OkHttpManager {
     public void postRequest(String url, Map<String, String> params, BaseCallBack callBack) {
         Request request = buildRequest(url, params, HttpMethodType.POST);
         doRequest(request, callBack);
+    }
+
+    public void postRequest(String url, MediaType mediaType, Object object, BaseCallBack callBack) {
+        Request request = buildRequest(url, mediaType, object);
+        doRequest(request, callBack);
+    }
+
+
+
+    private Request buildRequest(String url, MediaType mediaType, Object object) {
+        Request.Builder builder = new Request.Builder()
+                .url(url);
+        RequestBody body = post(mediaType, object);
+        builder.post(body);
+        return builder.build();
+    }
+
+    public RequestBody post(MediaType mediaType, Object object) {
+        return post(mediaType, object, -1, 0);
+    }
+
+    protected RequestBody post(MediaType mediaType, Object object, int offset, int byteCount) {
+        RequestBody mRequestBody;
+        if (object != null) {
+            if (object instanceof File) {
+                mRequestBody = RequestBody.create(mediaType, (File) object);
+            } else if (object instanceof String) {
+                mRequestBody = RequestBody.create(mediaType, (String) object);
+            } else if (object instanceof ByteString) {
+                mRequestBody = RequestBody.create(mediaType, (ByteString) object);
+            } else if (object instanceof byte[] && offset >= 0) {
+                mRequestBody = RequestBody.create(mediaType, (byte[]) object, offset, byteCount);
+            } else if (object instanceof byte[]) {
+                mRequestBody = RequestBody.create(mediaType, (byte[]) object);
+            } else {
+                mRequestBody = RequestBody.create(mediaType, String.valueOf(object));
+            }
+            return mRequestBody;
+        }
+        return null;
     }
 
 

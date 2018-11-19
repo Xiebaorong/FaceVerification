@@ -5,8 +5,12 @@ import android.media.Image;
 import android.os.Handler;
 import android.util.Log;
 
+import com.example.zd_x.faceverification.utils.ConstsUtils;
 import com.hanvon.face.FaceCoreHelper;
 import com.hanvon.face.HWCoreHelper;
+import com.hanvon.face.HWFaceClient;
+
+import static com.hanvon.face.HWCoreHelper.FACE_HANDLER;
 
 
 public class HWFaceIDCardCompareLib {
@@ -14,7 +18,7 @@ public class HWFaceIDCardCompareLib {
     private String TAG = "HWFaceIDCardCompareLib";
     public int iWidth = 0;
     public int iHeight = 0;
-
+    private int mRotation = 0;    //翻转角度
     public FaceRect objRect = new FaceRect(); // 输出人脸坐标
     private int[] nFaceCount = new int[]{HWConsts.iFaceMax};  // 最大检测到的人脸个数
 
@@ -74,47 +78,43 @@ public class HWFaceIDCardCompareLib {
 //        HwitManager.HwitSetCameraX7022ExposureRange(0, 0, 0, 0 );
 
     }
+    int Result;
+    public int SetCameraPreviewFrame(byte[] data) {
 
-    public void SetCameraPreviewFrame(byte[] Data, int Width, int Height, Handler mHandler) {
-        iWidth = Width;
-        iHeight = Height;
-        int dataLen = Data.length;
-        int[] nFacePosition = new int[HWConsts.iFaceMax * iFacePosLength]; // 人脸信息 = 单个人脸长度 * 人脸个数
-        byte[] bpRotateData = new byte[dataLen];
-        float[] faceEyes = new float[6];
-        nFaceCount[0] = HWConsts.iFaceMax;
-        switch (eCameraAngles) {
-            case Rotation_0:
-                System.arraycopy(Data, 0, bpRotateData, 0, dataLen);
-                break;
-            case Rotation_90:
-                UtilFunc.rotateYUV240SP_Clockwise(Data, bpRotateData, iWidth, iHeight);
-                iWidth = Height;
-                iHeight = Width;
-                break;
-            case Rotation_180:
-                UtilFunc.rotateYUV240SP_FlipY180(Data, bpRotateData, iWidth, iHeight);
-                break;
-            case Rotation_270:
-                UtilFunc.rotateYUV240SP_AntiClockwise(Data, bpRotateData, iWidth, iHeight);
-                iWidth = Height;
-                iHeight = Width;
-                break;
-            default:
-                System.arraycopy(Data, 0, bpRotateData, 0, dataLen);
-                break;
+        int[] faceNum = new int[1];
+        int intFaceNum = 1;
+        faceNum[0] = intFaceNum;    // 单人脸
+        int width = Camera2Helper.PIXEL_WIDTH;
+        int height = Camera2Helper.PIXEL_HEIGHT;
+        byte[] rotateData = new byte[data.length];
+
+        int[] pFacePos = new int[(HWFaceClient.HW_FACEPOS_LEN) * intFaceNum];
+        float[] pEyePos = new float[(HWFaceClient.HW_EYEPOS_LEN) * intFaceNum];
+
+        if (ConstsUtils.CAMERA_ID.equals(String.valueOf(ConstsUtils.FRONT_CAMERA))) {
+            width = Camera2Helper.PIXEL_HEIGHT;
+            height = Camera2Helper.PIXEL_WIDTH;
+            UtilFunc.rotateYuvData(rotateData, data, Camera2Helper.PIXEL_WIDTH, Camera2Helper.PIXEL_HEIGHT, 1);
+        }else if (ConstsUtils.CAMERA_ID.equals(String.valueOf(ConstsUtils.REAR_CAMERA))) {
+
         }
-        int iResult = FaceCoreHelper.HWFaceDetectFaces(HWCoreHelper.FACE_HANDLER, bpRotateData, iWidth, iHeight, nFacePosition, faceEyes, nFaceCount);
-        Log.e(TAG, "SetCameraPreviewFrame: iResult: "+iResult );
-//        if (iResult == HWConsts.HW_OK) {
-////            mHandler.sendMessage(mHandler.obtainMessage(Consts.SHOW_MSG, "人脸识别已开启"));
-//            objRect.iTop = nFacePosition[0];
-//            objRect.iBottom = nFacePosition[1];
-//            objRect.iLeft = nFacePosition[2];
-//            objRect.iRight = nFacePosition[3];
-//        } else {
-//            setDefaultFacePoint();
-//        }
+
+        long startLocatTime = System.nanoTime();
+        Result = FaceCoreHelper.HWFaceDetectFaces(FACE_HANDLER, data, width, height, pFacePos, pEyePos, faceNum);
+        long locatTime = (System.nanoTime() - startLocatTime)/1000000;
+        Log.e(TAG, "SetCameraPreviewFrame: iResult: " + Result);
+        Log.e("Tracker", " 定位耗时 " + locatTime );
+
+        if (Result == HWConsts.HW_OK) {
+            objRect.iTop = pFacePos[0];
+            objRect.iBottom = pFacePos[1];
+            objRect.iLeft = pFacePos[2];
+            objRect.iRight = pFacePos[3];
+        } else {
+            setDefaultFacePoint();
+        }
+
+        return Result;
     }
 
 }

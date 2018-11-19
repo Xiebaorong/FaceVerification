@@ -20,13 +20,13 @@ public class UtilFunc {
 				k++;  
 			}  
 		}  
-		for(int i=0;i<width;i+=2) {  
-			for(int j=0;j<height/2;j++){     
-				des[k] = src[wh+ width*(height/2-j-1) + i];      
-				des[k+1]=src[wh + width*(height/2-j-1) + i+1];  
-				k+=2;  
-			}  
-		}        
+//		for(int i=0;i<width;i+=2) {
+//			for(int j=0;j<height/2;j++){
+//				des[k] = src[wh+ width*(height/2-j-1) + i];
+//				des[k+1]=src[wh + width*(height/2-j-1) + i+1];
+//				k+=2;
+//			}
+//		}
 	}
 
 	public static void saveFile(final String dest, final byte[] bmp) {
@@ -48,26 +48,49 @@ public class UtilFunc {
 		}
 	}
 
-	public static void rotateYUV240SP_AntiClockwise(byte[] src,byte[] des,int width,int height){  	         
+	public static void rotateYUV240SP_AntiClockwise(byte[] src,byte[] des,int width,int height){
 		int wh = width * height;  
 		//旋转Y   
 		int k = 0;  
 		for(int i=0;i<width;i++) {  
 			for(int j=0;j<height;j++){  
-				des[k] = src[width*j + width-i-1];              
+				des[k] = src[width*j + width-i-1];
 				k++;  
 			}  
 		}  
 
-		for(int i=0;i<width;i+=2) {  
-			for(int j=0;j<height/2;j++){     
-				des[k+1] = src[wh+ width*j + width-i-1];      
-				des[k]=src[wh + width*j + width-(i+1)-1];  
-				k+=2;  
-			}  
-		} 
+//		for(int i=0;i<width;i+=2) {
+//			for(int j=0;j<height/2;j++){
+//				des[k+1] = src[wh+ width*j + width-i-1];
+//				des[k]=src[wh + width*j + width-(i+1)-1];
+//				k+=2;
+//			}
+//		}
 
 	}
+
+    public static byte[] rotateYUV420Degree270(byte[] ydata, byte[] udata, byte[] vdata, int imageWidth,
+                                               int imageHeight) {
+        byte[] yuv = new byte[imageWidth * imageHeight * 3 / 2];
+        // Rotate the Y luma
+        int i = 0;
+        for (int x = imageWidth - 1; x >= 0; x--) {
+            for (int y = 0; y < imageHeight; y++) {
+                yuv[i] = ydata[y * imageWidth + x];
+                i++;
+            }
+        }// Rotate the U and V color components
+        i = imageWidth * imageHeight;
+        for (int x = imageWidth - 1; x > 0; x = x - 2) {
+            for (int y = 0; y < imageHeight / 2; y++) {
+                yuv[i] = udata[(imageWidth * imageHeight) + (y * imageWidth) + (x - 1)];
+                i++;
+                yuv[i] = vdata[(imageWidth * imageHeight) + (y * imageWidth) + x];
+                i++;
+            }
+        }
+        return yuv;
+    }
 
 	public static void rotateYUV240SP_FlipY180(byte[] src,byte[] des,int width,int height){  	         
 		int wh = width * height;  
@@ -94,9 +117,9 @@ public class UtilFunc {
 			rotateYUV240SP_Clockwise(data,rotatedData,width,height);
 		}else if(nCase == 2){    		
 			rotateYUV240SP_FlipY180(data,rotatedData,width,height);
-		}else{    		
+		}else{
 			rotateYUV240SP_AntiClockwise(data,rotatedData,width,height);
-		}  	
+		}
 
 	} 
 

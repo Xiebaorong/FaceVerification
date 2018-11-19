@@ -12,4 +12,10 @@ public interface ICameraPresenter {
      * 人脸对比
      */
     void requestContrast(Context context );
+
+    /**
+     * 重启预览
+     * @param context
+     */
+    void restartPreview(Context context);
 }

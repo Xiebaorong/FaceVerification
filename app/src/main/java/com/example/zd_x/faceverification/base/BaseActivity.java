@@ -7,6 +7,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.example.zd_x.faceverification.database.DataManipulation;
 import com.orhanobut.logger.Logger;
 
 import butterknife.ButterKnife;
@@ -28,6 +29,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         OnActCreate(savedInstanceState);
 
         initEvent();
+
+        DataManipulation.getInstance().initDao();
     }
 
     protected abstract int getLayoutId();

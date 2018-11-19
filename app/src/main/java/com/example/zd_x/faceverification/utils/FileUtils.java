@@ -259,7 +259,7 @@ public class FileUtils {
     }
 
 
-    public static Bitmap imageSaver(final Image mImage,String imageID) {
+    public static Bitmap imageSaver(final Image mImage, String imageID) {
         ByteBuffer buffer = mImage.getPlanes()[0].getBuffer();
         byte[] data = new byte[buffer.remaining()];
         buffer.get(data);
@@ -267,9 +267,9 @@ public class FileUtils {
         if (bitmap != null) {
             mImage.close();
         }
-        Log.e(TAG, "run: 1111");
-        Bitmap bitmap1 = Bitmap.createBitmap(bitmap, 0, 0, 100, 100);
-        FileUtils.saveBitmap(FaceVerificationApplication.getmApplication(), bitmap, "camera/", imageID+".jpg");
+        Bitmap bitmap1 = Bitmap.createBitmap(bitmap, ConstsUtils.iLeftTop, ConstsUtils.iLeftBottom, ConstsUtils.iRightTop, ConstsUtils.iRightBottom);
+
+        FileUtils.saveBitmap(FaceVerificationApplication.getmApplication(), bitmap1, "camera/", imageID + ".jpg");
         return bitmap1;
 
     }
@@ -294,7 +294,7 @@ public class FileUtils {
 
                 byte[] bitmapBytes = baos.toByteArray();
                 result = Base64.encodeToString(bitmapBytes, Base64.DEFAULT);
-            }else {
+            } else {
                 return null;
             }
         } catch (IOException e) {
@@ -312,5 +312,8 @@ public class FileUtils {
         return result;
     }
 
-
+    public static Bitmap base64ToBitmap(String base64Data) {
+        byte[] bytes = Base64.decode(base64Data, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+    }
 }

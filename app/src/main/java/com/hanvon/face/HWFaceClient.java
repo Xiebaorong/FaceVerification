@@ -7,7 +7,6 @@ import android.widget.Toast;
 
 
 import com.example.zd_x.faceverification.application.FaceVerificationApplication;
-import com.hanvon.faceRec.TestData;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -24,6 +23,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 public class HWFaceClient {
+    private static final String TAG = "HWFaceClient";
     /**
      * 执行成功
      */
@@ -92,51 +92,6 @@ public class HWFaceClient {
         return (((int) b[0]) << 24) + (((int) b[1]) << 16) + (((int) b[2]) << 8) + b[3];
     }
 
-
-    public static int InitFaceEngine(Context ctx) {
-        if (mContext != null)
-            mContext = ctx;
-
-        int iResult = HWFaceClient.HW_FAIL;
-
-        if (HWFaceClient.GetKeyCode() == HWFaceClient.HW_OK) {
-            if (HWFaceClient.bpKeyCode != null) {
-                //初始化核心
-                TestData.initCoreTime = System.currentTimeMillis();
-                iResult = FaceCoreHelper.HWFaceInitial(pHandle, HWFaceClient.bpKeyCode, ctx);
-//                iResult = FaceCoreHelper.HwInitFace(pHandle, ctx);
-                if (iResult == HW_OK) {
-
-                    trackerParam = new TrackerParam();
-                    trackerParam.min_bBoxMergeRate = 0.5f;
-                    trackerParam.min_confidence = 0.87f;
-                    trackerParam.thread = 0;
-                    trackerParam.fps = 15.0f;
-
-                    iResult = FaceCoreHelper.HwInitTracker(pTrackerHandle, trackerParam);
-                    Log.e("Test", "跟踪核心初始化 ：" + iResult + " ");
-
-                    //int trackerCount = 1;
-                    //int[] pnInfo = new int[5 * trackerCount];
-                    //flaot[] pfInfoConfidence = new float[trackerCount];
-
-                    //int[] iTrackerCount = new int[1];
-                    //iResult = FaceCoreHelper.HwGetTrackerSize(pTrackerHandle, iTrackerCount);
-
-                    //FaceCoreHelper.HwSetThreadNum(pHandle, 2);  // 2个线程加速
-
-                }
-                long time = System.currentTimeMillis();
-                TestData.launchTime = time - TestData.launchTime;
-                TestData.initCoreTime = time - TestData.initCoreTime;
-                Log.e("Test", "App启动到核心初始化结束时间：" + TestData.launchTime + " ms");
-                Log.e("Test", "核心初始化时间：" + TestData.initCoreTime + " ms");
-            }
-        }
-
-        return iResult;
-    }
-
     /**
      * 获取客户端人脸核心秘钥
      *
@@ -145,19 +100,23 @@ public class HWFaceClient {
      * @return 见接口返回值定义说明
      */
     public static int InitFaceClient(String ServerAddressIP, int Port, Context contex) {
+        Log.e(TAG, "InitFaceClient: 进入");
         int Result = -1;
         try {
-            strServerAddressIP = ServerAddressIP;
-            nPort = Port;
-            client = new Socket(strServerAddressIP, nPort);
             byte[] bpSend = new byte[256];
             int[] nSendLen = new int[1];
             nSendLen[0] = bpSend.length;
 
-            FaceCoreHelper.HWGetKeyCode(bpSend, nSendLen, contex);
+            int result = -1;
+            result = FaceCoreHelper.HWGetKeyCode(bpSend, nSendLen, contex);
 
+            Log.e(TAG, "InitFaceClient: HWGetKeyCode" + result);
             if (nSendLen[0] <= 0)
                 return -1;
+
+            strServerAddressIP = ServerAddressIP;
+            nPort = Port;
+            client = new Socket(strServerAddressIP, nPort);
 
             byte[] bpHeadData = intToBytes2(nSendLen[0]);
             byte[] bpKey = new byte[nSendLen[0]];
@@ -172,10 +131,10 @@ public class HWFaceClient {
                 @Override
                 public void run() {
                     // TODO Auto-generated method stub
-
+                    Log.e(TAG, "onserver: in-----111");
                     while (ServerState) {
                         if (!client.isClosed()) {
-
+                            Log.e(TAG, "onserver: in-----2222");
                             //接收来自 server的响应数据
                             try {
                                 DataInputStream in;
@@ -189,23 +148,28 @@ public class HWFaceClient {
                                     continue;
 
                                 int KeyLen = byteToInt2(bpHead);
-
+                                Log.e(TAG, "onserver: in-----333333");
                                 if (KeyLen > 0) {
                                     byte[] bpData = new byte[KeyLen];
-
+                                    Log.e(TAG, "onserver: in-----44444");
                                     int iReadLen = in.read(bpData, 0, bpData.length);
 
                                     if (iReadLen <= 0) {
                                         ServerState = false;
                                         return;
                                     } else {
-                                        CreatInitKeyCodeFile(bpData, bpData.length);
+                                        Log.e(TAG, "onserver: in-----555555");
+                                        int funResult = CreatInitKeyCodeFile(bpData, bpData.length);
+                                        if (funResult == 0) {
+                                            Log.e(TAG, "onserver: in-----666666");
+                                            Log.e(TAG, "onserver: ");
+                                        }
                                     }
-
+                                    Log.e(TAG, "onserver: in-----777777");
                                     ServerState = false;
                                 }
-
                                 in.close();
+                                Log.e(TAG, "onserver: out------");
                             } catch (IOException e) {
                                 // TODO Auto-generated catch block
                                 e.printStackTrace();
@@ -213,9 +177,6 @@ public class HWFaceClient {
 
                         }
                     }
-
-                    InitFaceEngine(mContext);
-                    //InitFaceEngine();
                 }
             });
 
@@ -268,35 +229,35 @@ public class HWFaceClient {
             FileInputStream in = null;
             String strKeyCode = strDataFile2 + "/" + strDataFile + "/hwKeyCode.dat";
             File dstFile = new File(strKeyCode);
+
             if (dstFile.exists()) {
+                dstFile.createNewFile();
+                Log.e(TAG, "GetKeyCode: onCreate");
                 in = new FileInputStream(strKeyCode);
                 iKeyCodeSize = in.available();
                 if (iKeyCodeSize > 0) {
                     bpKeyCode = new byte[iKeyCodeSize];
                     in.read(bpKeyCode);
                 }
+                in.close();
             } else {
+                Log.e(TAG, "GetKeyCode: onFailure" + HW_FAIL);
                 nResult = HW_FAIL;
             }
-            in.close();
         } catch (Exception ex) {
             nResult = HW_FAIL;
             ex.printStackTrace();
         }
-
-
         return nResult;
     }
 
-
     /**
      * 创建秘钥
-     *
-     * @param pbKeyCode01 秘钥
+     * @param pbKeyCode   秘钥
      * @param iKeyCodeLen 秘钥长度
      * @return 见接口返回值定义说明
      */
-    public static int CreatInitKeyCodeFile(byte[] pbKeyCode01, int iKeyCodeLen) {
+    public static int CreatInitKeyCodeFile(byte[] pbKeyCode, int iKeyCodeLen) {
         int nResult = 0;
 
         FileOutputStream out = null;
@@ -321,13 +282,9 @@ public class HWFaceClient {
             }
 
             if (iKeyCodeLen > 0) {
-                iKeyCodeSize = iKeyCodeLen;
-                bpKeyCode = new byte[iKeyCodeLen];
-                System.arraycopy(pbKeyCode01, 0, bpKeyCode, 0, iKeyCodeSize);
-
                 try {
                     out = new FileOutputStream(strFilePath);
-                    out.write(pbKeyCode01);
+                    out.write(pbKeyCode);
                     out.flush();
                     out.close();
                 } catch (Exception e) {

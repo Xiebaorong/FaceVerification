@@ -5,7 +5,9 @@
     android:layout_height="match_parent"
     tools:context=".HomeActivity">
     <include android:id="@+id/home_header"
-        layout="@layout/include_header"/>
+        layout="@layout/include_header"
+        android:visibility="gone"
+        />
     <TextView
         android:id="@+id/tv_select_home"
         android:layout_below="@id/home_header"
@@ -47,15 +49,21 @@
         android:layout_below="@id/rl_cameraList_home"
         android:layout_height="50dp"
         android:layout_width="match_parent"
-        android:visibility="gone"
+        />
+    <View
+        android:id="@+id/view_home"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/inc_screen_home"
+
         />
 
-        <ListView
-            android:id="@+id/lv_showImageMsg_home"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_showImageMsg_home"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/inc_screen_home">
+            android:layout_below="@id/view_home">
 
-        </ListView>
+        </android.support.v7.widget.RecyclerView>
 
 </RelativeLayout>

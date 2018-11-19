@@ -6,6 +6,8 @@
     <string name="dialogTitle">查验结果</string>
     <string name="dialogImageIdText">图片编号:</string>
     <string name="dialoglimitText">对比人数:</string>
+    <string name="dialogCancelText">取消</string>
+    <string name="dialogConfirmText">关闭窗口</string>
     <string name="listNameText">姓名: </string>
     <string name="listSexText">性别: </string>
     <string name="listNationText">民族: </string>

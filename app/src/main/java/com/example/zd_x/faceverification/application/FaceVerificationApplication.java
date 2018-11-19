@@ -1,8 +1,8 @@
 package com.example.zd_x.faceverification.application;
 
 import android.app.Application;
-import android.database.sqlite.SQLiteDatabase;
 
+import com.example.zd_x.faceverification.database.GreenDaoManager;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 
@@ -20,8 +20,12 @@ public class FaceVerificationApplication extends Application {
         mApplication = this;
 
         Logger.addLogAdapter(new AndroidLogAdapter());
+        initDatabase();
     }
 
+    private void initDatabase() {
+        GreenDaoManager.getInstance().initializeDatabase(this);
+    }
 
 
 }

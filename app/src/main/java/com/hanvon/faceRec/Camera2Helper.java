@@ -43,8 +43,8 @@ public class Camera2Helper {
     private static final String TAG = "Camera2Helper";
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     // 相机预览分辨率
-    public static int PIXEL_WIDTH = 1920;// 1920,1280,(1280),(960),(640),576,480,384,352
-    public static int PIXEL_HEIGHT = 1080;// 1080,720,(960),(720),(480),432,320,288,288
+    public static int PIXEL_WIDTH = 640;// 1920,1280,(1280),(960),(640),576,480,384,352
+    public static int PIXEL_HEIGHT = 480;// 1080,720,(960),(720),(480),432,320,288,288
     public static Camera2Helper camera2Helper = new Camera2Helper();
     public static Size mPreviewSize, mCaptureSize;
 
@@ -56,7 +56,6 @@ public class Camera2Helper {
     private ImageReader previewImageReader, pictureImageReader;
     // 定义用于预览照片的捕获请求
     private CaptureRequest previewRequest;
-    public static Boolean isTakePicture = false;
 
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
@@ -77,10 +76,10 @@ public class Camera2Helper {
                 //获取StreamConfigurationMap，它是管理摄像头支持的所有输出格式和尺寸
                 map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
                 Range<Integer>[] range = map.getHighSpeedVideoFpsRanges();
-                Log.d(TAG, "range:"+range.length);
-                for(int j=0;j<range.length;j++) {
-                    Range<Integer> r=range[j];
-                    Log.e(TAG, "initCamera: "+r );
+                Log.d(TAG, "range:" + range.length);
+                for (int j = 0; j < range.length; j++) {
+                    Range<Integer> r = range[j];
+                    Log.e(TAG, "initCamera: " + r);
                 }
                 //获取相机支持的最大拍照尺寸
                 mCaptureSize = Collections.max(Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)), new Comparator<Size>() {
@@ -240,22 +239,28 @@ public class Camera2Helper {
     private final CameraCaptureSession.CaptureCallback captureCallback = new CameraCaptureSession.CaptureCallback() {
         @Override
         public void onCaptureCompleted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull TotalCaptureResult result) {
-            // 重设自动对焦模式
-            pictureCaptureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_CANCEL);
-            // 设置自动曝光模式
-            pictureCaptureRequestBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH);
-//            try {
-//                captureSession.setRepeatingRequest(previewRequest, null, null);
-//            } catch (CameraAccessException e) {
-//                e.printStackTrace();
-//            }
+
+
         }
+
 
         @Override
         public void onCaptureFailed(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull CaptureFailure failure) {
             super.onCaptureFailed(session, request, failure);
         }
     };
+
+    public void restartPreview(Context context) {
+        // 重设自动对焦模式
+        pictureCaptureRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_CANCEL);
+        // 设置自动曝光模式
+        pictureCaptureRequestBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH);
+        try {
+            captureSession.setRepeatingRequest(previewRequest, null, null);
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * @param sizeMap

@@ -1,5 +1,7 @@
 package com.example.zd_x.faceverification.utils;
 
+import okhttp3.MediaType;
+
 public class ConstsUtils {
     /**
      * 成功
@@ -45,4 +47,26 @@ public class ConstsUtils {
      * 取消Dialog
      */
     public final static boolean DIS_DIALOG = false;
+
+    /**
+     * JSON
+     */
+    public static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json; charset=utf-8");
+
+    /**
+     * 人脸左上点
+     */
+    public static int iLeftTop = 0;
+    /**
+     * 左下
+     */
+    public static int iLeftBottom = 0;
+    /**
+     * 右上
+     */
+    public static int iRightTop = 0;
+    /**
+     * 右下
+     */
+    public static int iRightBottom = 0;
 }

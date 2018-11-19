@@ -47,4 +47,5 @@ dependencies {
     //region greenDao
     implementation "org.greenrobot:greendao:$rootProject.greendaoVersion"
     implementation "org.greenrobot:greendao-generator:$rootProject.greendaoVersion"
+    implementation "com.github.yuweiguocn:GreenDaoUpgradeHelper:$rootProject.greendaoupdateVersion"
 }

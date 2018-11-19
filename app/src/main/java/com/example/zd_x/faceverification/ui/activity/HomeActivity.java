@@ -7,19 +7,30 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.Button;
 
 import com.example.zd_x.faceverification.R;
 import com.example.zd_x.faceverification.base.BaseActivity;
+import com.example.zd_x.faceverification.mvp.model.HistoryVerificationResultModel;
+import com.example.zd_x.faceverification.mvp.model.VerificationModel;
+import com.example.zd_x.faceverification.mvp.p.HomePresenterCompl;
+import com.example.zd_x.faceverification.mvp.view.IHomeView;
+import com.example.zd_x.faceverification.ui.adapter.HistoryVerificationListViewAdapter;
 import com.example.zd_x.faceverification.utils.ConstsUtils;
 import com.example.zd_x.faceverification.utils.LogUtils;
 import com.hanvon.face.HWCoreHelper;
 import com.hanvon.faceRec.Consts;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class HomeActivity extends BaseActivity {
+public class HomeActivity extends BaseActivity implements IHomeView {
     private static final String TAG = "HomeActivity";
 
     private static final String[] PERMISSION = new String[]{Manifest.permission.VIBRATE, Manifest.permission.CAMERA,
@@ -32,6 +43,9 @@ public class HomeActivity extends BaseActivity {
     Button btRearCameraHome;
     @BindView(R.id.bt_usbCamera_home)
     Button btUsbCameraHome;
+    @BindView(R.id.rv_showImageMsg_home)
+    RecyclerView rvShowImageMsgHome;
+    private HomePresenterCompl homePresenterCompl;
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -56,12 +70,13 @@ public class HomeActivity extends BaseActivity {
 
     @Override
     protected void OnActCreate(Bundle savedInstanceState) {
-
+        homePresenterCompl = new HomePresenterCompl(this);
     }
 
     @Override
     protected void initEvent() {
         permissions();
+
     }
 
     private void permissions() {
@@ -75,7 +90,7 @@ public class HomeActivity extends BaseActivity {
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
             ActivityCompat.requestPermissions(this, PERMISSION, 1000);
-        }else {
+        } else {
 
         }
     }
@@ -101,14 +116,16 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void startCamera(int cameraId) {
-
         Intent intent = new Intent(HomeActivity.this, CameraActivity.class);
-        intent.putExtra("cameraId", cameraId+"");
+        intent.putExtra("cameraId", cameraId + "");
         startActivity(intent);
     }
 
+
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    public void getHistoryMsg(List<HistoryVerificationResultModel> list) {
+
+        HistoryVerificationListViewAdapter historyAdapter = new HistoryVerificationListViewAdapter(this,list);
+        rvShowImageMsgHome.setAdapter(historyAdapter);
     }
 }

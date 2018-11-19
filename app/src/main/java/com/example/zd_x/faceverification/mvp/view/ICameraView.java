@@ -5,5 +5,7 @@ public interface ICameraView {
 
     void getCameraSwitch(boolean flag);
 
-    void showDialog(boolean flag);
+    void showUploadDialog(boolean flag);
+
+    void showVerificationMsgDialog(String verificationModel);
 }
