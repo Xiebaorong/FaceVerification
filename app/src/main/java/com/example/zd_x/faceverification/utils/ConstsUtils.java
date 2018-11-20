@@ -14,6 +14,10 @@ public class ConstsUtils {
     public final static int FAIL = -1;
 
     /**
+     * 权限
+     */
+    public static final int CODE_FOR_WRITE_PERMISSION = 1000;
+    /**
      * 编码成功
      */
     public final static int SUCCEED = 1;

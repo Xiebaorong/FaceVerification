@@ -168,6 +168,7 @@ public class HanvonfaceCamera2ShowView extends TextureView implements TextureVie
                             return;
                         }
                         canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+
                         canvasDarwLine(canvas, pFacePos, finalWidth, finalHeight);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -197,12 +198,6 @@ public class HanvonfaceCamera2ShowView extends TextureView implements TextureVie
                 startX = width - startX;
                 stopX = width - stopX;
             }
-//            else {
-//                Log.e(TAG, "canvasDarwLine: 0" );
-//                //TODO
-//                startX = width - startX;
-//                stopX = width - stopX;
-//            }
             int heightf = mSurfaceHolder02.getSurfaceFrame().height();
             int widthf = mSurfaceHolder02.getSurfaceFrame().width();
             float hratio = (float) heightf / (float) height;
@@ -217,7 +212,6 @@ public class HanvonfaceCamera2ShowView extends TextureView implements TextureVie
             stopX = (int) ((float) stopX * wratio);
             stopY = (int) ((float) stopY * hratio);
             int iPaintSize = (stopY - startY) / 6;
-
 
             if (ConstsUtils.CAMERA_ID.equals(String.valueOf(ConstsUtils.FRONT_CAMERA))) {
                 //剪裁

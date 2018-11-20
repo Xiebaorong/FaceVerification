@@ -1,7 +1,9 @@
 package com.example.zd_x.faceverification.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,7 +14,9 @@ import android.widget.TextView;
 
 import com.example.zd_x.faceverification.R;
 import com.example.zd_x.faceverification.mvp.model.HistoryVerificationResultModel;
+import com.example.zd_x.faceverification.ui.activity.DetailsActivity;
 import com.example.zd_x.faceverification.utils.FileUtils;
+import com.example.zd_x.faceverification.utils.LogUtil;
 
 import java.util.List;
 
@@ -22,6 +26,7 @@ import butterknife.ButterKnife;
 public class HistoryVerificationListViewAdapter extends RecyclerView.Adapter<HistoryVerificationListViewAdapter.ViewHolder> {
     private Context mContext;
     private List<HistoryVerificationResultModel> mList;
+
     public HistoryVerificationListViewAdapter(Context context, List<HistoryVerificationResultModel> list) {
         this.mContext = context;
         this.mList = list;
@@ -36,11 +41,29 @@ public class HistoryVerificationListViewAdapter extends RecyclerView.Adapter<His
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+        LogUtil.e(mList.get(position).getImageId());
         String faceBase64 = mList.get(position).getFaceBase64();
         //TODO 需要两个参数,用于判断bitmap是否缩放显示 ,传入参数确定中
         Bitmap bitmap = FileUtils.base64ToBitmap(faceBase64);
-
+        holder.ivHFaceImageListView.setImageBitmap(bitmap);
+        holder.tvHVerificationImageIDListView.setText(mContext.getString(R.string.verificationImageIdText) + mList.get(position).getImageId());
+        String Result;
+        if (mList.get(position).getIsVerification()) {
+            Result = mContext.getString(R.string.verificationTrue);
+        } else {
+            Result = mContext.getString(R.string.verificationFalse);
+        }
+        holder.tvHVerificationResultListView.setText(mContext.getString(R.string.verificationResultText) + Result);
+        holder.tvHVerificationTimeListView.setText(mContext.getString(R.string.verificationTimeText) + mList.get(position).getVerificationTime());
+        holder.ivToDetailsListView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, DetailsActivity.class);
+                intent.putExtra("position",position);
+                mContext.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -59,6 +82,7 @@ public class HistoryVerificationListViewAdapter extends RecyclerView.Adapter<His
         TextView tvHVerificationImageIDListView;
         @BindView(R.id.iv_toDetails_listView)
         ImageView ivToDetailsListView;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);

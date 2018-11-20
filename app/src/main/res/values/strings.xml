@@ -17,12 +17,13 @@
     <string name="verificationTimeText">对比时间: </string>
     <string name="verificationImageIdText">图片编号: </string>
 
+    <string name="verificationTrue">对比通过 </string>
+    <string name="verificationFalse">对比失败 </string>
 
     <!--测试-->
     <string name="dialogImageId">1101081542181099923</string>
     <string name="dialoglimit">3</string>
     <string name="dialogErrorMsg">失败，无效的Json数据</string>
-
 
 
 </resources>

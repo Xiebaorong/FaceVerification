@@ -4,8 +4,16 @@ import android.content.Context;
 import android.media.Image;
 
 public interface ICameraPresenter {
+    /**
+     * 拍照
+     * @param context
+     */
     void takePicture(Context context);
 
+    /**
+     * 相机切换
+     * @param context
+     */
     void cameraSwitch(Context context);
 
     /**

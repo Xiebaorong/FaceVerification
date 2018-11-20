@@ -6,14 +6,19 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.widget.Button;
 
 import com.example.zd_x.faceverification.R;
 import com.example.zd_x.faceverification.base.BaseActivity;
 import com.example.zd_x.faceverification.mvp.model.HistoryVerificationResultModel;
-import com.example.zd_x.faceverification.mvp.p.HomePresenterCompl;
+import com.example.zd_x.faceverification.mvp.p.compl.HomePresenterCompl;
 import com.example.zd_x.faceverification.mvp.view.IHomeView;
 import com.example.zd_x.faceverification.ui.adapter.HistoryVerificationListViewAdapter;
 import com.example.zd_x.faceverification.utils.ConstsUtils;
@@ -46,14 +51,7 @@ public class HomeActivity extends BaseActivity implements IHomeView {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case Consts.INIT_SUCCESS:
-                    HWCoreHelper.initHWCore(HomeActivity.this, handler);
-                    break;
-                case Consts.SHOW_MSG:
 
-                    break;
-                default:
-                    break;
             }
         }
     };
@@ -72,22 +70,30 @@ public class HomeActivity extends BaseActivity implements IHomeView {
     @Override
     protected void initEvent() {
         permissions();
-
     }
 
     private void permissions() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
-//                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-//                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-//                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_WIFI_STATE) != PackageManager.PERMISSION_GRANTED ||
-//                ActivityCompat.checkSelfPermission(this, Manifest.permission.CHANGE_WIFI_STATE) != PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(this, PERMISSION, 1000);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, PERMISSION, ConstsUtils.CODE_FOR_WRITE_PERMISSION);
+            Log.e(TAG, "permissions: 2222" );
         } else {
+            Log.e(TAG, "permissions: 1111" );
+            homePresenterCompl.findHistoryResult();
+        }
+    }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        if (requestCode == ConstsUtils.CODE_FOR_WRITE_PERMISSION){
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                //用户同意，执行操作
+                homePresenterCompl.findHistoryResult();
+            }else {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+                }
+            }
         }
     }
 
@@ -112,13 +118,24 @@ public class HomeActivity extends BaseActivity implements IHomeView {
     private void startCamera(int cameraId) {
         Intent intent = new Intent(HomeActivity.this, CameraActivity.class);
         intent.putExtra("cameraId", cameraId + "");
+
         startActivity(intent);
     }
 
 
+
     @Override
     public void getHistoryMsg(List<HistoryVerificationResultModel> list) {
+        if (list.size()==0){
+            return;
+        }
         HistoryVerificationListViewAdapter historyAdapter = new HistoryVerificationListViewAdapter(this, list);
+        //必须先设置LayoutManager
+        rvShowImageMsgHome.setLayoutManager(new LinearLayoutManager(this));
+        //添加自定义分割线
+        DividerItemDecoration divider = new DividerItemDecoration(this,DividerItemDecoration.VERTICAL);
+        divider.setDrawable(ContextCompat.getDrawable(this,R.drawable.recyclerview_divider_style));
+        rvShowImageMsgHome.addItemDecoration(divider);
         rvShowImageMsgHome.setAdapter(historyAdapter);
     }
 }

@@ -26,7 +26,8 @@
         <activity
             android:name=".ui.activity.CameraActivity"
             android:hardwareAccelerated="true" />
-        <activity android:name=".ui.activity.StartupActivity"></activity>
+        <activity android:name=".ui.activity.StartupActivity" />
+        <activity android:name=".ui.activity.DetailsActivity"></activity>
     </application>
 
 </manifest>

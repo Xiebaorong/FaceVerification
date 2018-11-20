@@ -1,4 +1,4 @@
-package com.example.zd_x.faceverification.mvp.p;
+package com.example.zd_x.faceverification.mvp.p.compl;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,6 +10,7 @@ import com.example.zd_x.faceverification.callBack.LoadCallBack;
 import com.example.zd_x.faceverification.database.DataManipulation;
 import com.example.zd_x.faceverification.mvp.model.DetectionModel;
 import com.example.zd_x.faceverification.mvp.model.VerificationModel;
+import com.example.zd_x.faceverification.mvp.p.ICameraPresenter;
 import com.example.zd_x.faceverification.mvp.view.ICameraView;
 import com.example.zd_x.faceverification.utils.APPUrl;
 import com.example.zd_x.faceverification.utils.ConstsUtils;
@@ -54,28 +55,30 @@ public class CameraPresenterCompl implements ICameraPresenter, ImageReader.OnIma
 
     @Override
     public void requestContrast(final Context context) {
-        String json = gson.toJson(detectionModel);
-        LogUtil.allLog(json);
-        OkHttpManager.getInstance().postRequest(APPUrl.SEND, ConstsUtils.MEDIA_TYPE_JSON, json, new LoadCallBack<String>(context) {
-            @Override
-            public void onSuccess(Call call, Response response, String result) {
-                iCameraView.showUploadDialog(ConstsUtils.DIS_DIALOG);
-                Log.e(TAG, "onSuccess: " + result);
-                VerificationModel verificationModel = gson.fromJson(result, VerificationModel.class);
-                verificationResult(context, verificationModel);
+        //TODO 放入数据库保存
+        DataManipulation.getInstance().insertData(null, null);
 
-            }
-
-            @Override
-            public void onError(Call call, int statusCode, Exception e) {
-
-            }
-
-            @Override
-            public void onFailure(Call call, IOException e) {
-
-            }
-        });
+//        String json = gson.toJson(detectionModel);
+//        LogUtil.allLog(json);
+//        OkHttpManager.getInstance().postRequest(APPUrl.SEND, ConstsUtils.MEDIA_TYPE_JSON, json, new LoadCallBack<String>(context) {
+//            @Override
+//            public void onSuccess(Call call, Response response, String result) {
+//                iCameraView.showUploadDialog(ConstsUtils.DIS_DIALOG);
+//                Log.e(TAG, "onSuccess: " + result);
+//                VerificationModel verificationModel = gson.fromJson(result, VerificationModel.class);
+//                verificationResult(context, verificationModel);
+//            }
+//
+//            @Override
+//            public void onError(Call call, int statusCode, Exception e) {
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call call, IOException e) {
+//
+//            }
+//        });
     }
 
     @Override

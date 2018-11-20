@@ -2,11 +2,14 @@ package com.hanvon.face;
 
 import android.content.Context;
 import android.os.Environment;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
 
 import com.example.zd_x.faceverification.application.FaceVerificationApplication;
+import com.example.zd_x.faceverification.utils.ConstsUtils;
+import com.hanvon.faceRec.Consts;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -99,7 +102,7 @@ public class HWFaceClient {
      * @param Port            [input] 服务器端口
      * @return 见接口返回值定义说明
      */
-    public static int InitFaceClient(String ServerAddressIP, int Port, Context contex) {
+    public static int InitFaceClient(String ServerAddressIP, int Port, Context contex, final Handler handler) {
         Log.e(TAG, "InitFaceClient: 进入");
         int Result = -1;
         try {
@@ -162,14 +165,12 @@ public class HWFaceClient {
                                         int funResult = CreatInitKeyCodeFile(bpData, bpData.length);
                                         if (funResult == 0) {
                                             Log.e(TAG, "onserver: in-----666666");
-                                            Log.e(TAG, "onserver: ");
+                                            handler.sendMessage(handler.obtainMessage(ConstsUtils.INIT_SUCCESS, "初始化成功"));
                                         }
                                     }
-                                    Log.e(TAG, "onserver: in-----777777");
                                     ServerState = false;
                                 }
                                 in.close();
-                                Log.e(TAG, "onserver: out------");
                             } catch (IOException e) {
                                 // TODO Auto-generated catch block
                                 e.printStackTrace();
@@ -253,6 +254,7 @@ public class HWFaceClient {
 
     /**
      * 创建秘钥
+     *
      * @param pbKeyCode   秘钥
      * @param iKeyCodeLen 秘钥长度
      * @return 见接口返回值定义说明

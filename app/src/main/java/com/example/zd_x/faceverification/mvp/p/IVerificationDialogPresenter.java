@@ -1,6 +1,6 @@
 package com.example.zd_x.faceverification.mvp.p;
 
-public interface VerificationDialogPresenter {
+public interface IVerificationDialogPresenter {
 
     void onConfirmListener();
 }

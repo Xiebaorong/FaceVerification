@@ -24,7 +24,7 @@ public class HWCoreHelper {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                int Result = HWFaceClient.InitFaceClient(IP, port, context);
+                int Result = HWFaceClient.InitFaceClient(IP, port, context,handler);
                 Log.e(TAG, "InitFaceClient"+Result );
                 if (Result == -1) {
                     handler.sendMessage(handler.obtainMessage(ConstsUtils.SHOW_MSG, "服务器连接失败"));

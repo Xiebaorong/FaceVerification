@@ -12,13 +12,12 @@ import android.widget.ImageView;
 
 import com.example.zd_x.faceverification.R;
 import com.example.zd_x.faceverification.base.BaseActivity;
-import com.example.zd_x.faceverification.mvp.p.CameraPresenterCompl;
+import com.example.zd_x.faceverification.mvp.p.compl.CameraPresenterCompl;
 import com.example.zd_x.faceverification.mvp.view.ICameraView;
 import com.example.zd_x.faceverification.utils.ConstsUtils;
 import com.example.zd_x.faceverification.utils.LogUtil;
 import com.hanvon.face.HWCoreHelper;
 import com.hanvon.faceRec.Camera2Helper;
-import com.hanvon.faceRec.Consts;
 import com.hanvon.faceRec.HanvonfaceCamera2ShowView;
 
 import butterknife.BindView;
@@ -43,7 +42,9 @@ public class CameraActivity extends BaseActivity implements ICameraView {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case ConstsUtils.INIT_SUCCESS:
-//                    HWCoreHelper.initHWCore(CameraActivity.this, handler);
+                    Log.e(TAG, "handleMessage: -----" );
+                    HWCoreHelper.initHWCore(CameraActivity.this, handler);
+
                     break;
                 case ConstsUtils.SHOW_MSG:
                     showToast((String) msg.obj);
@@ -63,6 +64,7 @@ public class CameraActivity extends BaseActivity implements ICameraView {
     protected void OnActCreate(Bundle savedInstanceState) {
         iCameraPresenter = new CameraPresenterCompl(this);
         String cameraId = getIntent().getExtras().getString("cameraId");
+
         Log.e(TAG, "initEvent: int1---" + cameraId);
         ConstsUtils.CAMERA_ID = cameraId;
         HWCoreHelper.initHWCore(this, handler);
@@ -99,7 +101,7 @@ public class CameraActivity extends BaseActivity implements ICameraView {
             LogUtil.d("未检测到人脸");
         } else if (result == ConstsUtils.SUCCEED) {
             LogUtil.d("发送");
-//            iCameraPresenter.requestContrast(this);
+            iCameraPresenter.requestContrast(this);
         }
     }
 

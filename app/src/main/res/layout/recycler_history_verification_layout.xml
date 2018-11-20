@@ -1,81 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="80dp"
-    android:gravity="center_vertical"
-    >
+    android:orientation="horizontal">
 
     <ImageView
         android:id="@+id/iv_hFaceImage_listView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/ic_launcher"
-        />
-    <TextView
-        android:id="@+id/tv_hVerificationResultText_listView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/verificationResultText"
-        android:layout_toRightOf="@id/iv_hFaceImage_listView"
-        android:layout_marginLeft="5dp"
-        android:textSize="@dimen/text_size"
-        />
-    <TextView
-        android:id="@+id/tv_hVerificationResult_listView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="通过"
-        android:layout_toRightOf="@id/tv_hVerificationResultText_listView"
-        android:textSize="@dimen/text_size"
-        android:layout_marginLeft="2dp"
-        />
-    <TextView
-        android:id="@+id/tv_hVerificationTimeText_listView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/verificationTimeText"
-        android:layout_toRightOf="@id/tv_hVerificationResult_listView"
-        android:layout_marginLeft="15dp"
-        android:textSize="@dimen/text_size"
-        />
-    <TextView
-        android:id="@+id/tv_hVerificationTime_listView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="2018-11-15"
-        android:layout_toRightOf="@id/tv_hVerificationTimeText_listView"
-        android:textSize="@dimen/text_size"
-        android:layout_marginLeft="2dp"
-        />
-    <TextView
-        android:id="@+id/tv_hVerificationImageIDText_listView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/verificationImageIdText"
-        android:layout_toRightOf="@id/iv_hFaceImage_listView"
-        android:layout_below="@id/tv_hVerificationResultText_listView"
-        android:layout_marginLeft="5dp"
-        android:textSize="@dimen/text_size"
-        />
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:src="@mipmap/ic_launcher" />
 
-    <TextView
-        android:id="@+id/tv_hVerificationImageID_listView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="1101081542181099923"
-        android:layout_toRightOf="@id/tv_hVerificationImageIDText_listView"
-        android:layout_below="@id/tv_hVerificationResult_listView"
-        android:textSize="@dimen/text_size"
-        android:layout_marginLeft="2dp"
-        />
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="6"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_hVerificationResult_listView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="通过"
+                android:textSize="@dimen/text_size" />
+
+            <TextView
+                android:id="@+id/tv_hVerificationTime_listView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center_vertical"
+                android:text="2018-11-15"
+                android:textSize="@dimen/text_size" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_hVerificationImageID_listView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginLeft="2dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="1101081542181099923"
+            android:textSize="@dimen/text_size" />
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/iv_toDetails_listView"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:src="@mipmap/ic_launcher"
-        android:layout_centerVertical="true"
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
         android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
         android:layout_marginRight="25dp"
-        />
-</RelativeLayout>
+        android:src="@mipmap/ic_launcher" />
+
+</LinearLayout>

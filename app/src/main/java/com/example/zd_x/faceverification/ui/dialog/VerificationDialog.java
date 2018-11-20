@@ -1,21 +1,16 @@
 package com.example.zd_x.faceverification.ui.dialog;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.content.Context;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.zd_x.faceverification.R;
 import com.example.zd_x.faceverification.base.BaseDialog;
 import com.example.zd_x.faceverification.mvp.model.VerificationModel;
-import com.example.zd_x.faceverification.mvp.p.IVerificationDialogPresenterCompl;
+import com.example.zd_x.faceverification.mvp.p.compl.VerificationDialogPresenterCompl;
 import com.example.zd_x.faceverification.mvp.view.IVerificationDialogView;
 
 import butterknife.BindView;
@@ -37,7 +32,7 @@ public class VerificationDialog extends BaseDialog implements IVerificationDialo
     Button btCancelDialog;
     @BindView(R.id.bt_confirm_dialog)
     Button btConfirmDialog;
-    private IVerificationDialogPresenterCompl dialogPresenterCompl;
+    private VerificationDialogPresenterCompl dialogPresenterCompl;
 
     public VerificationDialog(Activity context) {
         super(context);
@@ -52,7 +47,7 @@ public class VerificationDialog extends BaseDialog implements IVerificationDialo
     protected View getView(Activity mContext) {
         View view = View.inflate(mContext, R.layout.dialog_verification_msg_layout, null);
         ButterKnife.bind(mContext);
-        dialogPresenterCompl = new IVerificationDialogPresenterCompl(this);
+        dialogPresenterCompl = new VerificationDialogPresenterCompl(this);
         return view;
     }
 

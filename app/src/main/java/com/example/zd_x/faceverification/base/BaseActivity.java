@@ -22,15 +22,15 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         if (getLayoutId() != 0) {
-            setContentView(getLayoutId());
         }
+            setContentView(getLayoutId());
 
         ButterKnife.bind(this);
         OnActCreate(savedInstanceState);
 
+        DataManipulation.getInstance().initDao();
         initEvent();
 
-        DataManipulation.getInstance().initDao();
     }
 
     protected abstract int getLayoutId();
