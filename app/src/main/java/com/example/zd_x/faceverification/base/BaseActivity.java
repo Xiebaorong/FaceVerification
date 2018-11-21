@@ -8,6 +8,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.example.zd_x.faceverification.database.DataManipulation;
+import com.example.zd_x.faceverification.utils.LogUtil;
 import com.orhanobut.logger.Logger;
 
 import butterknife.ButterKnife;
@@ -22,8 +23,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         if (getLayoutId() != 0) {
-        }
             setContentView(getLayoutId());
+        }
 
         ButterKnife.bind(this);
         OnActCreate(savedInstanceState);

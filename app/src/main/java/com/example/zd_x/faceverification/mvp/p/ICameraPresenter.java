@@ -1,5 +1,6 @@
 package com.example.zd_x.faceverification.mvp.p;
 
+import android.app.Activity;
 import android.content.Context;
 import android.media.Image;
 
@@ -14,7 +15,7 @@ public interface ICameraPresenter {
      * 相机切换
      * @param context
      */
-    void cameraSwitch(Context context);
+    void cameraSwitch(Activity context);
 
     /**
      * 人脸对比

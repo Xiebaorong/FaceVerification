@@ -48,7 +48,7 @@ public class CameraPresenterCompl implements ICameraPresenter, ImageReader.OnIma
      * @param context
      */
     @Override
-    public void cameraSwitch(Context context) {
+    public void cameraSwitch(Activity context) {
         Camera2Helper.camera2Helper.cameraSwitch(context);
     }
 

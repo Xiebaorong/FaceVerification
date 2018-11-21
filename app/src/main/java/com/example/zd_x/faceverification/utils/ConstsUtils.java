@@ -17,6 +17,11 @@ public class ConstsUtils {
      * 权限
      */
     public static final int CODE_FOR_WRITE_PERMISSION = 1000;
+
+    /**
+     * 权限
+     */
+    public static final int NOTICE_REFRESH = 1111;
     /**
      * 编码成功
      */

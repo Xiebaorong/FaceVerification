@@ -32,7 +32,6 @@ public class CameraActivity extends BaseActivity implements ICameraView {
     //SDK 7.0
     @BindView(R.id.hcsv_camera2Preview_camera)
     HanvonfaceCamera2ShowView hcsvCamera2PreviewCamera;
-
     @BindView(R.id.sfv_faceShow_camera)
     SurfaceView sfvFaceShowCamera;
 
@@ -42,7 +41,7 @@ public class CameraActivity extends BaseActivity implements ICameraView {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case ConstsUtils.INIT_SUCCESS:
-                    Log.e(TAG, "handleMessage: -----" );
+                    Log.e(TAG, "handleMessage: -----");
                     HWCoreHelper.initHWCore(CameraActivity.this, handler);
 
                     break;
@@ -64,20 +63,14 @@ public class CameraActivity extends BaseActivity implements ICameraView {
     protected void OnActCreate(Bundle savedInstanceState) {
         iCameraPresenter = new CameraPresenterCompl(this);
         String cameraId = getIntent().getExtras().getString("cameraId");
-
-        Log.e(TAG, "initEvent: int1---" + cameraId);
         ConstsUtils.CAMERA_ID = cameraId;
         HWCoreHelper.initHWCore(this, handler);
     }
 
     @Override
     protected void initEvent() {
-        int result = Camera2Helper.camera2Helper.initCamera(this);
-        if (result == ConstsUtils.OK) {
-            Camera2Helper.camera2Helper.openCamera(this);
-        }
+        Camera2Helper.camera2Helper.initCamera(this);
         hcsvCamera2PreviewCamera.setSurfaceView(sfvFaceShowCamera, handler);
-
     }
 
 
@@ -115,7 +108,7 @@ public class CameraActivity extends BaseActivity implements ICameraView {
     public void showUploadDialog(boolean flag) {
         if (flag) {
             showProgressDialog();
-        }else {
+        } else {
             disMissDialog();
         }
     }
@@ -128,8 +121,8 @@ public class CameraActivity extends BaseActivity implements ICameraView {
                 .setMessage(msg)
                 .setCancelable(false)
                 .setPositiveButton("确定",
-                        new DialogInterface.OnClickListener(){
-                            public void onClick(DialogInterface dialoginterface, int i){
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialoginterface, int i) {
                                 //按钮事件
                                 iCameraPresenter.restartPreview(CameraActivity.this);
                             }
@@ -139,15 +132,23 @@ public class CameraActivity extends BaseActivity implements ICameraView {
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Camera2Helper.camera2Helper.isCanDetectFace= false;
+    }
+
+
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         //SDK7.0
+        HWCoreHelper.releaseCore();
         Camera2Helper.camera2Helper.stopCamera();
         handler.removeCallbacksAndMessages(null);
-        hcsvCamera2PreviewCamera = null;
         HanvonfaceCamera2ShowView.hanvonfaceShowView = null;
-        HWCoreHelper.releaseCore();
-
+        hcsvCamera2PreviewCamera = null;
+        Camera2Helper.camera2Helper.isCanDetectFace= true;
     }
 
 

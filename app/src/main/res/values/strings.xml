@@ -3,6 +3,7 @@
     <string name="selectCamera">选择相机</string>
     <string name="frontCamera">前置相机</string>
     <string name="rearCamera">后置相机</string>
+    <string name="takePictureText">拍照</string>
     <string name="dialogTitle">查验结果</string>
     <string name="dialogImageIdText">图片编号:</string>
     <string name="dialoglimitText">对比人数:</string>
@@ -15,10 +16,10 @@
 
     <string name="verificationResultText">对比结果: </string>
     <string name="verificationTimeText">对比时间: </string>
-    <string name="verificationImageIdText">图片编号: </string>
+    <string name="verificationTotalText">比对人数: </string>
 
-    <string name="verificationTrue">对比通过 </string>
-    <string name="verificationFalse">对比失败 </string>
+    <string name="verificationTrue"> 通过 </string>
+    <string name="verificationFalse">失败 </string>
 
     <!--测试-->
     <string name="dialogImageId">1101081542181099923</string>

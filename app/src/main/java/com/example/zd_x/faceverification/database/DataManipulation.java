@@ -49,7 +49,7 @@ public class DataManipulation {
 //        historyVerModel.setCompareResults(verificationModel.getOut().getCompareResults());
         try {
             historyVerModel.setImageId("11010815426100376200000000000000000000002");
-            historyVerModel.setTotal(0);
+            historyVerModel.setTotal(3);
             historyVerModel.setIsVerification(false);
             historyVerModel.setFaceBase64("/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABsSFBcUERsXFhceHBsgKEIrKCUlKFE6PTBCYFVlZF9VXVtqeJmBanGQc1tdhbWGkJ6jq62rZ4C8ybqmx5moq6T/2wBDARweHigjKE4rK06kbl1upKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKT/wAARCABkAGQDASIAAhEBAxEB/8QAFwABAQEBAAAAAAAAAAAAAAAAAAEDBf/EABUQAQEAAAAAAAAAAAAAAAAAAAAB/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAH/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwDtgqoAALABQEBQABQAAZgKCgAqKACgAqAAAKAyVFUAUAFABUAFBFAAUBkAooKAAAoAKACgAKIMVIKKACgACgCooCgAADJUUBQAUUEUAAUAFAABioAqgAoAKAAAKAAAg//Z");
             historyVerModel.setVerificationTime(getTime(1517387585987L));
@@ -81,7 +81,7 @@ public class DataManipulation {
     }
 
     private String getTime(long entryTime) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss  ");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss  ");
         Date date = new Date(entryTime);
         return simpleDateFormat.format(date);
     }

@@ -5,7 +5,6 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.example.zd_x.faceverification.utils.ConstsUtils;
-import com.hanvon.faceRec.Consts;
 import com.hanvon.faceRec.HWConsts;
 
 
@@ -47,11 +46,10 @@ public class HWCoreHelper {
                 //初始化核心
                 int initResult = FaceCoreHelper.HWFaceInitial(FACE_HANDLER, HWFaceClient.bpKeyCode, context);
                 if (initResult == HWFaceClient.HW_OK) {
-                    handler.sendMessage(handler.obtainMessage(Consts.SHOW_MSG, "初始化成功"));
+                    handler.sendMessage(handler.obtainMessage(ConstsUtils.SHOW_MSG, "初始化成功"));
                     Log.e(TAG, "1764033-initFaceCore:初始化成功" );
                     int[] featureSize = new int[1];
                     FaceCoreHelper.HWFaceGetFeatureSize(FACE_HANDLER, featureSize);
-                    HWConsts.iFeatureSize = featureSize[0];
                 } else {
                     Log.d(TAG, "initFaceCore====== " + initResult);
                 }

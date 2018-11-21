@@ -29,21 +29,28 @@
         >
         <ImageView
             android:id="@+id/iv_switchoverCamera_camera"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/ic_launcher"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/switchovercamera"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
-            android:visibility="gone"
+
             />
 
         <ImageView
             android:id="@+id/iv_photograph_camera"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/ic_launcher_round"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/opencamera"
             android:layout_centerInParent="true"
             />
-
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_photograph_camera"
+            android:text="@string/takePictureText"
+            android:gravity="center"
+            android:layout_marginTop="10dp"
+            />
     </RelativeLayout>
 </LinearLayout>

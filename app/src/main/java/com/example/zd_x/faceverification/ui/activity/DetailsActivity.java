@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.zd_x.faceverification.R;
@@ -27,6 +28,20 @@ import butterknife.BindView;
 public class DetailsActivity extends BaseActivity implements IDetailsView {
     @BindView(R.id.vp_showDetailsMsg_details)
     ViewPager vpShowDetailsMsgDetails;
+    @BindView(R.id.iv_faceImage_details)
+    ImageView ivFaceImageDetails;
+    @BindView(R.id.tv_msg1_details)
+    TextView tvMsg1Details;
+     @BindView(R.id.tv_msg2_details)
+    TextView tvMsg2Details;
+    @BindView(R.id.tv_msg3_details)
+    TextView tvMsg3Details;
+    @BindView(R.id.tv_msg4_details)
+    TextView tvMsg4Details;
+    @BindView(R.id.rl_showDetailsMsg_details)
+    RelativeLayout rlShowDetailsMsgDetails;
+
+
     private DetailsPresenterCompl presenterCompl;
 
     @Override

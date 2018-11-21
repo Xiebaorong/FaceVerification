@@ -47,7 +47,7 @@ public class HistoryVerificationListViewAdapter extends RecyclerView.Adapter<His
         //TODO 需要两个参数,用于判断bitmap是否缩放显示 ,传入参数确定中
         Bitmap bitmap = FileUtils.base64ToBitmap(faceBase64);
         holder.ivHFaceImageListView.setImageBitmap(bitmap);
-        holder.tvHVerificationImageIDListView.setText(mContext.getString(R.string.verificationImageIdText) + mList.get(position).getImageId());
+        holder.tvHVerificationTotalListView.setText(mContext.getString(R.string.verificationTotalText) + mList.get(position).getTotal());
         String Result;
         if (mList.get(position).getIsVerification()) {
             Result = mContext.getString(R.string.verificationTrue);
@@ -78,8 +78,8 @@ public class HistoryVerificationListViewAdapter extends RecyclerView.Adapter<His
         TextView tvHVerificationTimeListView;
         @BindView(R.id.tv_hVerificationResult_listView)
         TextView tvHVerificationResultListView;
-        @BindView(R.id.tv_hVerificationImageID_listView)
-        TextView tvHVerificationImageIDListView;
+        @BindView(R.id.tv_hVerificationTotal_listView)
+        TextView tvHVerificationTotalListView;
         @BindView(R.id.iv_toDetails_listView)
         ImageView ivToDetailsListView;
 

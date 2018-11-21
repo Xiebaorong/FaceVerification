@@ -36,6 +36,22 @@ public class UtilFunc {
 //		}
     }
 
+    public static void rotateYUV420_Clockwise(byte[] src, byte[] des, int width, int height) {
+        try {
+            int wh = width * height;
+            //旋转Y
+            int k = 0;
+            for (int i = 0; i < width; i++) {
+                for (int j = 0; j < height; j++) {
+                    des[k] = src[width * (height - j - 1) + i];
+                    k++;
+                }
+            }
+        } catch (Exception e) {
+            LogUtil.e("---" + e);
+        }
+    }
+
     public static void saveFile(final String dest, final byte[] bmp) {
         if (bmp != null) {
             final File f = new File(dest);
@@ -56,7 +72,7 @@ public class UtilFunc {
     }
 
     public static void rotateYUV240SP_AntiClockwise(byte[] src, byte[] des, int width, int height) {
-        int wh = width * height;
+//        int wh = width * height;
         //旋转Y
         int k = 0;
         for (int i = 0; i < width; i++) {
@@ -74,6 +90,16 @@ public class UtilFunc {
 //			}
 //		}
 
+    }
+    public static void rotateYUV420_AntiClockwise(byte[] src, byte[] des, int width, int height) {
+        //旋转Y
+        int k = 0;
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                des[k] = src[width * j + width - i - 1];
+                k++;
+            }
+        }
     }
 
     public static byte[] rotateYUV420Degree270(byte[] ydata, byte[] udata, byte[] vdata, int imageWidth,
@@ -122,11 +148,11 @@ public class UtilFunc {
     //it works becuase in YCbCr_420_SP and YCbCr_422_SP, the Y channel is planar and appears first
     public static void rotateYuvData(final byte[] rotatedData, final byte[] data, final int width, final int height, final int nCase) {
         if (nCase == 0) {
-            rotateYUV240SP_Clockwise(data, rotatedData, width, height);
+            rotateYUV420_Clockwise(data, rotatedData, width, height);
         } else if (nCase == 2) {
             rotateYUV240SP_FlipY180(data, rotatedData, width, height);
         } else {
-            rotateYUV240SP_AntiClockwise(data, rotatedData, width, height);
+            rotateYUV420_AntiClockwise(data, rotatedData, width, height);
         }
     }
 

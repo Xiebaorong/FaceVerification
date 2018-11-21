@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeActivity">
+    >
     <include android:id="@+id/home_header"
         layout="@layout/include_header"
         android:visibility="gone"
@@ -14,19 +13,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/selectCamera"
+        android:visibility="gone"
         />
     <RelativeLayout
         android:id="@+id/rl_cameraList_home"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_below="@id/tv_select_home"
         >
+        <ImageView
+            android:id="@+id/iv_openCamera_home"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:src="@drawable/opencamera"
+            android:paddingVertical="5dp"
+            />
         <Button
             android:id="@+id/bt_frontCamera_home"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
             android:text="@string/frontCamera"
+            android:visibility="gone"
             />
         <Button
             android:id="@+id/bt_rearCamera_home"
@@ -35,6 +44,7 @@
             android:layout_toRightOf="@id/bt_frontCamera_home"
             android:layout_marginHorizontal="5dp"
             android:text="@string/rearCamera"
+            android:visibility="gone"
             />
         <Button
             android:id="@+id/bt_usbCamera_home"
@@ -49,13 +59,14 @@
         android:layout_below="@id/rl_cameraList_home"
         android:layout_height="50dp"
         android:layout_width="match_parent"
+        android:visibility="gone"
         />
     <View
         android:id="@+id/view_home"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="2dp"
         android:layout_below="@id/inc_screen_home"
-
+        android:background="@color/colorPrimary"
         />
 
         <android.support.v7.widget.RecyclerView
