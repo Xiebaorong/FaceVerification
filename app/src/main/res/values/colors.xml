@@ -16,6 +16,7 @@
     <color name="blue_38a1ff">#38a1ff</color>
 
     <color name="yellow_bfb45d">#bfb45d</color>
+    <color name="red_bf0000">#BF0000</color>
 
     <color name="gray_898989">#898989</color>
     <color name="gray_525f73">#525f73</color>
@@ -37,5 +38,5 @@
 
     <color name="color_menu_bg">@color/black_2a323f</color>
     <color name="color_menu_line">@color/gray_525f73</color>
-    <color name="color_menu_text">@color/white_d8d8d8</color>
+    <color name="color_hint_text">@color/red_bf0000</color>
 </resources>

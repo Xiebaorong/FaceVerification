@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.zd_x.faceverification.R;
 import com.example.zd_x.faceverification.base.BaseActivity;
@@ -29,11 +30,15 @@ public class CameraActivity extends BaseActivity implements ICameraView {
     ImageView ivPhotographCamera;
     @BindView(R.id.iv_switchoverCamera_camera)
     ImageView ivSwitchoverCameraCamera;
+    @BindView(R.id.iv_back_camera)
+    ImageView ivBackCamera;
     //SDK 7.0
     @BindView(R.id.hcsv_camera2Preview_camera)
     HanvonfaceCamera2ShowView hcsvCamera2PreviewCamera;
     @BindView(R.id.sfv_faceShow_camera)
     SurfaceView sfvFaceShowCamera;
+    @BindView(R.id.tv_hintText_camera)
+    TextView tvHintTextCamera;
 
     private CameraPresenterCompl iCameraPresenter;
     private Handler handler = new Handler() {
@@ -43,10 +48,9 @@ public class CameraActivity extends BaseActivity implements ICameraView {
                 case ConstsUtils.INIT_SUCCESS:
                     Log.e(TAG, "handleMessage: -----");
                     HWCoreHelper.initHWCore(CameraActivity.this, handler);
-
                     break;
                 case ConstsUtils.SHOW_MSG:
-                    showToast((String) msg.obj);
+                    tvHintTextCamera.setText((String) msg.obj);
                     break;
                 default:
                     break;
@@ -74,14 +78,18 @@ public class CameraActivity extends BaseActivity implements ICameraView {
     }
 
 
-    @OnClick({R.id.iv_photograph_camera, R.id.iv_switchoverCamera_camera})
+    @OnClick({R.id.iv_photograph_camera, R.id.iv_switchoverCamera_camera,R.id.iv_back_camera})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_photograph_camera:
-                iCameraPresenter.takePicture(this);
+                iCameraPresenter.takePicture(this,handler);
                 break;
             case R.id.iv_switchoverCamera_camera:
                 iCameraPresenter.cameraSwitch(this);
+                break;
+            case R.id.iv_back_camera:
+                Camera2Helper.camera2Helper.isCanDetectFace= false;
+                finish();
                 break;
         }
     }
@@ -143,6 +151,7 @@ public class CameraActivity extends BaseActivity implements ICameraView {
     protected void onDestroy() {
         super.onDestroy();
         //SDK7.0
+        Log.e(TAG, "onDestroy: 1111111111" );
         HWCoreHelper.releaseCore();
         Camera2Helper.camera2Helper.stopCamera();
         handler.removeCallbacksAndMessages(null);

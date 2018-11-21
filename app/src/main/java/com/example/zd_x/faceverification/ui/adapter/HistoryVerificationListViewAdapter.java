@@ -17,6 +17,7 @@ import com.example.zd_x.faceverification.mvp.model.HistoryVerificationResultMode
 import com.example.zd_x.faceverification.ui.activity.DetailsActivity;
 import com.example.zd_x.faceverification.utils.FileUtils;
 import com.example.zd_x.faceverification.utils.LogUtil;
+import com.example.zd_x.faceverification.utils.PictureMsgUtils;
 
 import java.util.List;
 
@@ -48,19 +49,16 @@ public class HistoryVerificationListViewAdapter extends RecyclerView.Adapter<His
         Bitmap bitmap = FileUtils.base64ToBitmap(faceBase64);
         holder.ivHFaceImageListView.setImageBitmap(bitmap);
         holder.tvHVerificationTotalListView.setText(mContext.getString(R.string.verificationTotalText) + mList.get(position).getTotal());
-        String Result;
-        if (mList.get(position).getIsVerification()) {
-            Result = mContext.getString(R.string.verificationTrue);
-        } else {
-            Result = mContext.getString(R.string.verificationFalse);
-        }
-        holder.tvHVerificationResultListView.setText(mContext.getString(R.string.verificationResultText) + Result);
+
+
+        holder.tvHVerificationResultListView.setText(mContext.getString(R.string.verificationResultText) + PictureMsgUtils.getInstance().getVerificationResult(mList.get(position).getIsVerification()));
         holder.tvHVerificationTimeListView.setText(mContext.getString(R.string.verificationTimeText) + mList.get(position).getVerificationTime());
         holder.ivToDetailsListView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, DetailsActivity.class);
-                intent.putExtra("position",position);
+                LogUtil.e(mList.get(position).getId()+"");
+                intent.putExtra("position",mList.get(position).getId());
                 mContext.startActivity(intent);
             }
         });

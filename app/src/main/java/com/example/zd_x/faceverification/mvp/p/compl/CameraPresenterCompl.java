@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.ImageReader;
+import android.os.Handler;
 import android.util.Log;
 
 import com.example.zd_x.faceverification.callBack.LoadCallBack;
@@ -38,8 +39,12 @@ public class CameraPresenterCompl implements ICameraPresenter, ImageReader.OnIma
     public Gson gson = new Gson();
 
     @Override
-    public void takePicture(Context context) {
-        Camera2Helper.camera2Helper.takePicture((Activity) context, this);
+    public void takePicture(Context context, Handler handler) {
+        if (ConstsUtils.iStartX != 0) {
+            Camera2Helper.camera2Helper.takePicture((Activity) context, this);
+        }else {
+            handler.sendMessage(handler.obtainMessage(ConstsUtils.SHOW_MSG, "未检测到人脸"));
+        }
     }
 
     /**
@@ -56,29 +61,29 @@ public class CameraPresenterCompl implements ICameraPresenter, ImageReader.OnIma
     @Override
     public void requestContrast(final Context context) {
         //TODO 放入数据库保存
-        DataManipulation.getInstance().insertData(null, null);
+//        DataManipulation.getInstance().insertData(detectionModel, null);
 
-//        String json = gson.toJson(detectionModel);
-//        LogUtil.allLog(json);
-//        OkHttpManager.getInstance().postRequest(APPUrl.SEND, ConstsUtils.MEDIA_TYPE_JSON, json, new LoadCallBack<String>(context) {
-//            @Override
-//            public void onSuccess(Call call, Response response, String result) {
-//                iCameraView.showUploadDialog(ConstsUtils.DIS_DIALOG);
-//                Log.e(TAG, "onSuccess: " + result);
-//                VerificationModel verificationModel = gson.fromJson(result, VerificationModel.class);
-//                verificationResult(context, verificationModel);
-//            }
-//
-//            @Override
-//            public void onError(Call call, int statusCode, Exception e) {
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call call, IOException e) {
-//
-//            }
-//        });
+        String json = gson.toJson(detectionModel);
+        LogUtil.allLog(json);
+        OkHttpManager.getInstance().postRequest(APPUrl.SEND, ConstsUtils.MEDIA_TYPE_JSON, json, new LoadCallBack<String>(context) {
+            @Override
+            public void onSuccess(Call call, Response response, String result) {
+                iCameraView.showUploadDialog(ConstsUtils.DIS_DIALOG);
+                Log.e(TAG, "onSuccess: " + result);
+                VerificationModel verificationModel = gson.fromJson(result, VerificationModel.class);
+                verificationResult(context, verificationModel);
+            }
+
+            @Override
+            public void onError(Call call, int statusCode, Exception e) {
+
+            }
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+        });
     }
 
     @Override

@@ -17,9 +17,14 @@
     <string name="verificationResultText">对比结果: </string>
     <string name="verificationTimeText">对比时间: </string>
     <string name="verificationTotalText">比对人数: </string>
+    <string name="verificationSimilarityText">相似度: </string>
+    <string name="verificationNameText">姓名: </string>
+    <string name="verificationSexText">性别: </string>
+    <string name="verificationNationText">民族: </string>
 
     <string name="verificationTrue"> 通过 </string>
     <string name="verificationFalse">失败 </string>
+
 
     <!--测试-->
     <string name="dialogImageId">1101081542181099923</string>

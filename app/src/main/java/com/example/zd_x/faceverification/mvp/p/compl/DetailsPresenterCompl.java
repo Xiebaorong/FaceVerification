@@ -20,8 +20,9 @@ public class DetailsPresenterCompl implements IDetailsPresenter {
 
     @Override
     public void findDetailsMsg(int position) {
-        LogUtil.e( "findDetailsMsg: "+position );
-        List<CompareResultsBean> detailsMsg = DataManipulation.getInstance().findDetailsMsg(position + 1);
+        HistoryVerificationResultModel nativeData = DataManipulation.getInstance().findNativedata(position);
+        List<CompareResultsBean> detailsMsg = DataManipulation.getInstance().findDetailsMsg(position);
+        iDetailsView.getNativedata(nativeData);
         iDetailsView.getDetailsMsg(detailsMsg);
     }
 }

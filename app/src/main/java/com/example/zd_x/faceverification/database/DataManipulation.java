@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.security.auth.login.LoginException;
+
 public class DataManipulation {
     private static DataManipulation instance;
     private DaoSession daoSession;
@@ -34,50 +36,69 @@ public class DataManipulation {
     public void insertData(DetectionModel detectionModel, VerificationModel verificationModel) {
         HistoryVerificationResultModel historyVerModel = new HistoryVerificationResultModel();
 
-//        int total = verificationModel.getOut().getTotal();
-//        if (total > 0) {
-//            historyVerModel.setIsVerification(true);
-//        } else {
-//            historyVerModel.setIsVerification(false);
-//        }
-//        historyVerModel.setCompareResults(verificationModel.getOut().getCompareResults());
-//        historyVerModel.setImageId(detectionModel.getImageID());
-//        historyVerModel.setTotal(verificationModel.getOut().getTotal());
-//        historyVerModel.setFaceBase64(detectionModel.getFaceBase64());
-//        long entryTime = verificationModel.getOut().getIpcMetadata().getEntryTime();
-//        historyVerModel.setVerificationTime(getTime(entryTime));
-//        historyVerModel.setCompareResults(verificationModel.getOut().getCompareResults());
-        try {
-            historyVerModel.setImageId("11010815426100376200000000000000000000002");
-            historyVerModel.setTotal(3);
+        int total = verificationModel.getOut().getTotal();
+        if (total > 0) {
+            historyVerModel.setIsVerification(true);
+        } else {
             historyVerModel.setIsVerification(false);
-            historyVerModel.setFaceBase64("/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABsSFBcUERsXFhceHBsgKEIrKCUlKFE6PTBCYFVlZF9VXVtqeJmBanGQc1tdhbWGkJ6jq62rZ4C8ybqmx5moq6T/2wBDARweHigjKE4rK06kbl1upKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKSkpKT/wAARCABkAGQDASIAAhEBAxEB/8QAFwABAQEBAAAAAAAAAAAAAAAAAAEDBf/EABUQAQEAAAAAAAAAAAAAAAAAAAAB/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAH/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwDtgqoAALABQEBQABQAAZgKCgAqKACgAqAAAKAyVFUAUAFABUAFBFAAUBkAooKAAAoAKACgAKIMVIKKACgACgCooCgAADJUUBQAUUEUAAUAFAABioAqgAoAKAAAKAAAg//Z");
-            historyVerModel.setVerificationTime(getTime(1517387585987L));
-            daoSession.insert(historyVerModel);
-            for (int i = 0; i < 3; i++) {
-                CompareResultsBean compareResultsBean = new CompareResultsBean();
-                compareResultsBean.setHistoryId(historyVerModel.getId());
-                compareResultsBean.setName("李" + i);
-                compareResultsBean.setSex("女" + i);
-                daoSession.insert(compareResultsBean);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            LogUtil.e(e+"");
         }
+        historyVerModel.setImageId(detectionModel.getImageID());
+        historyVerModel.setTotal(verificationModel.getOut().getTotal());
+        historyVerModel.setFaceBase64(detectionModel.getFaceBase64());
+        Long entryTime = verificationModel.getOut().getIpcMetadata().getEntryTime();
+        historyVerModel.setVerificationTime(getTime(entryTime));
+        daoSession.insert(historyVerModel);
+        for (int i = 0; i < verificationModel.getOut().getCompareResults().size(); i++) {
+            CompareResultsBean compareResultsBean = new CompareResultsBean();
+            compareResultsBean.setHistoryId(historyVerModel.getId());
+            compareResultsBean.setImageBase64(verificationModel.getOut().getCompareResults().get(i).getIpcBlacklist().getImageBase64());
+            compareResultsBean.setName(verificationModel.getOut().getCompareResults().get(i).getIpcBlacklist().getName());
+            compareResultsBean.setSex(verificationModel.getOut().getCompareResults().get(i).getIpcBlacklist().getSex());
+            compareResultsBean.setNation(verificationModel.getOut().getCompareResults().get(i).getIpcBlacklist().getNation());
+            compareResultsBean.setSimilarity(verificationModel.getOut().getCompareResults().get(i).getSimilarity());
+            daoSession.insert(compareResultsBean);
+        }
+//        historyVerModel.setCompareResults(verificationModel.getOut().getCompareResults());
+//        try {
+//            historyVerModel.setImageId("11010815426100376200000000000000000000002");
+//            historyVerModel.setTotal(3);
+//            historyVerModel.setIsVerification(true);
+//            historyVerModel.setFaceBase64(detectionModel.getFaceBase64());
+//            historyVerModel.setVerificationTime(getTime(System.currentTimeMillis()));
+//            daoSession.insert(historyVerModel);
+//            for (int i = 0; i < 3; i++) {
+//                CompareResultsBean compareResultsBean = new CompareResultsBean();
+//                LogUtil.e(historyVerModel.getId() + "");
+//                compareResultsBean.setHistoryId(historyVerModel.getId());
+//                compareResultsBean.setImageBase64(detectionModel.getFaceBase64());
+//                compareResultsBean.setSimilarity(95 + i);
+//                compareResultsBean.setName("李" + i);
+//                compareResultsBean.setSex("男");
+//                compareResultsBean.setNation("汉");
+//                daoSession.insert(compareResultsBean);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            LogUtil.e(e + "");
+//        }
     }
 
     public List<HistoryVerificationResultModel> findData() {
         if (daoSession == null) {
             LogUtil.e("dao空");
         }
-        List<HistoryVerificationResultModel> list = GreenDaoManager.getInstance().getDaoSession().queryBuilder(HistoryVerificationResultModel.class).list();
+        List<HistoryVerificationResultModel> list = GreenDaoManager.getInstance().getDaoSession().queryBuilder(HistoryVerificationResultModel.class).orderDesc(HistoryVerificationResultModelDao.Properties.Id).list();
         return list == null ? new ArrayList() : list;
     }
 
     public List<CompareResultsBean> findDetailsMsg(int id) {
-        List<CompareResultsBean> list = daoSession.queryBuilder(CompareResultsBean.class).where(CompareResultsBeanDao.Properties.HistoryId.eq(id)).orderAsc(CompareResultsBeanDao.Properties.HistoryId).list();
+        List<CompareResultsBean> list = daoSession.queryBuilder(CompareResultsBean.class).where(CompareResultsBeanDao.Properties.HistoryId.eq(id)).orderDesc(CompareResultsBeanDao.Properties.Similarity).list();
         return list == null ? new ArrayList() : list;
+    }
+
+    public HistoryVerificationResultModel findNativedata(int id) {
+        LogUtil.e(id + "");
+        return daoSession.queryBuilder(HistoryVerificationResultModel.class).where(HistoryVerificationResultModelDao.Properties.Id.eq(id)).unique();
     }
 
     private String getTime(long entryTime) {

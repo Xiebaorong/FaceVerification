@@ -1,9 +1,13 @@
 package com.example.zd_x.faceverification.ui.activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,8 +21,12 @@ import com.example.zd_x.faceverification.mvp.model.CompareResultsBean;
 import com.example.zd_x.faceverification.mvp.model.HistoryVerificationResultModel;
 import com.example.zd_x.faceverification.mvp.p.compl.DetailsPresenterCompl;
 import com.example.zd_x.faceverification.mvp.view.IDetailsView;
+import com.example.zd_x.faceverification.ui.adapter.DetailsMsgRecyclerViewAdapter;
 import com.example.zd_x.faceverification.ui.adapter.DetailsViewPagerAdapter;
+import com.example.zd_x.faceverification.ui.widget.SpaceItemDecoration;
+import com.example.zd_x.faceverification.utils.FileUtils;
 import com.example.zd_x.faceverification.utils.LogUtil;
+import com.example.zd_x.faceverification.utils.PictureMsgUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,14 +40,14 @@ public class DetailsActivity extends BaseActivity implements IDetailsView {
     ImageView ivFaceImageDetails;
     @BindView(R.id.tv_msg1_details)
     TextView tvMsg1Details;
-     @BindView(R.id.tv_msg2_details)
+    @BindView(R.id.tv_msg2_details)
     TextView tvMsg2Details;
     @BindView(R.id.tv_msg3_details)
     TextView tvMsg3Details;
     @BindView(R.id.tv_msg4_details)
     TextView tvMsg4Details;
-    @BindView(R.id.rl_showDetailsMsg_details)
-    RelativeLayout rlShowDetailsMsgDetails;
+    @BindView(R.id.rv_showDetailsMsg_details)
+    RecyclerView rvShowDetailsMsgDetails;
 
 
     private DetailsPresenterCompl presenterCompl;
@@ -64,7 +72,8 @@ public class DetailsActivity extends BaseActivity implements IDetailsView {
 
     private void processExtraData() {
         Intent intent = getIntent();
-        int position = intent.getIntExtra("position", 0);
+        int position = (int) intent.getLongExtra("position",0);
+        LogUtil.e(position+"");
         presenterCompl.findDetailsMsg(position);
     }
 
@@ -75,46 +84,22 @@ public class DetailsActivity extends BaseActivity implements IDetailsView {
 
     @Override
     public void getDetailsMsg(List<CompareResultsBean> detailsMsgList) {
-        int size = detailsMsgList.size();
-        LogUtil.e("getDetailsMsg: " + size);
-        addPage(detailsMsgList);
-//        LogUtil.e("getDetailsMsg: ---");
-//        if (detailsMsg.size() == 0) {
-//            return;
-//        }
-//        tvHVerificationImageIDDetails.setText(getString(R.string.verificationImageIdText) + detailsMsg());
-//        String result;
-//        if (historyModel.getIsVerification()) {
-//            result = getString(R.string.verificationTrue);
-//        } else {
-//            result = getString(R.string.verificationFalse);
-//        }
-//        tvHVerificationResultDetails.setText(getString(R.string.verificationResultText) + result);
-//        tvHVerificationTimeDetails.setText(getString(R.string.verificationTimeText) + historyModel.getVerificationTime());
-//        List<CompareResultsBean> compareResultsList = historyModel.getCompareResults();
-//        addPage(compareResultsList);
+        LogUtil.e(detailsMsgList.size()+"");
+        DetailsMsgRecyclerViewAdapter adapter = new DetailsMsgRecyclerViewAdapter(this, detailsMsgList);
+        rvShowDetailsMsgDetails.setLayoutManager(new LinearLayoutManager(this));
+//        rvShowDetailsMsgDetails.addItemDecoration(new SpaceItemDecoration(0, 30));
+        //添加自定义分割线
+        rvShowDetailsMsgDetails.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        rvShowDetailsMsgDetails.setAdapter(adapter);
     }
 
-    private List<View> viewList = new ArrayList<>();
-
-    private void addPage(List<CompareResultsBean> detailsMsgList) {
-
-        for (int i = 0; i < detailsMsgList.size(); i++) {
-            LayoutInflater inflater = LayoutInflater.from(this);
-            View view = inflater.inflate(R.layout.viewpager_show_detailsmsg_layout, null);
-            TextView tvUsernameViewpager = view.findViewById(R.id.tv_username_viewpager);
-            TextView tvSexViewpager = view.findViewById(R.id.tv_sex_viewpager);
-            tvUsernameViewpager.setText(detailsMsgList.get(i).getName());
-            tvSexViewpager.setText(detailsMsgList.get(i).getSex());
-            viewList.add(view);
-        }
-        LogUtil.e(viewList.size()+"");
-        try {
-            DetailsViewPagerAdapter pagerAdapter = new DetailsViewPagerAdapter(viewList);
-            vpShowDetailsMsgDetails.setAdapter(pagerAdapter);
-        } catch (Exception e) {
-            e.printStackTrace();
-            LogUtil.e(e+"");
-        }
+    @Override
+    public void getNativedata(HistoryVerificationResultModel nativedata) {
+        Bitmap bitmap = FileUtils.base64ToBitmap(nativedata.getFaceBase64());
+        ivFaceImageDetails.setImageBitmap(bitmap);
+        tvMsg1Details.setText(getString(R.string.verificationTimeText) + nativedata.getVerificationTime());
+        tvMsg2Details.setText(getString(R.string.verificationTotalText) + nativedata.getTotal());
+        tvMsg3Details.setText(getString(R.string.verificationResultText) + PictureMsgUtils.getInstance().getVerificationResult(nativedata.getIsVerification()));
     }
+
 }

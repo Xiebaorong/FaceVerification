@@ -27,22 +27,40 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         >
+        <TextView
+            android:id="@+id/tv_hintText_camera"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/color_hint_text"
+            android:layout_marginTop="5dp"
+            />
+        <ImageView
+            android:id="@+id/iv_back_camera"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/switchovercamera"
+            android:layout_marginLeft="15dp"
+            android:layout_centerVertical="true"
+            />
+
+        <ImageView
+            android:id="@+id/iv_photograph_camera"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/opencamera"
+            android:layout_centerInParent="true"
+            />
+
         <ImageView
             android:id="@+id/iv_switchoverCamera_camera"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/switchovercamera"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="15dp"
-
-            />
-
-        <ImageView
-            android:id="@+id/iv_photograph_camera"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/opencamera"
+            android:layout_alignParentRight="true"
             android:layout_centerInParent="true"
+            android:layout_marginRight="15dp"
+
             />
         <TextView
             android:layout_width="match_parent"

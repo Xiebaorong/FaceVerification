@@ -46,7 +46,7 @@ public class HanvonfaceCamera2ShowView extends TextureView implements TextureVie
             startListener();
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtil.e(e+"");
+            LogUtil.e(e + "");
         }
 
     }
@@ -58,20 +58,20 @@ public class HanvonfaceCamera2ShowView extends TextureView implements TextureVie
 
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-        Log.e(TAG, "onSurfaceTextureAvailable: 1111111111111" );
-        Camera2Helper.camera2Helper.openCamera((Activity) getContext(),this);
+        Log.e(TAG, "onSurfaceTextureAvailable: 1111111111111");
+        Camera2Helper.camera2Helper.openCamera((Activity) getContext(), this);
     }
 
 
     @Override
     public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-        Log.e(TAG, "onSurfaceTextureSizeChanged: 22222" );
+        Log.e(TAG, "onSurfaceTextureSizeChanged: 22222");
     }
 
     @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-        Log.e(TAG, "onSurfaceTextureSizeChanged: 33333" );
-         return true;
+        Log.e(TAG, "onSurfaceTextureSizeChanged: 33333");
+        return true;
     }
 
     @Override
@@ -101,7 +101,6 @@ public class HanvonfaceCamera2ShowView extends TextureView implements TextureVie
         mSurfaceView02 = view02;
         mSurfaceView02.setZOrderOnTop(true);
         getSurfaceHolder();
-
     }
 
     public void getSurfaceHolder() {
@@ -109,13 +108,12 @@ public class HanvonfaceCamera2ShowView extends TextureView implements TextureVie
         mSurfaceHolder02.setFormat(PixelFormat.TRANSLUCENT);
     }
 
-
-    public TextureView getTextureView(){
+    public TextureView getTextureView() {
         return this;
     }
 
-
     private Canvas canvas;
+
     public void cameraPreview(final Image image) {
         int[] faceNum = new int[1];
         int intFaceNum = 1;
@@ -143,7 +141,11 @@ public class HanvonfaceCamera2ShowView extends TextureView implements TextureVie
         }
         image.close();
         final int result = FaceCoreHelper.HWFaceDetectFaces(FACE_HANDLER, rotateData, width, height, pFacePos, pEyePos, faceNum);
-        LogUtil.d("result: " + result);
+        if (result == ConstsUtils.OK) {
+            mHandler.sendMessage(mHandler.obtainMessage(ConstsUtils.SHOW_MSG, "人脸检测成功"));
+        } else if (ConstsUtils.iStartX == 0) {
+            mHandler.sendMessage(mHandler.obtainMessage(ConstsUtils.SHOW_MSG, "未检测到人脸"));
+        }
         final int finalWidth = width;
         final int finalHeight = height;
         new Thread(new Runnable() {

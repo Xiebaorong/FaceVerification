@@ -110,7 +110,7 @@ public class HomeActivity extends BaseActivity implements IHomeView {
         switch (view.getId()) {
             case R.id.iv_openCamera_home:
                 LogUtil.d("bt_frontCamera_home");
-                startCamera(ConstsUtils.FRONT_CAMERA);
+                startCamera(ConstsUtils.REAR_CAMERA);
                 break;
             default:
                 break;
@@ -121,7 +121,6 @@ public class HomeActivity extends BaseActivity implements IHomeView {
     private void startCamera(int cameraId) {
         Intent intent = new Intent(HomeActivity.this, CameraActivity.class);
         intent.putExtra("cameraId", cameraId + "");
-
         startActivity(intent);
     }
 
