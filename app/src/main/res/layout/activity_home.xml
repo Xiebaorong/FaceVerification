@@ -1,80 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fl_showHistoryMsg_home"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
-    <include android:id="@+id/home_header"
-        layout="@layout/include_header"
-        android:visibility="gone"
-        />
-    <TextView
-        android:id="@+id/tv_select_home"
-        android:layout_below="@id/home_header"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_showImageMsg_home"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/selectCamera"
-        android:visibility="gone"
-        />
+        android:layout_height="match_parent">
+    </android.support.v7.widget.RecyclerView>
     <RelativeLayout
-        android:id="@+id/rl_cameraList_home"
         android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/iv_openCamera_home"
+        android:layout_width="100dp"
         android:layout_height="50dp"
-        android:layout_below="@id/tv_select_home"
-        >
-        <ImageView
-            android:id="@+id/iv_openCamera_home"
-            android:layout_width="60dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="15dp"
-            android:src="@drawable/opencamera"
-            android:paddingVertical="5dp"
-            />
-        <Button
-            android:id="@+id/bt_frontCamera_home"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:text="@string/frontCamera"
-            android:visibility="gone"
-            />
-        <Button
-            android:id="@+id/bt_rearCamera_home"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/bt_frontCamera_home"
-            android:layout_marginHorizontal="5dp"
-            android:text="@string/rearCamera"
-            android:visibility="gone"
-            />
-        <Button
-            android:id="@+id/bt_usbCamera_home"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/bt_rearCamera_home"
-            android:visibility="gone"
-            />
+        android:background="@drawable/opencamerahome_check_selector"
+        android:clickable="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="50dp"
+        />
+
     </RelativeLayout>
-    <include android:id="@+id/inc_screen_home"
-        layout="@layout/include_filter"
-        android:layout_below="@id/rl_cameraList_home"
-        android:layout_height="50dp"
-        android:layout_width="match_parent"
-        android:visibility="gone"
-        />
-    <View
-        android:id="@+id/view_home"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_below="@id/inc_screen_home"
-        android:background="@color/colorPrimary"
-        />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_showImageMsg_home"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/view_home">
-
-        </android.support.v7.widget.RecyclerView>
-
-</RelativeLayout>
+</FrameLayout>

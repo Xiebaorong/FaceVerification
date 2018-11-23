@@ -9,6 +9,7 @@ import com.example.zd_x.faceverification.mvp.p.IDetailsPresenter;
 import com.example.zd_x.faceverification.mvp.view.IDetailsView;
 import com.example.zd_x.faceverification.utils.LogUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DetailsPresenterCompl implements IDetailsPresenter {
@@ -21,8 +22,13 @@ public class DetailsPresenterCompl implements IDetailsPresenter {
     @Override
     public void findDetailsMsg(int position) {
         HistoryVerificationResultModel nativeData = DataManipulation.getInstance().findNativedata(position);
-        List<CompareResultsBean> detailsMsg = DataManipulation.getInstance().findDetailsMsg(position);
         iDetailsView.getNativedata(nativeData);
+        List<CompareResultsBean> detailsMsg;
+        if (nativeData.getTotal() != 0) {
+            detailsMsg = DataManipulation.getInstance().findDetailsMsg(position);
+        } else {
+            detailsMsg = new ArrayList<>();
+        }
         iDetailsView.getDetailsMsg(detailsMsg);
     }
 }

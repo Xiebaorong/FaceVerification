@@ -33,32 +33,34 @@ public class DataManipulation {
         daoSession = GreenDaoManager.getInstance().getDaoSession();
     }
 
-    public void insertData(DetectionModel detectionModel, VerificationModel verificationModel) {
+    public long insertData(DetectionModel detectionModel, VerificationModel verificationModel) {
+        long insert = 0;
         HistoryVerificationResultModel historyVerModel = new HistoryVerificationResultModel();
-
+        historyVerModel.setImageId(detectionModel.getImageID());
+        historyVerModel.setTotal(verificationModel.getOut().getTotal());
+        historyVerModel.setFaceBase64(detectionModel.getFaceBase64());
+        Long entryTime = verificationModel.getOut().getIpcMetadata().getEntryTime();
+        historyVerModel.setVerificationTime(getTime(entryTime));
         int total = verificationModel.getOut().getTotal();
         if (total > 0) {
             historyVerModel.setIsVerification(true);
         } else {
             historyVerModel.setIsVerification(false);
         }
-        historyVerModel.setImageId(detectionModel.getImageID());
-        historyVerModel.setTotal(verificationModel.getOut().getTotal());
-        historyVerModel.setFaceBase64(detectionModel.getFaceBase64());
-        Long entryTime = verificationModel.getOut().getIpcMetadata().getEntryTime();
-        historyVerModel.setVerificationTime(getTime(entryTime));
-        daoSession.insert(historyVerModel);
-        for (int i = 0; i < verificationModel.getOut().getCompareResults().size(); i++) {
-            CompareResultsBean compareResultsBean = new CompareResultsBean();
-            compareResultsBean.setHistoryId(historyVerModel.getId());
-            compareResultsBean.setImageBase64(verificationModel.getOut().getCompareResults().get(i).getIpcBlacklist().getImageBase64());
-            compareResultsBean.setName(verificationModel.getOut().getCompareResults().get(i).getIpcBlacklist().getName());
-            compareResultsBean.setSex(verificationModel.getOut().getCompareResults().get(i).getIpcBlacklist().getSex());
-            compareResultsBean.setNation(verificationModel.getOut().getCompareResults().get(i).getIpcBlacklist().getNation());
-            compareResultsBean.setSimilarity(verificationModel.getOut().getCompareResults().get(i).getSimilarity());
-            daoSession.insert(compareResultsBean);
+        insert = daoSession.insert(historyVerModel);
+        if (total != 0) {
+            for (int i = 0; i < verificationModel.getOut().getCompareResults().size(); i++) {
+                CompareResultsBean compareResultsBean = new CompareResultsBean();
+                compareResultsBean.setHistoryId(historyVerModel.getId());
+                compareResultsBean.setImageBase64(verificationModel.getOut().getCompareResults().get(i).getIpcBlacklist().getImageBase64());
+                compareResultsBean.setName(verificationModel.getOut().getCompareResults().get(i).getIpcBlacklist().getName());
+                compareResultsBean.setSex(verificationModel.getOut().getCompareResults().get(i).getIpcBlacklist().getSex());
+                compareResultsBean.setNation(verificationModel.getOut().getCompareResults().get(i).getIpcBlacklist().getNation());
+                compareResultsBean.setSimilarity(verificationModel.getOut().getCompareResults().get(i).getSimilarity());
+                daoSession.insert(compareResultsBean);
+            }
         }
-//        historyVerModel.setCompareResults(verificationModel.getOut().getCompareResults());
+        return insert;
 //        try {
 //            historyVerModel.setImageId("11010815426100376200000000000000000000002");
 //            historyVerModel.setTotal(3);
@@ -83,11 +85,11 @@ public class DataManipulation {
 //        }
     }
 
-    public List<HistoryVerificationResultModel> findData() {
+    public List<HistoryVerificationResultModel> findData(int offset) {
         if (daoSession == null) {
             LogUtil.e("dao空");
         }
-        List<HistoryVerificationResultModel> list = GreenDaoManager.getInstance().getDaoSession().queryBuilder(HistoryVerificationResultModel.class).orderDesc(HistoryVerificationResultModelDao.Properties.Id).list();
+        List<HistoryVerificationResultModel> list = GreenDaoManager.getInstance().getDaoSession().queryBuilder(HistoryVerificationResultModel.class).offset(offset*10).limit(10).orderDesc(HistoryVerificationResultModelDao.Properties.Id).list();
         return list == null ? new ArrayList() : list;
     }
 
@@ -97,7 +99,6 @@ public class DataManipulation {
     }
 
     public HistoryVerificationResultModel findNativedata(int id) {
-        LogUtil.e(id + "");
         return daoSession.queryBuilder(HistoryVerificationResultModel.class).where(HistoryVerificationResultModelDao.Properties.Id.eq(id)).unique();
     }
 

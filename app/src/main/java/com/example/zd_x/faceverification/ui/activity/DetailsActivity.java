@@ -24,6 +24,7 @@ import com.example.zd_x.faceverification.mvp.view.IDetailsView;
 import com.example.zd_x.faceverification.ui.adapter.DetailsMsgRecyclerViewAdapter;
 import com.example.zd_x.faceverification.ui.adapter.DetailsViewPagerAdapter;
 import com.example.zd_x.faceverification.ui.widget.SpaceItemDecoration;
+import com.example.zd_x.faceverification.utils.ConstsUtils;
 import com.example.zd_x.faceverification.utils.FileUtils;
 import com.example.zd_x.faceverification.utils.LogUtil;
 import com.example.zd_x.faceverification.utils.PictureMsgUtils;
@@ -72,8 +73,7 @@ public class DetailsActivity extends BaseActivity implements IDetailsView {
 
     private void processExtraData() {
         Intent intent = getIntent();
-        int position = (int) intent.getLongExtra("position",0);
-        LogUtil.e(position+"");
+        int position = (int) intent.getLongExtra(ConstsUtils.ID_IDENTIFY,0);
         presenterCompl.findDetailsMsg(position);
     }
 
@@ -84,7 +84,9 @@ public class DetailsActivity extends BaseActivity implements IDetailsView {
 
     @Override
     public void getDetailsMsg(List<CompareResultsBean> detailsMsgList) {
-        LogUtil.e(detailsMsgList.size()+"");
+        if (detailsMsgList.size()==0){
+            return;
+        }
         DetailsMsgRecyclerViewAdapter adapter = new DetailsMsgRecyclerViewAdapter(this, detailsMsgList);
         rvShowDetailsMsgDetails.setLayoutManager(new LinearLayoutManager(this));
 //        rvShowDetailsMsgDetails.addItemDecoration(new SpaceItemDecoration(0, 30));

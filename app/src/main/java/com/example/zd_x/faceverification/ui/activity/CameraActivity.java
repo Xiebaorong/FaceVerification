@@ -1,11 +1,14 @@
 package com.example.zd_x.faceverification.ui.activity;
 
+import android.animation.AnimatorSet;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.ImageView;
@@ -23,6 +26,7 @@ import com.hanvon.faceRec.HanvonfaceCamera2ShowView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import butterknife.OnTouch;
 
 public class CameraActivity extends BaseActivity implements ICameraView {
     private static final String TAG = "CameraActivity";
@@ -82,6 +86,7 @@ public class CameraActivity extends BaseActivity implements ICameraView {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_photograph_camera:
+
                 iCameraPresenter.takePicture(this,handler);
                 break;
             case R.id.iv_switchoverCamera_camera:
@@ -89,11 +94,11 @@ public class CameraActivity extends BaseActivity implements ICameraView {
                 break;
             case R.id.iv_back_camera:
                 Camera2Helper.camera2Helper.isCanDetectFace= false;
+                startActivity(new Intent(this,HomeActivity.class));
                 finish();
                 break;
         }
     }
-
 
     @Override
     public void getPhotoResults(int result) {
@@ -123,7 +128,7 @@ public class CameraActivity extends BaseActivity implements ICameraView {
 
     @Override
     public void showVerificationMsgDialog(String msg) {
-
+        //android.view.WindowManager$BadTokenException: Unable to add window -- token android.os.BinderProxy@fe70341 is not valid; is your activity running?
         new AlertDialog.Builder(this)
                 .setTitle("提示:")
                 .setMessage(msg)
@@ -141,8 +146,9 @@ public class CameraActivity extends BaseActivity implements ICameraView {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         Camera2Helper.camera2Helper.isCanDetectFace= false;
+        startActivity(new Intent(this,HomeActivity.class));
+        finish();
     }
 
 
@@ -160,5 +166,25 @@ public class CameraActivity extends BaseActivity implements ICameraView {
         Camera2Helper.camera2Helper.isCanDetectFace= true;
     }
 
+    @OnTouch(R.id.iv_photograph_camera)
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        switch (motionEvent.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                if(view.getId() == R.id.iv_photograph_camera){
+                    ivPhotographCamera.setScaleX( 1.3f);
+                    ivPhotographCamera.setScaleY(1.3f);
+                }
+                break;
+
+            case MotionEvent.ACTION_UP:
+                if(view.getId() == R.id.iv_photograph_camera){
+                    ivPhotographCamera.setScaleX(1);
+                    ivPhotographCamera.setScaleY(1);
+                }
+                break;
+        }
+        return false;
+
+    }
 
 }

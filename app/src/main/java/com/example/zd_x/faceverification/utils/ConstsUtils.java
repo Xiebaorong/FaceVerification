@@ -47,6 +47,12 @@ public class ConstsUtils {
      */
     public static String CAMERA_ID = "0";
 
+     /**
+     * 相机编号
+     */
+    public static String ID_IDENTIFY = "ID";
+
+
     /**
      * 显示Dialog
      */

@@ -2,6 +2,7 @@ package com.example.zd_x.faceverification.mvp.p.compl;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.ImageReader;
 import android.os.Handler;
@@ -13,6 +14,7 @@ import com.example.zd_x.faceverification.mvp.model.DetectionModel;
 import com.example.zd_x.faceverification.mvp.model.VerificationModel;
 import com.example.zd_x.faceverification.mvp.p.ICameraPresenter;
 import com.example.zd_x.faceverification.mvp.view.ICameraView;
+import com.example.zd_x.faceverification.ui.activity.DetailsActivity;
 import com.example.zd_x.faceverification.utils.APPUrl;
 import com.example.zd_x.faceverification.utils.ConstsUtils;
 import com.example.zd_x.faceverification.utils.FileUtils;
@@ -69,7 +71,6 @@ public class CameraPresenterCompl implements ICameraPresenter, ImageReader.OnIma
             @Override
             public void onSuccess(Call call, Response response, String result) {
                 iCameraView.showUploadDialog(ConstsUtils.DIS_DIALOG);
-                Log.e(TAG, "onSuccess: " + result);
                 VerificationModel verificationModel = gson.fromJson(result, VerificationModel.class);
                 verificationResult(context, verificationModel);
             }
@@ -92,12 +93,16 @@ public class CameraPresenterCompl implements ICameraPresenter, ImageReader.OnIma
     }
 
     private void verificationResult(Context context, final VerificationModel verificationModel) {
-        if (verificationModel.getStatus() == 1) {
+        if (verificationModel.getStatus() == 0) {
             Log.e(TAG, "对比回调:  " + verificationModel.getMessage());
-            //显示数据
-
             //放入数据库保存
-            DataManipulation.getInstance().insertData(detectionModel, verificationModel);
+            long id = DataManipulation.getInstance().insertData(detectionModel, verificationModel);
+            //显示数据
+            if (id!=0){
+                Intent intent = new Intent(context, DetailsActivity.class);
+                intent.putExtra(ConstsUtils.ID_IDENTIFY,id);
+                context.startActivity(intent);
+            }
 
         } else {
             final String message = verificationModel.getMessage();

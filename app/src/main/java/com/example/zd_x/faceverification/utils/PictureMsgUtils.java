@@ -18,7 +18,7 @@ public class PictureMsgUtils {
     public static int skip = 0;
     public static int limit = 3;
     public static String strategy = "strategy";
-    public static List<String> repoIDs = Arrays.asList("662d1256-33d9-45b6-be5b-8cbc06960450");//list的size就固定了，不能再add
+    public static List<String> repoIDs = Arrays.asList("75dd62c4-8eaf-4ab8-8d1f-7066e712b8ec");//list的size就固定了，不能再add
     //    public static String repoIDs = "662d1256-33d9-45b6-be5b-8cbc06960450";//list的size就固定了，不能再add
     public static int threshold = 80;
 

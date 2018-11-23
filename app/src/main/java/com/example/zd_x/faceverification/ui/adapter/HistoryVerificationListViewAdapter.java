@@ -15,11 +15,16 @@ import android.widget.TextView;
 import com.example.zd_x.faceverification.R;
 import com.example.zd_x.faceverification.mvp.model.HistoryVerificationResultModel;
 import com.example.zd_x.faceverification.ui.activity.DetailsActivity;
+import com.example.zd_x.faceverification.utils.ConstsUtils;
 import com.example.zd_x.faceverification.utils.FileUtils;
 import com.example.zd_x.faceverification.utils.LogUtil;
 import com.example.zd_x.faceverification.utils.PictureMsgUtils;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,7 +48,6 @@ public class HistoryVerificationListViewAdapter extends RecyclerView.Adapter<His
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        LogUtil.e(mList.get(position).getImageId());
         String faceBase64 = mList.get(position).getFaceBase64();
         //TODO 需要两个参数,用于判断bitmap是否缩放显示 ,传入参数确定中
         Bitmap bitmap = FileUtils.base64ToBitmap(faceBase64);
@@ -57,17 +61,35 @@ public class HistoryVerificationListViewAdapter extends RecyclerView.Adapter<His
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, DetailsActivity.class);
-                LogUtil.e(mList.get(position).getId()+"");
-                intent.putExtra("position",mList.get(position).getId());
+                LogUtil.e(mList.get(position).getId() + "");
+                intent.putExtra(ConstsUtils.ID_IDENTIFY, mList.get(position).getId());
                 mContext.startActivity(intent);
             }
         });
+    }
+
+    public void addData(List<HistoryVerificationResultModel> list, int positionStart, int size) {
+        Set<HistoryVerificationResultModel> set = new HashSet<>();
+        for (Iterator<HistoryVerificationResultModel> iter = list.iterator(); iter.hasNext(); ) {
+            HistoryVerificationResultModel verificationResultModel = iter.next();
+            //利用set集合不会添加重复元素的特性
+            if (set.add(verificationResultModel))
+                mList.add(verificationResultModel);
+        }
+        notifyItemChanged(positionStart, 1);
+    }
+
+    public void addData(HistoryVerificationResultModel resultModel, int positionStart, int size) {
+
+        mList.add(resultModel);
+        notifyItemChanged(positionStart, size);
     }
 
     @Override
     public int getItemCount() {
         return mList.size();
     }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.iv_hFaceImage_listView)

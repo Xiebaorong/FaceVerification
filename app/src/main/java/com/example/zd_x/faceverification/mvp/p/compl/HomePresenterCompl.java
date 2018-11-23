@@ -16,9 +16,9 @@ public class HomePresenterCompl implements IHomePresenter {
     }
 
     @Override
-    public void findHistoryResult() {
+    public void findHistoryResult(int offset) {
         try {
-            List<HistoryVerificationResultModel> historyList = DataManipulation.getInstance().findData();
+            List<HistoryVerificationResultModel> historyList = DataManipulation.getInstance().findData(offset);
             IHomeView.getHistoryMsg(historyList);
         } catch (Exception e) {
             e.printStackTrace();
