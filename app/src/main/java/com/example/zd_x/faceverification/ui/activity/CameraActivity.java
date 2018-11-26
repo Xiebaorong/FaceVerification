@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.zd_x.faceverification.R;
+import com.example.zd_x.faceverification.application.FaceVerificationApplication;
 import com.example.zd_x.faceverification.base.BaseActivity;
 import com.example.zd_x.faceverification.mvp.p.compl.CameraPresenterCompl;
 import com.example.zd_x.faceverification.mvp.view.ICameraView;
@@ -72,7 +73,7 @@ public class CameraActivity extends BaseActivity implements ICameraView {
         iCameraPresenter = new CameraPresenterCompl(this);
         String cameraId = getIntent().getExtras().getString("cameraId");
         ConstsUtils.CAMERA_ID = cameraId;
-        HWCoreHelper.initHWCore(this, handler);
+
     }
 
     @Override
@@ -81,20 +82,33 @@ public class CameraActivity extends BaseActivity implements ICameraView {
         hcsvCamera2PreviewCamera.setSurfaceView(sfvFaceShowCamera, handler);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                HWCoreHelper.initHWCore(FaceVerificationApplication.getmApplication(), handler);
+            }
+        }, 500);
+    }
 
-    @OnClick({R.id.iv_photograph_camera, R.id.iv_switchoverCamera_camera,R.id.iv_back_camera})
+    @OnClick({R.id.iv_photograph_camera, R.id.iv_switchoverCamera_camera, R.id.iv_back_camera})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_photograph_camera:
-
-                iCameraPresenter.takePicture(this,handler);
+                if (ConstsUtils.isPermissions) {
+                    iCameraPresenter.takePicture(this, handler);
+                }else {
+                    showToast("当前应用需要打开存储权限.");
+                }
                 break;
             case R.id.iv_switchoverCamera_camera:
                 iCameraPresenter.cameraSwitch(this);
                 break;
             case R.id.iv_back_camera:
-                Camera2Helper.camera2Helper.isCanDetectFace= false;
-                startActivity(new Intent(this,HomeActivity.class));
+                Camera2Helper.camera2Helper.isCanDetectFace = false;
+                startActivity(new Intent(this, HomeActivity.class));
                 finish();
                 break;
         }
@@ -146,38 +160,37 @@ public class CameraActivity extends BaseActivity implements ICameraView {
 
     @Override
     public void onBackPressed() {
-        Camera2Helper.camera2Helper.isCanDetectFace= false;
-        startActivity(new Intent(this,HomeActivity.class));
+        Camera2Helper.camera2Helper.isCanDetectFace = false;
+        startActivity(new Intent(this, HomeActivity.class));
         finish();
     }
-
 
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         //SDK7.0
-        Log.e(TAG, "onDestroy: 1111111111" );
+        Log.e(TAG, "onDestroy: 1111111111");
         HWCoreHelper.releaseCore();
         Camera2Helper.camera2Helper.stopCamera();
         handler.removeCallbacksAndMessages(null);
         HanvonfaceCamera2ShowView.hanvonfaceShowView = null;
         hcsvCamera2PreviewCamera = null;
-        Camera2Helper.camera2Helper.isCanDetectFace= true;
+        Camera2Helper.camera2Helper.isCanDetectFace = true;
     }
 
     @OnTouch(R.id.iv_photograph_camera)
     public boolean onTouch(View view, MotionEvent motionEvent) {
-        switch (motionEvent.getAction()){
+        switch (motionEvent.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                if(view.getId() == R.id.iv_photograph_camera){
-                    ivPhotographCamera.setScaleX( 1.3f);
+                if (view.getId() == R.id.iv_photograph_camera) {
+                    ivPhotographCamera.setScaleX(1.3f);
                     ivPhotographCamera.setScaleY(1.3f);
                 }
                 break;
 
             case MotionEvent.ACTION_UP:
-                if(view.getId() == R.id.iv_photograph_camera){
+                if (view.getId() == R.id.iv_photograph_camera) {
                     ivPhotographCamera.setScaleX(1);
                     ivPhotographCamera.setScaleY(1);
                 }

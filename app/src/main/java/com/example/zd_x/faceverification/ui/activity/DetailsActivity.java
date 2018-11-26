@@ -1,18 +1,12 @@
 package com.example.zd_x.faceverification.ui.activity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.zd_x.faceverification.R;
@@ -22,14 +16,10 @@ import com.example.zd_x.faceverification.mvp.model.HistoryVerificationResultMode
 import com.example.zd_x.faceverification.mvp.p.compl.DetailsPresenterCompl;
 import com.example.zd_x.faceverification.mvp.view.IDetailsView;
 import com.example.zd_x.faceverification.ui.adapter.DetailsMsgRecyclerViewAdapter;
-import com.example.zd_x.faceverification.ui.adapter.DetailsViewPagerAdapter;
-import com.example.zd_x.faceverification.ui.widget.SpaceItemDecoration;
 import com.example.zd_x.faceverification.utils.ConstsUtils;
-import com.example.zd_x.faceverification.utils.FileUtils;
-import com.example.zd_x.faceverification.utils.LogUtil;
+import com.example.zd_x.faceverification.utils.Glide.GlideApp;
 import com.example.zd_x.faceverification.utils.PictureMsgUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -97,8 +87,14 @@ public class DetailsActivity extends BaseActivity implements IDetailsView {
 
     @Override
     public void getNativedata(HistoryVerificationResultModel nativedata) {
-        Bitmap bitmap = FileUtils.base64ToBitmap(nativedata.getFaceBase64());
-        ivFaceImageDetails.setImageBitmap(bitmap);
+//        Bitmap bitmap = FileUtils.base64ToBitmap(nativedata.getFaceBase64());
+//        ivFaceImageDetails.setImageBitmap(bitmap);
+
+        GlideApp.with(this)
+                .load(nativedata.getFaceBase64())
+                .placeholder(R.drawable.recog_200_middle)
+                .centerCrop()
+                .into(ivFaceImageDetails);
         tvMsg1Details.setText(getString(R.string.verificationTimeText) + nativedata.getVerificationTime());
         tvMsg2Details.setText(getString(R.string.verificationTotalText) + nativedata.getTotal());
         tvMsg3Details.setText(getString(R.string.verificationResultText) + PictureMsgUtils.getInstance().getVerificationResult(nativedata.getIsVerification()));

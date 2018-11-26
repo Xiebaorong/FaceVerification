@@ -2,8 +2,6 @@ package com.example.zd_x.faceverification.ui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,15 +14,11 @@ import com.example.zd_x.faceverification.R;
 import com.example.zd_x.faceverification.mvp.model.HistoryVerificationResultModel;
 import com.example.zd_x.faceverification.ui.activity.DetailsActivity;
 import com.example.zd_x.faceverification.utils.ConstsUtils;
-import com.example.zd_x.faceverification.utils.FileUtils;
+import com.example.zd_x.faceverification.utils.Glide.GlideApp;
 import com.example.zd_x.faceverification.utils.LogUtil;
 import com.example.zd_x.faceverification.utils.PictureMsgUtils;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,13 +42,29 @@ public class HistoryVerificationListViewAdapter extends RecyclerView.Adapter<His
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        String faceBase64 = mList.get(position).getFaceBase64();
-        //TODO 需要两个参数,用于判断bitmap是否缩放显示 ,传入参数确定中
-        Bitmap bitmap = FileUtils.base64ToBitmap(faceBase64);
-        holder.ivHFaceImageListView.setImageBitmap(bitmap);
+//        String faceBase64 = mList.get(position).getFaceBase64();
+//        //TODO 需要两个参数,用于判断bitmap是否缩放显示 ,传入参数确定中
+//        Bitmap bitmap = FileUtils.base64ToBitmap(faceBase64);
+//        holder.ivHFaceImageListView.setImageBitmap(bitmap);
+
+        if (mList.get(position).getFaceBase64() == null) { //当ViewHolder复用的时候，如果当前返回的图片url为null，为了防止上一个复用的viewHolder图片
+            // 遗留，要clear并且将图片设置为空。
+            GlideApp.with(mContext).clear(holder.ivHFaceImageListView);
+            holder.ivHFaceImageListView.setImageDrawable(null);
+            holder.ivHFaceImageListView.setTag(R.id.iv_hFaceImage_listView, position);
+            return;
+        }
+        Object tag=holder.ivHFaceImageListView.getTag(R.id.iv_hFaceImage_listView);
+        if (tag!=null&&(int) tag!= position) {
+            GlideApp.with(mContext).clear(holder.ivToDetailsListView);
+        }
+        GlideApp.with(mContext)
+                .load(mList.get(position).getFaceBase64())
+                .placeholder(R.drawable.recog_200_middle)
+                .centerCrop()
+                .into(holder.ivHFaceImageListView);
+
         holder.tvHVerificationTotalListView.setText(mContext.getString(R.string.verificationTotalText) + mList.get(position).getTotal());
-
-
         holder.tvHVerificationResultListView.setText(mContext.getString(R.string.verificationResultText) + PictureMsgUtils.getInstance().getVerificationResult(mList.get(position).getIsVerification()));
         holder.tvHVerificationTimeListView.setText(mContext.getString(R.string.verificationTimeText) + mList.get(position).getVerificationTime());
         holder.ivToDetailsListView.setOnClickListener(new View.OnClickListener() {
@@ -68,26 +78,15 @@ public class HistoryVerificationListViewAdapter extends RecyclerView.Adapter<His
         });
     }
 
-    public void addData(List<HistoryVerificationResultModel> list, int positionStart, int size) {
-        Set<HistoryVerificationResultModel> set = new HashSet<>();
-        for (Iterator<HistoryVerificationResultModel> iter = list.iterator(); iter.hasNext(); ) {
-            HistoryVerificationResultModel verificationResultModel = iter.next();
-            //利用set集合不会添加重复元素的特性
-            if (set.add(verificationResultModel))
-                mList.add(verificationResultModel);
-        }
-        notifyItemChanged(positionStart, 1);
-    }
-
-    public void addData(HistoryVerificationResultModel resultModel, int positionStart, int size) {
-
-        mList.add(resultModel);
-        notifyItemChanged(positionStart, size);
-    }
 
     @Override
     public int getItemCount() {
         return mList.size();
+    }
+
+    public void partItemChanged(List<HistoryVerificationResultModel> historylist) {
+        mList.addAll(historylist);
+        notifyItemChanged(mList.size(), 1);
     }
 
 

@@ -59,17 +59,14 @@ public class CameraPresenterCompl implements ICameraPresenter, ImageReader.OnIma
         Camera2Helper.camera2Helper.cameraSwitch(context);
     }
 
-
     @Override
     public void requestContrast(final Context context) {
-        //TODO 放入数据库保存
-//        DataManipulation.getInstance().insertData(detectionModel, null);
-
         String json = gson.toJson(detectionModel);
-        LogUtil.allLog(json);
         OkHttpManager.getInstance().postRequest(APPUrl.SEND, ConstsUtils.MEDIA_TYPE_JSON, json, new LoadCallBack<String>(context) {
             @Override
             public void onSuccess(Call call, Response response, String result) {
+                LogUtil.d(result);
+                Log.e(TAG, "onSuccess: "+result );
                 iCameraView.showUploadDialog(ConstsUtils.DIS_DIALOG);
                 VerificationModel verificationModel = gson.fromJson(result, VerificationModel.class);
                 verificationResult(context, verificationModel);
@@ -122,7 +119,7 @@ public class CameraPresenterCompl implements ICameraPresenter, ImageReader.OnIma
         iCameraView.showUploadDialog(ConstsUtils.SHOW_DIALOG);
         String base64 = null;
         String imageID = PictureMsgUtils.getInstance().getPictureImageId();
-
+        Log.e(TAG, "onImageAvailable: "+imageID );
         Bitmap bitmap = FileUtils.imageSaver(reader.acquireNextImage(), imageID);
         if (bitmap != null) {
             base64 = FileUtils.bitmapToBase64(bitmap);

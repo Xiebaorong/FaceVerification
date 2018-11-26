@@ -39,24 +39,24 @@
             android:id="@+id/iv_back_camera"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/switchovercamera"
             android:layout_marginLeft="15dp"
             android:layout_centerVertical="true"
+            android:background="@drawable/backcamera_check_selector"
             />
 
         <ImageView
             android:id="@+id/iv_photograph_camera"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:src="@drawable/opencamera"
             android:layout_centerInParent="true"
+            android:src="@drawable/recog_200_middle"
             />
 
         <ImageView
             android:id="@+id/iv_switchoverCamera_camera"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/switchovercamera"
+            android:background="@drawable/switchowvercamera_check_selector"
             android:layout_alignParentRight="true"
             android:layout_centerInParent="true"
             android:layout_marginRight="15dp"

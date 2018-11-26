@@ -8,26 +8,28 @@
         android:id="@+id/iv_hFaceImage_listView"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_weight="1.5"
+        android:paddingLeft="5dp"
         android:src="@mipmap/ic_launcher" />
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="6"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginLeft="5dp"
+        >
 
-            <TextView
-                android:id="@+id/tv_hVerificationResult_listView"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:text="通过"
-                android:textSize="@dimen/text_size"
-                android:singleLine="true"
-                android:paddingLeft="5dp"
-                />
+        <TextView
+            android:id="@+id/tv_hVerificationResult_listView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:paddingLeft="5dp"
+            android:singleLine="true"
+            android:text="通过"
+            android:textSize="@dimen/text_size" />
 
         <TextView
             android:id="@+id/tv_hVerificationTotal_listView"
@@ -35,21 +37,21 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:text="3"
-            android:textSize="@dimen/text_size"
+            android:paddingLeft="5dp"
             android:singleLine="true"
-            android:paddingLeft="5dp"/>
-            <TextView
-                android:id="@+id/tv_hVerificationTime_listView"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:text="2018-11-15"
-                android:textSize="@dimen/text_size"
-                android:singleLine="true"
-                android:paddingLeft="5dp"
-                />
+            android:text="3"
+            android:textSize="@dimen/text_size" />
+
+        <TextView
+            android:id="@+id/tv_hVerificationTime_listView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:paddingLeft="5dp"
+            android:singleLine="true"
+            android:text="2018-11-15"
+            android:textSize="@dimen/text_size" />
 
     </LinearLayout>
 
@@ -60,8 +62,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="25dp"
-        android:src="@drawable/rightimage"
         android:padding="15dp"
-        />
+        android:src="@drawable/rightimage" />
 
 </LinearLayout>

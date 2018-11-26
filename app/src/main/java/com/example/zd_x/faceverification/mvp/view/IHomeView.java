@@ -5,5 +5,9 @@ import com.example.zd_x.faceverification.mvp.model.HistoryVerificationResultMode
 import java.util.List;
 
 public interface IHomeView {
-    void getHistoryMsg(List<HistoryVerificationResultModel> list);
+    List<HistoryVerificationResultModel> getHistoryMsg();
+
+    void notifyDataSetChanged();
+
+    void partItemnotifyDataSetChanged();
 }

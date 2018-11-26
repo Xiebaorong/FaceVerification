@@ -7,6 +7,7 @@ import com.example.zd_x.faceverification.mvp.model.CompareResultsBean;
 import com.example.zd_x.faceverification.mvp.model.DetectionModel;
 import com.example.zd_x.faceverification.mvp.model.HistoryVerificationResultModel;
 import com.example.zd_x.faceverification.mvp.model.VerificationModel;
+import com.example.zd_x.faceverification.utils.APPUrl;
 import com.example.zd_x.faceverification.utils.LogUtil;
 
 import java.text.SimpleDateFormat;
@@ -19,6 +20,7 @@ import javax.security.auth.login.LoginException;
 public class DataManipulation {
     private static DataManipulation instance;
     private DaoSession daoSession;
+
 
     public static DataManipulation getInstance() {
         if (instance == null) {
@@ -38,7 +40,9 @@ public class DataManipulation {
         HistoryVerificationResultModel historyVerModel = new HistoryVerificationResultModel();
         historyVerModel.setImageId(detectionModel.getImageID());
         historyVerModel.setTotal(verificationModel.getOut().getTotal());
-        historyVerModel.setFaceBase64(detectionModel.getFaceBase64());
+//        historyVerModel.setFaceBase64(detectionModel.getFaceBase64());
+        historyVerModel.setFaceBase64(getImageIp(verificationModel.getOut().getIpcMetadata().getZfsPath()));
+
         Long entryTime = verificationModel.getOut().getIpcMetadata().getEntryTime();
         historyVerModel.setVerificationTime(getTime(entryTime));
         int total = verificationModel.getOut().getTotal();
@@ -52,7 +56,9 @@ public class DataManipulation {
             for (int i = 0; i < verificationModel.getOut().getCompareResults().size(); i++) {
                 CompareResultsBean compareResultsBean = new CompareResultsBean();
                 compareResultsBean.setHistoryId(historyVerModel.getId());
-                compareResultsBean.setImageBase64(verificationModel.getOut().getCompareResults().get(i).getIpcBlacklist().getImageBase64());
+                String imageIp = getImageIp(verificationModel.getOut().getCompareResults().get(i).getIpcBlacklist().getZfsPath());
+                LogUtil.e(imageIp);
+                compareResultsBean.setZfsPath(getImageIp(verificationModel.getOut().getCompareResults().get(i).getIpcBlacklist().getZfsPath()));
                 compareResultsBean.setName(verificationModel.getOut().getCompareResults().get(i).getIpcBlacklist().getName());
                 compareResultsBean.setSex(verificationModel.getOut().getCompareResults().get(i).getIpcBlacklist().getSex());
                 compareResultsBean.setNation(verificationModel.getOut().getCompareResults().get(i).getIpcBlacklist().getNation());
@@ -89,7 +95,7 @@ public class DataManipulation {
         if (daoSession == null) {
             LogUtil.e("dao空");
         }
-        List<HistoryVerificationResultModel> list = GreenDaoManager.getInstance().getDaoSession().queryBuilder(HistoryVerificationResultModel.class).offset(offset*10).limit(10).orderDesc(HistoryVerificationResultModelDao.Properties.Id).list();
+        List<HistoryVerificationResultModel> list = GreenDaoManager.getInstance().getDaoSession().queryBuilder(HistoryVerificationResultModel.class).offset(offset * 10).limit(10).orderDesc(HistoryVerificationResultModelDao.Properties.Id).list();
         return list == null ? new ArrayList() : list;
     }
 
@@ -108,4 +114,7 @@ public class DataManipulation {
         return simpleDateFormat.format(date);
     }
 
+    public String getImageIp(String zfsPath) {
+        return "http://"+ zfsPath.split("@")[0] + APPUrl.IMAGE_IP + zfsPath.split("@")[1]+".jpg";
+    }
 }

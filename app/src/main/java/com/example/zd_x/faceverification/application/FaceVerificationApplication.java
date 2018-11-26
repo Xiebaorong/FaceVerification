@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.example.zd_x.faceverification.database.GreenDaoManager;
 import com.example.zd_x.faceverification.utils.CrashHandler;
+import com.example.zd_x.faceverification.utils.SharedPreferencesUtils;
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.orhanobut.logger.AndroidLogAdapter;
@@ -35,6 +36,7 @@ public class FaceVerificationApplication extends Application {
 
     private void initDatabase() {
         GreenDaoManager.getInstance().initializeDatabase(this);
+        SharedPreferencesUtils.getInstance().initSharedPreferences(this);
     }
 
 }

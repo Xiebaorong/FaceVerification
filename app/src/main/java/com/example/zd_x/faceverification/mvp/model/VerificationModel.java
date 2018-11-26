@@ -4,10 +4,11 @@ import java.util.List;
 
 public class VerificationModel {
 
+
     /**
      * status : 0
      * message : 成功
-     * out : {"ipcMetadata":{"imageID":"11010801010000000001022017032110101000009","deviceID":"11010801010000000001","entryTime":"1517 5332 6030 8","createTime":"1517 5332 6 0308","zfsPath":"192.168.104.3:8080@2018-02-02-0000_9664","deviceName":"摄像机4","isBlk":1,"zfsPersonPath":null,"snapshotID":"63866561-07b4-11e8-9a0a-b8ca3a958ee3"},"compareResults":[{"ipcBlacklist":{"compareID":"bd70d54f-0657-11e8-886f-b8ca3a958ee3","blacklistID":"652122198610253236","zfsPath":"192.168.104.3:8080@2018-01-31-0002_6117","imageBase64":null,"name":"test3","sex":"男","birthday":530553600000,"nation":"汉","dubious":8,"note":"111111111","repoID":"3"},"similarity":100},{"ipcBlacklist":{"compareID":"d1253c80-0657-11e8-875b-b8ca3a958ee3","blacklistID":"652122198610253236","zfsPath":"192.168.104.3:8080@2018-01-31-0002_6136","imageBase64":null,"name":"test2","sex":"男","birthday":530553600000,"nation":"汉","dubious":8,"note":"111111111","repoID":"3"},"similarity":98.26102},{"ipcBlacklist":{"compareID":"795d28f0-0657-11e8-ad89-b8ca3a958ee3","blacklistID":"652122198610253236","zfsPath":"192.168.104.3:8080@2018-01-31-0002_6041","imageBase64":null,"name":"test1","sex":"男","birthday":530553600000,"nation":"汉","dubious":8,"note":"111111111","repoID":"1"},"similarity":98.26102}],"total":3}
+     * out : {"ipcMetadata":{"imageID":"11010801800007000001022018112310470019067","deviceID":"11010801800007000001","entryTime":1542941220323,"createTime":1542941220323,"zfsPath":"122.115.57.130:8080@2018-11-23-0000_104","deviceName":"1","isBlk":1,"zfsPersonPath":null,"snapshotID":"8f5338ed-085b-4f5b-9d68-1b4bc5dadfce","snapshotbodyID":null,"direction":null},"compareResults":[{"ipcBlacklist":{"compareID":"15dfff6d-ca26-4988-a6a7-2553ae3b5eb9","blacklistID":"6578","zfsPath":"122.115.57.130:8080@2018-11-23-0000_101","imageBase64":null,"name":"谢宝荣","sex":null,"birthday":null,"nation":"汉族","dubious":12,"note":null,"repoID":"75dd62c4-8eaf-4ab8-8d1f-7066e712b8ec"},"similarity":92.907974}],"total":1}
      */
 
     private int status;
@@ -40,9 +41,9 @@ public class VerificationModel {
 
     public static class OutBean {
         /**
-         * ipcMetadata : {"imageID":"11010801010000000001022017032110101000009","deviceID":"11010801010000000001","entryTime":"1517 5332 6030 8","createTime":"1517 5332 6 0308","zfsPath":"192.168.104.3:8080@2018-02-02-0000_9664","deviceName":"摄像机4","isBlk":1,"zfsPersonPath":null,"snapshotID":"63866561-07b4-11e8-9a0a-b8ca3a958ee3"}
-         * compareResults : [{"ipcBlacklist":{"compareID":"bd70d54f-0657-11e8-886f-b8ca3a958ee3","blacklistID":"652122198610253236","zfsPath":"192.168.104.3:8080@2018-01-31-0002_6117","imageBase64":null,"name":"test3","sex":"男","birthday":530553600000,"nation":"汉","dubious":8,"note":"111111111","repoID":"3"},"similarity":100},{"ipcBlacklist":{"compareID":"d1253c80-0657-11e8-875b-b8ca3a958ee3","blacklistID":"652122198610253236","zfsPath":"192.168.104.3:8080@2018-01-31-0002_6136","imageBase64":null,"name":"test2","sex":"男","birthday":530553600000,"nation":"汉","dubious":8,"note":"111111111","repoID":"3"},"similarity":98.26102},{"ipcBlacklist":{"compareID":"795d28f0-0657-11e8-ad89-b8ca3a958ee3","blacklistID":"652122198610253236","zfsPath":"192.168.104.3:8080@2018-01-31-0002_6041","imageBase64":null,"name":"test1","sex":"男","birthday":530553600000,"nation":"汉","dubious":8,"note":"111111111","repoID":"1"},"similarity":98.26102}]
-         * total : 3
+         * ipcMetadata : {"imageID":"11010801800007000001022018112310470019067","deviceID":"11010801800007000001","entryTime":1542941220323,"createTime":1542941220323,"zfsPath":"122.115.57.130:8080@2018-11-23-0000_104","deviceName":"1","isBlk":1,"zfsPersonPath":null,"snapshotID":"8f5338ed-085b-4f5b-9d68-1b4bc5dadfce","snapshotbodyID":null,"direction":null}
+         * compareResults : [{"ipcBlacklist":{"compareID":"15dfff6d-ca26-4988-a6a7-2553ae3b5eb9","blacklistID":"6578","zfsPath":"122.115.57.130:8080@2018-11-23-0000_101","imageBase64":null,"name":"谢宝荣","sex":null,"birthday":null,"nation":"汉族","dubious":12,"note":null,"repoID":"75dd62c4-8eaf-4ab8-8d1f-7066e712b8ec"},"similarity":92.907974}]
+         * total : 1
          */
 
         private IpcMetadataBean ipcMetadata;
@@ -75,26 +76,30 @@ public class VerificationModel {
 
         public static class IpcMetadataBean {
             /**
-             * imageID : 11010801010000000001022017032110101000009
-             * deviceID : 11010801010000000001
-             * entryTime : 1517 5332 6030 8
-             * createTime : 1517 5332 6 0308
-             * zfsPath : 192.168.104.3:8080@2018-02-02-0000_9664
-             * deviceName : 摄像机4
+             * imageID : 11010801800007000001022018112310470019067
+             * deviceID : 11010801800007000001
+             * entryTime : 1542941220323
+             * createTime : 1542941220323
+             * zfsPath : 122.115.57.130:8080@2018-11-23-0000_104
+             * deviceName : 1
              * isBlk : 1
              * zfsPersonPath : null
-             * snapshotID : 63866561-07b4-11e8-9a0a-b8ca3a958ee3
+             * snapshotID : 8f5338ed-085b-4f5b-9d68-1b4bc5dadfce
+             * snapshotbodyID : null
+             * direction : null
              */
 
             private String imageID;
             private String deviceID;
-            private Long entryTime;
-            private Long createTime;
+            private long entryTime;
+            private long createTime;
             private String zfsPath;
             private String deviceName;
             private int isBlk;
             private String zfsPersonPath;
             private String snapshotID;
+            private String snapshotbodyID;
+            private String direction;
 
             public String getImageID() {
                 return imageID;
@@ -112,7 +117,21 @@ public class VerificationModel {
                 this.deviceID = deviceID;
             }
 
+            public long getEntryTime() {
+                return entryTime;
+            }
 
+            public void setEntryTime(long entryTime) {
+                this.entryTime = entryTime;
+            }
+
+            public long getCreateTime() {
+                return createTime;
+            }
+
+            public void setCreateTime(long createTime) {
+                this.createTime = createTime;
+            }
 
             public String getZfsPath() {
                 return zfsPath;
@@ -138,24 +157,8 @@ public class VerificationModel {
                 this.isBlk = isBlk;
             }
 
-            public Object getZfsPersonPath() {
+            public String getZfsPersonPath() {
                 return zfsPersonPath;
-            }
-
-            public Long getEntryTime() {
-                return entryTime;
-            }
-
-            public void setEntryTime(Long entryTime) {
-                this.entryTime = entryTime;
-            }
-
-            public Long getCreateTime() {
-                return createTime;
-            }
-
-            public void setCreateTime(Long createTime) {
-                this.createTime = createTime;
             }
 
             public void setZfsPersonPath(String zfsPersonPath) {
@@ -169,16 +172,32 @@ public class VerificationModel {
             public void setSnapshotID(String snapshotID) {
                 this.snapshotID = snapshotID;
             }
+
+            public String getSnapshotbodyID() {
+                return snapshotbodyID;
+            }
+
+            public void setSnapshotbodyID(String snapshotbodyID) {
+                this.snapshotbodyID = snapshotbodyID;
+            }
+
+            public String getDirection() {
+                return direction;
+            }
+
+            public void setDirection(String direction) {
+                this.direction = direction;
+            }
         }
 
         public static class CompareResultsBean {
             /**
-             * ipcBlacklist : {"compareID":"bd70d54f-0657-11e8-886f-b8ca3a958ee3","blacklistID":"652122198610253236","zfsPath":"192.168.104.3:8080@2018-01-31-0002_6117","imageBase64":null,"name":"test3","sex":"男","birthday":530553600000,"nation":"汉","dubious":8,"note":"111111111","repoID":"3"}
-             * similarity : 100
+             * ipcBlacklist : {"compareID":"15dfff6d-ca26-4988-a6a7-2553ae3b5eb9","blacklistID":"6578","zfsPath":"122.115.57.130:8080@2018-11-23-0000_101","imageBase64":null,"name":"谢宝荣","sex":null,"birthday":null,"nation":"汉族","dubious":12,"note":null,"repoID":"75dd62c4-8eaf-4ab8-8d1f-7066e712b8ec"}
+             * similarity : 92.907974
              */
 
             private IpcBlacklistBean ipcBlacklist;
-            private int similarity;
+            private double similarity;
 
             public IpcBlacklistBean getIpcBlacklist() {
                 return ipcBlacklist;
@@ -188,27 +207,27 @@ public class VerificationModel {
                 this.ipcBlacklist = ipcBlacklist;
             }
 
-            public int getSimilarity() {
+            public double getSimilarity() {
                 return similarity;
             }
 
-            public void setSimilarity(int similarity) {
+            public void setSimilarity(double similarity) {
                 this.similarity = similarity;
             }
 
             public static class IpcBlacklistBean {
                 /**
-                 * compareID : bd70d54f-0657-11e8-886f-b8ca3a958ee3
-                 * blacklistID : 652122198610253236
-                 * zfsPath : 192.168.104.3:8080@2018-01-31-0002_6117
+                 * compareID : 15dfff6d-ca26-4988-a6a7-2553ae3b5eb9
+                 * blacklistID : 6578
+                 * zfsPath : 122.115.57.130:8080@2018-11-23-0000_101
                  * imageBase64 : null
-                 * name : test3
-                 * sex : 男
-                 * birthday : 530553600000
-                 * nation : 汉
-                 * dubious : 8
-                 * note : 111111111
-                 * repoID : 3
+                 * name : 谢宝荣
+                 * sex : null
+                 * birthday : null
+                 * nation : 汉族
+                 * dubious : 12
+                 * note : null
+                 * repoID : 75dd62c4-8eaf-4ab8-8d1f-7066e712b8ec
                  */
 
                 private String compareID;
@@ -217,7 +236,7 @@ public class VerificationModel {
                 private String imageBase64;
                 private String name;
                 private String sex;
-                private long birthday;
+                private String birthday;
                 private String nation;
                 private int dubious;
                 private String note;
@@ -271,11 +290,11 @@ public class VerificationModel {
                     this.sex = sex;
                 }
 
-                public long getBirthday() {
+                public String getBirthday() {
                     return birthday;
                 }
 
-                public void setBirthday(long birthday) {
+                public void setBirthday(String birthday) {
                     this.birthday = birthday;
                 }
 

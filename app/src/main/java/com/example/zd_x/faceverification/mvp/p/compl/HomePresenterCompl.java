@@ -1,5 +1,7 @@
 package com.example.zd_x.faceverification.mvp.p.compl;
 
+import android.util.Log;
+
 import com.example.zd_x.faceverification.database.DataManipulation;
 import com.example.zd_x.faceverification.mvp.model.HistoryVerificationResultModel;
 import com.example.zd_x.faceverification.mvp.p.IHomePresenter;
@@ -17,9 +19,17 @@ public class HomePresenterCompl implements IHomePresenter {
 
     @Override
     public void findHistoryResult(int offset) {
+        LogUtil.e("-----");
         try {
             List<HistoryVerificationResultModel> historyList = DataManipulation.getInstance().findData(offset);
-            IHomeView.getHistoryMsg(historyList);
+            if (offset==0){
+                IHomeView.getHistoryMsg().clear();
+                IHomeView.getHistoryMsg().addAll(historyList);
+                IHomeView.notifyDataSetChanged();
+            }else {
+                IHomeView.getHistoryMsg().addAll(historyList);
+                IHomeView.notifyDataSetChanged();
+            }
         } catch (Exception e) {
             e.printStackTrace();
             LogUtil.e(e+"");

@@ -23,7 +23,7 @@ public class DetectionModel {
     private int skip;
     private int limit;
     private String strategy;
-    private int threshold;
+    private String threshold;
     private List<String> repoIDs;
 
     public String getImageID() {
@@ -82,11 +82,11 @@ public class DetectionModel {
         this.strategy = strategy;
     }
 
-    public int getThreshold() {
+    public String getThreshold() {
         return threshold;
     }
 
-    public void setThreshold(int threshold) {
+    public void setThreshold(String threshold) {
         this.threshold = threshold;
     }
 
@@ -98,7 +98,7 @@ public class DetectionModel {
         this.repoIDs = repoIDs;
     }
 
-    public DetectionModel(String imageID, String deviceID, String deviceName, String faceBase64, int skip, int limit, String strategy, int threshold, List<String> repoIDs) {
+    public DetectionModel(String imageID, String deviceID, String deviceName, String faceBase64, int skip, int limit, String strategy, String threshold, List<String> repoIDs) {
         this.imageID = imageID;
         this.deviceID = deviceID;
         this.deviceName = deviceName;
