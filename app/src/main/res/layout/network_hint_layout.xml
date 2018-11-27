@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_hint_network"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    >
+    <TextView
+        android:id="@+id/tv_hint_network"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="网络连接不可用"
+        android:drawableLeft="@drawable/warning"
+        android:gravity="center_vertical"
+        android:drawablePadding="12dp"
+        android:padding="10dp"
+        android:textSize="@dimen/title_size"
+        android:background="@color/gray_898989"
+        android:visibility="gone"
+        />
+
+</android.support.constraint.ConstraintLayout>

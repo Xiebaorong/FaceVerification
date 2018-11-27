@@ -6,7 +6,11 @@
     tools:context=".ui.activity.CameraActivity"
     android:orientation="vertical"
     >
-
+    <include layout="@layout/network_hint_layout"
+        android:id="@+id/include_hint_camera"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"

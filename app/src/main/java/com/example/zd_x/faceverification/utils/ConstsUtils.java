@@ -93,10 +93,6 @@ public class ConstsUtils {
      */
     public static final int INIT_SUCCESS = 2000;
 
-    /**
-     * 权限判断
-     */
-    public static boolean isPermissions = false;
 
 
 

@@ -10,4 +10,6 @@ public interface IHomeView {
     void notifyDataSetChanged();
 
     void partItemnotifyDataSetChanged();
+
+    void appUpdate();
 }

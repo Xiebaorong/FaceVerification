@@ -52,11 +52,12 @@ public class SharedPreferencesUtils {
      * @param isPermissions
      */
     public void savePermissions(String permissionsName, boolean isPermissions) {
-        edit.putString("permissionsName", permissionsName);
         edit.putBoolean(permissionsName, isPermissions);
         edit.commit();
     }
 
-
+    public boolean getPermission(String permissionsName){
+        return sp.getBoolean(permissionsName, false);
+    }
 
 }

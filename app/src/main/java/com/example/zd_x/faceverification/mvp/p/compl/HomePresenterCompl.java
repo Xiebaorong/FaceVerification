@@ -19,7 +19,7 @@ public class HomePresenterCompl implements IHomePresenter {
 
     @Override
     public void findHistoryResult(int offset) {
-        LogUtil.e("-----");
+
         try {
             List<HistoryVerificationResultModel> historyList = DataManipulation.getInstance().findData(offset);
             if (offset==0){

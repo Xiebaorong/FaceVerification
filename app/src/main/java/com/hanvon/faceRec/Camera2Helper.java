@@ -107,7 +107,6 @@ public class Camera2Helper {
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                 return;
             } else {
-                Log.e(TAG, "openCamera: 1111111111111");
                 initImageReader();
                 manager.openCamera(ConstsUtils.CAMERA_ID, new CameraDevice.StateCallback() {
                     @Override
@@ -179,7 +178,6 @@ public class Camera2Helper {
             return;
         }
         try {
-            Log.e(TAG, "takePreview: 11111111111");
             previewCaptureRequestBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
             texture = textureView.getSurfaceTexture();
             //根据TextureView的尺寸设置预览尺寸

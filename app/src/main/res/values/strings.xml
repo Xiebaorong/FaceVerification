@@ -25,6 +25,10 @@
     <string name="verificationTrue"> 通过 </string>
     <string name="verificationFalse">失败 </string>
 
+    <!--权限-->
+    <string name="cameraPermissions">android.permission.CAMERA</string>
+    <string name="storePermissions">android.permission.READ_EXTERNAL_STORAGE</string>
+
 
     <!--测试-->
     <string name="dialogImageId">1101081542181099923</string>

@@ -73,6 +73,11 @@ public class DetailsActivity extends BaseActivity implements IDetailsView {
     }
 
     @Override
+    protected void onNetChanged(int netWorkState) {
+
+    }
+
+    @Override
     public void getDetailsMsg(List<CompareResultsBean> detailsMsgList) {
         if (detailsMsgList.size()==0){
             return;

@@ -32,6 +32,7 @@ public class FaceVerificationApplication extends Application {
         new OkHttpClient.Builder() .
                 addNetworkInterceptor(new StethoInterceptor()) .build();
         initDatabase();
+
     }
 
     private void initDatabase() {

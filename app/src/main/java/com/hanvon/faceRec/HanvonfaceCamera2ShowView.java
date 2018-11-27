@@ -58,7 +58,6 @@ public class HanvonfaceCamera2ShowView extends TextureView implements TextureVie
 
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-        Log.e(TAG, "onSurfaceTextureAvailable: 1111111111111");
         Camera2Helper.camera2Helper.openCamera((Activity) getContext(), this);
     }
 

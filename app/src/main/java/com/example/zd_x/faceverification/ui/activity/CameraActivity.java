@@ -1,6 +1,5 @@
 package com.example.zd_x.faceverification.ui.activity;
 
-import android.animation.AnimatorSet;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,6 +20,7 @@ import com.example.zd_x.faceverification.mvp.p.compl.CameraPresenterCompl;
 import com.example.zd_x.faceverification.mvp.view.ICameraView;
 import com.example.zd_x.faceverification.utils.ConstsUtils;
 import com.example.zd_x.faceverification.utils.LogUtil;
+import com.example.zd_x.faceverification.utils.SharedPreferencesUtils;
 import com.hanvon.face.HWCoreHelper;
 import com.hanvon.faceRec.Camera2Helper;
 import com.hanvon.faceRec.HanvonfaceCamera2ShowView;
@@ -44,7 +44,9 @@ public class CameraActivity extends BaseActivity implements ICameraView {
     SurfaceView sfvFaceShowCamera;
     @BindView(R.id.tv_hintText_camera)
     TextView tvHintTextCamera;
-
+    @BindView(R.id.tv_hint_network)
+    TextView tHintNetwork;
+    private int netWorkState;
     private CameraPresenterCompl iCameraPresenter;
     private Handler handler = new Handler() {
         @Override
@@ -74,12 +76,23 @@ public class CameraActivity extends BaseActivity implements ICameraView {
         String cameraId = getIntent().getExtras().getString("cameraId");
         ConstsUtils.CAMERA_ID = cameraId;
 
+
     }
 
     @Override
     protected void initEvent() {
         Camera2Helper.camera2Helper.initCamera(this);
         hcsvCamera2PreviewCamera.setSurfaceView(sfvFaceShowCamera, handler);
+    }
+
+    @Override
+    protected void onNetChanged(int state) {
+       netWorkState = state;
+        if (state<0 ) {
+            tHintNetwork.setVisibility(View.VISIBLE);
+        } else {
+            tHintNetwork.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -97,7 +110,7 @@ public class CameraActivity extends BaseActivity implements ICameraView {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_photograph_camera:
-                if (ConstsUtils.isPermissions) {
+                if (SharedPreferencesUtils.getInstance().getPermission(getString(R.string.storePermissions))) {
                     iCameraPresenter.takePicture(this, handler);
                 }else {
                     showToast("当前应用需要打开存储权限.");
@@ -170,7 +183,6 @@ public class CameraActivity extends BaseActivity implements ICameraView {
     protected void onDestroy() {
         super.onDestroy();
         //SDK7.0
-        Log.e(TAG, "onDestroy: 1111111111");
         HWCoreHelper.releaseCore();
         Camera2Helper.camera2Helper.stopCamera();
         handler.removeCallbacksAndMessages(null);

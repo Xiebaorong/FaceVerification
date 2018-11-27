@@ -24,4 +24,9 @@ public class StartupActivity extends BaseActivity {
     protected void initEvent() {
 
     }
+
+    @Override
+    protected void onNetChanged(int netWorkState) {
+
+    }
 }

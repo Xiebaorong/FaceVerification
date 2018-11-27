@@ -47,16 +47,21 @@ public class OkHttpManager {
         mGson = new Gson();
     }
 
-    public void getRequest(String url, Map<String, String> params, BaseCallBack callBack) {
-        Request request = buildRequest(url, params, HttpMethodType.GET);
+    public void get(String url, BaseCallBack callBack) {
+        Request request = buildRequest(url, (Map<String, String>) null, HttpMethodType.GET);
         doRequest(request, callBack);
     }
+
 
     public void postRequest(String url, Map<String, String> params, BaseCallBack callBack) {
         Request request = buildRequest(url, params, HttpMethodType.POST);
         doRequest(request, callBack);
     }
 
+    public void postRequest(String url, Map<String, String> params, okhttp3.Callback callback) {
+        Request request = buildRequest(url, params, HttpMethodType.POST);
+        doRequest(request,callback);
+    }
     public void postRequest(String url, MediaType mediaType, Object object, BaseCallBack callBack) {
         Request request = buildRequest(url, mediaType, object);
         doRequest(request, callBack);
@@ -72,11 +77,11 @@ public class OkHttpManager {
         return builder.build();
     }
 
-    public RequestBody post(MediaType mediaType, Object object) {
+    private RequestBody post(MediaType mediaType, Object object) {
         return post(mediaType, object, -1, 0);
     }
 
-    protected RequestBody post(MediaType mediaType, Object object, int offset, int byteCount) {
+    private RequestBody post(MediaType mediaType, Object object, int offset, int byteCount) {
         RequestBody mRequestBody;
         if (object != null) {
             if (object instanceof File) {
@@ -110,6 +115,10 @@ public class OkHttpManager {
         return builder.build();
     }
 
+
+    private void doRequest(final Request request,okhttp3.Callback callback) {
+        mOkHttpClient.newCall(request).enqueue(callback);
+    }
     private void doRequest(final Request request, final BaseCallBack callBack) {
         callBack.OnRequestBefore(request);
         mOkHttpClient.newCall(request).enqueue(new Callback() {
