@@ -61,6 +61,7 @@ public class CameraPresenterCompl implements ICameraPresenter, ImageReader.OnIma
 
     @Override
     public void requestContrast(final Context context) {
+        Log.e(TAG, "requestContrast: "+detectionModel.getLimit() );
         String json = gson.toJson(detectionModel);
         OkHttpManager.getInstance().postRequest(APPUrl.SEND, ConstsUtils.MEDIA_TYPE_JSON, json, new LoadCallBack<String>(context) {
             @Override
@@ -132,7 +133,6 @@ public class CameraPresenterCompl implements ICameraPresenter, ImageReader.OnIma
         PictureMsgUtils.imageID = imageID;
         PictureMsgUtils.deviceName = ConstsUtils.CAMERA_ID;
         PictureMsgUtils.faceBase64 = base64;
-        PictureMsgUtils.limit = 3;
         detectionModel = new DetectionModel(PictureMsgUtils.imageID, PictureMsgUtils.deviceID, PictureMsgUtils.deviceName, PictureMsgUtils.faceBase64, PictureMsgUtils.skip,
                 PictureMsgUtils.limit, PictureMsgUtils.strategy, PictureMsgUtils.threshold, PictureMsgUtils.repoIDs);
         if (detectionModel.getImageID() != null) {

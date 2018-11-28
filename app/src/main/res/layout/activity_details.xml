@@ -16,7 +16,7 @@
         android:id="@+id/iv_faceImage_details"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:padding="5dp"
         />
         <LinearLayout
@@ -24,7 +24,7 @@
             android:layout_height="match_parent"
             android:layout_weight="2"
             android:orientation="vertical"
-
+            android:padding="5dp"
             >
             <TextView
                 android:id="@+id/tv_msg1_details"
@@ -73,21 +73,13 @@
                 android:paddingLeft="5dp"
                 android:visibility="invisible"
                 />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:text="图像结果:通过"
-                android:gravity="center_vertical"
-                android:paddingLeft="5dp"
-                android:visibility="invisible"
-                />
+
         </LinearLayout>
     </LinearLayout>
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorPrimary"/>
+        android:layout_height="2dp"
+        android:background=" @color/gray_EAEEEF"/>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_showDetailsMsg_details"
         android:layout_width="match_parent"

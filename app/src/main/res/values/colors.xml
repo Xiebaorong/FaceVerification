@@ -18,7 +18,10 @@
     <color name="yellow_bfb45d">#bfb45d</color>
     <color name="red_bf0000">#BF0000</color>
 
+
     <color name="gray_898989">#898989</color>
+    <color name="gray_EAEEEF">#EAEEEF</color>
+
     <color name="gray_525f73">#525f73</color>
 
     <!--++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
@@ -31,10 +34,12 @@
 
     <color name="color_details_text_name">@color/blue_38a1ff</color>
     <color name="color_details_text_value">@color/black_262626</color>
+    <color name="color_custom_value">@color/gray_EAEEEF</color>
 
 
     <color name="color_title_text">@color/yellow_bfb45d</color>
     <color name="color_filter_bg">@color/gray_898989</color>
+    <color name="color_interval_bg">@color/gray_898989</color>
 
     <color name="color_menu_bg">@color/black_2a323f</color>
     <color name="color_menu_line">@color/gray_525f73</color>
