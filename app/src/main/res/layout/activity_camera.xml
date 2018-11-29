@@ -1,78 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.activity.CameraActivity"
     android:orientation="vertical"
-    >
-    <include layout="@layout/network_hint_layout"
+    tools:context=".ui.activity.CameraActivity">
+
+    <include
         android:id="@+id/include_hint_camera"
+        layout="@layout/network_hint_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
+        android:layout_height="wrap_content" />
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3"
-        >
+        android:layout_weight="5">
 
         <com.hanvon.faceRec.HanvonfaceCamera2ShowView
             android:id="@+id/hcsv_camera2Preview_camera"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
+        <com.example.zd_x.faceverification.ui.widget.CameraPreviewView
+            android:id="@+id/cpv_camera2Preview_camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true" />
+
         <SurfaceView
             android:id="@+id/sfv_faceShow_camera"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <com.hanvon.faceRec.FaceView
+            android:id="@+id/fv_faceShow_camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/hcsv_camera2Preview_camera"
+            app:layout_constraintEnd_toEndOf="@id/hcsv_camera2Preview_camera"
+            app:layout_constraintStart_toStartOf="@id/hcsv_camera2Preview_camera"
+            app:layout_constraintTop_toTopOf="@id/hcsv_camera2Preview_camera" />
     </FrameLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        >
+        android:layout_weight="1">
+
         <TextView
             android:id="@+id/tv_hintText_camera"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textColor="@color/color_hint_text"
             android:layout_marginTop="5dp"
-            />
+            android:gravity="center"
+            android:textColor="@color/color_hint_text" />
+
         <ImageView
             android:id="@+id/iv_back_camera"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginLeft="15dp"
             android:layout_centerVertical="true"
-            android:background="@drawable/backcamera_check_selector"
-            />
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/backcamera_check_selector" />
 
         <ImageView
             android:id="@+id/iv_photograph_camera"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_centerInParent="true"
-            android:src="@drawable/recog_200_middle"
-            />
+            android:src="@drawable/recog_200_middle" />
 
         <ImageView
             android:id="@+id/iv_switchoverCamera_camera"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@drawable/switchowvercamera_check_selector"
             android:layout_alignParentRight="true"
             android:layout_centerInParent="true"
             android:layout_marginRight="15dp"
+            android:background="@drawable/switchowvercamera_check_selector"
 
             />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/iv_photograph_camera"
-            android:text="@string/takePictureText"
-            android:gravity="center"
             android:layout_marginTop="10dp"
-            />
+            android:gravity="center"
+            android:text="@string/takePictureText" />
     </RelativeLayout>
 </LinearLayout>

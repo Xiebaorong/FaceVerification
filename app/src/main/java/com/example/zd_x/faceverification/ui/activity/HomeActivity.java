@@ -1,6 +1,8 @@
 package com.example.zd_x.faceverification.ui.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -9,6 +11,7 @@ import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -115,9 +118,12 @@ public class HomeActivity extends BaseActivity implements IHomeView, PagingScrol
         srlRefreshHome.setEnableLoadMoreWhenContentNotFull(false);
     }
 
+    RxPermissions rxPermission;
 
+    @SuppressLint("CheckResult")
     private void permissions() {
-        RxPermissions rxPermission = new RxPermissions(HomeActivity.this);
+        final List<String> permissionList = new ArrayList<>();
+        rxPermission = new RxPermissions(HomeActivity.this);
         rxPermission
                 .requestEach(Manifest.permission.CAMERA,
                         Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -125,18 +131,28 @@ public class HomeActivity extends BaseActivity implements IHomeView, PagingScrol
                         Manifest.permission.READ_PHONE_STATE)
                 .subscribe(new Consumer<Permission>() {
                     @Override
-                    public void accept(Permission permission) throws Exception {
+                    public void accept(final Permission permission) throws Exception {
                         if (permission.granted) {
-                            // 用户已经同意该权限
-                            Log.d(TAG, permission.name + " is granted.");
-                        } else if (permission.shouldShowRequestPermissionRationale) {
-                            // 用户拒绝了该权限，没有选中『不再询问』（Never ask again）,那么下次再次启动时，还会提示请求权限的对话框
-                            Log.d(TAG, permission.name + " is denied. More info should be provided.");
-                        } else { // 用户拒绝了该权限，并且选中『不再询问』
-                            Log.d(TAG, permission.name + " is denied.");
+                            SharedPreferencesUtils.getInstance().savePermissions(permission.name, true);
+                        } else if (permission.shouldShowRequestPermissionRationale){
+                            SharedPreferencesUtils.getInstance().savePermissions(permission.name, false);
+                        }else {
+                            SharedPreferencesUtils.getInstance().savePermissions(permission.name, false);
                         }
+//                        if (permission.name.equals(Manifest.permission.CAMERA)) { //当ACCESS_FINE_LOCATION权限获取成功时，permission.granted=true
+//                            Log.i("permissions", Manifest.permission.ACCESS_FINE_LOCATION + "：" + permission.granted);
+//                            reapplyPermissions(permission.name);
+//                        }
+//                        if (permission.name.equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+//                            reapplyPermissions(permission.name);
+//                        }
+//
+//                        if (permission.name.equals(Manifest.permission.READ_PHONE_STATE)) {
+//                            reapplyPermissions(permission.name);
+//                        }
                     }
                 });
+
 //        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
 //
 //        {
@@ -155,26 +171,52 @@ public class HomeActivity extends BaseActivity implements IHomeView, PagingScrol
 
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == ConstsUtils.CODE_FOR_WRITE_PERMISSION) {
-            Log.e(TAG, "onRequestPermissionsResult:00000 ");
-            for (int i = 0; i < grantResults.length; i++) {
-                boolean isTip = ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[i]);
-                String permission = permissions[i];
-                if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
-                    SharedPreferencesUtils.getInstance().savePermissions(permission, false);
-                    if (isTip) {//表明用户没有彻底禁止弹出权限请求
-                        Log.e(TAG, "onRequestPermissionsResult: " + permission);
-                    } else {//表明用户已经彻底禁止弹出权限请求
 
+    private void reapplyPermissions(final String name) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+        builder
+                .setTitle("权限提示")
+                .setMessage(name)
+                .setPositiveButton("重新申请", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(final DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        rxPermission.request(name).subscribe(new Consumer<Boolean>() {
+                            @Override
+                            public void accept(Boolean aBoolean) throws Exception {
+                                if (aBoolean) {
+                                    Log.e(TAG, name + " 用户已经同意该权限");
+                                    dialogInterface.dismiss();
+                                }
+                            }
+                        });
                     }
-                } else {
-                    SharedPreferencesUtils.getInstance().savePermissions(permission, true);
-                }
-            }
-        }
+                })
+                .create().show();
+
     }
+
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        if (requestCode == ConstsUtils.CODE_FOR_WRITE_PERMISSION) {
+//            Log.e(TAG, "onRequestPermissionsResult:00000 ");
+//            for (int i = 0; i < grantResults.length; i++) {
+//                boolean isTip = ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[i]);
+//                String permission = permissions[i];
+//                if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+//                    SharedPreferencesUtils.getInstance().savePermissions(permission, false);
+//                    if (isTip) {//表明用户没有彻底禁止弹出权限请求
+//                        Log.e(TAG, "onRequestPermissionsResult: " + permission);
+//                    } else {//表明用户已经彻底禁止弹出权限请求
+//
+//                    }
+//                } else {
+//                    SharedPreferencesUtils.getInstance().savePermissions(permission, true);
+//                }
+//            }
+//        }
+//    }
 
     @Override
     protected void onResume() {
@@ -263,5 +305,6 @@ public class HomeActivity extends BaseActivity implements IHomeView, PagingScrol
 //                .build()
 //                .silenceUpdate();
     }
+
 
 }

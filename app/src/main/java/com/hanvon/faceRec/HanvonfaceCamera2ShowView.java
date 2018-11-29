@@ -141,9 +141,9 @@ public class HanvonfaceCamera2ShowView extends TextureView implements TextureVie
         image.close();
         final int result = FaceCoreHelper.HWFaceDetectFaces(FACE_HANDLER, rotateData, width, height, pFacePos, pEyePos, faceNum);
         if (result == ConstsUtils.OK) {
-            mHandler.sendMessage(mHandler.obtainMessage(ConstsUtils.SHOW_MSG, "人脸检测成功"));
+            mHandler.sendMessage(mHandler.obtainMessage(ConstsUtils.WHAT_SHOW_MSG, "人脸检测成功"));
         } else if (ConstsUtils.iStartX == 0) {
-            mHandler.sendMessage(mHandler.obtainMessage(ConstsUtils.SHOW_MSG, "未检测到人脸"));
+            mHandler.sendMessage(mHandler.obtainMessage(ConstsUtils.WHAT_SHOW_MSG, "未检测到人脸"));
         }
         final int finalWidth = width;
         final int finalHeight = height;

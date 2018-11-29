@@ -5,7 +5,9 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.ImageFormat;
+import android.graphics.Point;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
@@ -15,7 +17,9 @@ import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureFailure;
 import android.hardware.camera2.CaptureRequest;
+import android.hardware.camera2.CaptureResult;
 import android.hardware.camera2.TotalCaptureResult;
+import android.hardware.camera2.params.Face;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.Image;
 import android.media.ImageReader;
@@ -32,6 +36,7 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.TextureView;
 
+import com.example.zd_x.faceverification.ui.widget.CameraPreviewView;
 import com.example.zd_x.faceverification.utils.ConstsUtils;
 import com.example.zd_x.faceverification.utils.LogUtil;
 
@@ -45,10 +50,11 @@ public class Camera2Helper {
     private static final String TAG = "Camera2Helper";
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
     // 相机预览分辨率
-    public static int PIXEL_WIDTH = 640;// 1920,1280,(1280),(960),(640),576,480,384,352
-    public static int PIXEL_HEIGHT = 480;// 1080,720,(960),(720),(480),432,320,288,288
+    public static int PIXEL_WIDTH = 1920;// 1920,1280,(1280),(960),(640),576,480,384,352
+    public static int PIXEL_HEIGHT = 1080;// 1080,720,(960),(720),(480),432,320,288,288
     public static Camera2Helper camera2Helper = new Camera2Helper();
     public static Size mPreviewSize, mCaptureSize;
+    private Size cPixelSize;
     private CameraManager manager;
     private CameraDevice cameraDevice;
     private StreamConfigurationMap map;
@@ -59,7 +65,11 @@ public class Camera2Helper {
     private SurfaceTexture texture;
     // 定义用于预览照片的捕获请求
     private CaptureRequest previewRequest;
-    public volatile  boolean isCanDetectFace = true;
+    public volatile boolean isCanDetectFace = true;
+    /**
+     * Orientation of the camera sensor
+     */
+    private int mSensorOrientation;
 
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
@@ -71,28 +81,124 @@ public class Camera2Helper {
     private Handler mCameraHandler;
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public int initCamera(Activity mContext) {
+    private void initCamera(Activity mContext, TextureView textureView) {
+        startCameraThread();
+        int width = textureView.getWidth();
+        int height = textureView.getHeight();
         try {
             manager = (CameraManager) mContext.getSystemService(Context.CAMERA_SERVICE);
-            for (String cameraId : manager.getCameraIdList()) {
-                CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraId);
-                //获取StreamConfigurationMap，它是管理摄像头支持的所有输出格式和尺寸
-                map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
-                //获取相机支持的最大拍照尺寸
-                mCaptureSize = Collections.max(Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)), new Comparator<Size>() {
-                    @Override
-                    public int compare(Size lhs, Size rhs) {
-                        return Long.signum(lhs.getWidth() * lhs.getHeight() - rhs.getHeight() * rhs.getWidth());
-                    }
-                });
-                startCameraThread();
-                break;
+
+            CameraCharacteristics characteristics = manager.getCameraCharacteristics(ConstsUtils.CAMERA_ID);
+            //获取StreamConfigurationMap，它是管理摄像头支持的所有输出格式和尺寸
+            map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
+            if (map == null) {
+                return;
             }
+            //获取人脸检测参数
+            characteristics.get(CameraCharacteristics.STATISTICS_INFO_AVAILABLE_FACE_DETECT_MODES);
+//                textureView.getSurfaceTexture().setDefaultBufferSize(sSize.getWidth(),sSize.getHeight());
+
+            //获取成像尺寸
+            cPixelSize = characteristics.get(CameraCharacteristics.SENSOR_INFO_PIXEL_ARRAY_SIZE);//获取成像尺寸
+            //获取相机支持的最大拍照尺寸
+//                mCaptureSize = Collections.max(Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)), new Comparator<Size>() {
+//                    @Override
+//                    public int compare(Size lhs, Size rhs) {
+//                        return Long.signum(lhs.getWidth() * lhs.getHeight() - rhs.getHeight() * rhs.getWidth());
+//                    }
+//                });
+
+            Size largest = Collections.max(
+                    Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)),
+                    new CompareSizesByArea());
+
+            //看看我们是否需要交换尺寸来获得相对于传感器坐标的预览尺寸。
+            int displayRotation = mContext.getWindowManager().getDefaultDisplay().getRotation();
+            mSensorOrientation = characteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
+            boolean swappedDimensions = false;
+            switch (displayRotation) {
+                case Surface.ROTATION_0:
+                case Surface.ROTATION_180:
+                    if (mSensorOrientation == 90 || mSensorOrientation == 270) {
+                        swappedDimensions = true;
+                    }
+                    break;
+                case Surface.ROTATION_90:
+                case Surface.ROTATION_270:
+                    if (mSensorOrientation == 0 || mSensorOrientation == 180) {
+                        swappedDimensions = true;
+                    }
+                    break;
+                default:
+                    Log.e(TAG, "Display rotation is invalid: " + displayRotation);
+            }
+            Point displaySize = new Point();
+            mContext.getWindowManager().getDefaultDisplay().getSize(displaySize);
+            int rotatedPreviewWidth = width;
+            int rotatedPreviewHeight = height;
+            int maxPreviewWidth = displaySize.x;
+            int maxPreviewHeight = displaySize.y;
+
+            if (swappedDimensions) {
+                rotatedPreviewWidth = height;
+                rotatedPreviewHeight = width;
+                maxPreviewWidth = displaySize.y;
+                maxPreviewHeight = displaySize.x;
+            }
+
+            if (maxPreviewWidth > PIXEL_WIDTH) {
+                maxPreviewWidth = PIXEL_WIDTH;
+            }
+
+            if (maxPreviewHeight > PIXEL_HEIGHT) {
+                maxPreviewHeight = PIXEL_HEIGHT;
+            }
+
+            mPreviewSize = chooseOptimalSize(map.getOutputSizes(SurfaceTexture.class),
+                    rotatedPreviewWidth, rotatedPreviewHeight, maxPreviewWidth,
+                    maxPreviewHeight, largest);
+
+
+            // 根据选中的预览尺寸来调整预览组件（TextureView）的长宽比
+            int orientation = mContext.getResources().getConfiguration().orientation;
+            if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                CameraPreviewView.cameraPreviewView.setAspectRatio(mPreviewSize.getWidth(), mPreviewSize.
+                        getHeight());
+            } else {
+                CameraPreviewView.cameraPreviewView.setAspectRatio(mPreviewSize.getHeight(),
+                        mPreviewSize.getWidth());
+            }
+
+
         } catch (CameraAccessException e) {
             e.printStackTrace();
-            return ConstsUtils.FAIL;
         }
-        return ConstsUtils.OK;
+    }
+
+    private Size chooseOptimalSize(Size[] choices, int textureViewWidth,
+                                   int textureViewHeight, int maxWidth, int maxHeight, Size aspectRatio) {
+        List<Size> bigEnough = new ArrayList<>();
+        List<Size> notBigEnough = new ArrayList<>();
+        int w = aspectRatio.getWidth();
+        int h = aspectRatio.getHeight();
+        for (Size option : choices) {
+            if (option.getWidth() <= maxWidth && option.getHeight() <= maxHeight && option.getHeight() == option.getWidth() * h / w) {
+                if (option.getWidth() >= textureViewWidth &&
+                        option.getHeight() >= textureViewHeight) {
+                    bigEnough.add(option);
+                } else {
+                    notBigEnough.add(option);
+                }
+            }
+        }
+        if (bigEnough.size() > 0) {
+            return Collections.min(bigEnough, new CompareSizesByArea());
+        } else if (notBigEnough.size() > 0) {
+            return Collections.max(notBigEnough, new CompareSizesByArea());
+        } else {
+            Log.e(TAG, "Couldn't find any suitable preview size");
+            return choices[0];
+        }
     }
 
     private void startCameraThread() {
@@ -103,6 +209,7 @@ public class Camera2Helper {
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void openCamera(Activity context, final TextureView textureView) {
+        initCamera(context, textureView);
         try {
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                 return;
@@ -135,8 +242,9 @@ public class Camera2Helper {
         }
     }
 
+
     private void initImageReader() {
-        previewImageReader = ImageReader.newInstance(Camera2Helper.PIXEL_WIDTH, Camera2Helper.PIXEL_HEIGHT, ImageFormat.YUV_420_888, 1);
+        previewImageReader = ImageReader.newInstance(Camera2Helper.PIXEL_WIDTH, Camera2Helper.PIXEL_HEIGHT, ImageFormat.YUV_420_888, 2);
         pictureImageReader = ImageReader.newInstance(Camera2Helper.PIXEL_WIDTH, Camera2Helper.PIXEL_HEIGHT, ImageFormat.JPEG, 2);
         previewImageReader.setOnImageAvailableListener(onImageAvailableListener, mCameraHandler);
 
@@ -153,7 +261,7 @@ public class Camera2Helper {
                         return;
                     }
                     if (isCanDetectFace) {
-                        HanvonfaceCamera2ShowView.hanvonfaceShowView.cameraPreview(image);
+//                        HanvonfaceCamera2ShowView.hanvonfaceShowView.cameraPreview(image);
                     }
                 } catch (Exception e) {
                     LogUtil.e("---" + e);
@@ -180,13 +288,15 @@ public class Camera2Helper {
         try {
             previewCaptureRequestBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
             texture = textureView.getSurfaceTexture();
-            //根据TextureView的尺寸设置预览尺寸
-            mPreviewSize = getOptimalSize(map.getOutputSizes(SurfaceTexture.class), textureView.getWidth(), textureView.getHeight());
-            texture.setDefaultBufferSize(Camera2Helper.mPreviewSize.getWidth(), Camera2Helper.camera2Helper.mPreviewSize.getHeight());
+//            mPreviewSize = getOptimalSize(map.getOutputSizes(SurfaceTexture.class), textureView.getWidth(), textureView.getHeight());
+//            texture.setDefaultBufferSize(Camera2Helper.mPreviewSize.getWidth(), Camera2Helper.camera2Helper.mPreviewSize.getHeight());
             Surface surface = new Surface(texture);
 
             previewCaptureRequestBuilder.addTarget(surface);
             previewCaptureRequestBuilder.addTarget(previewImageReader.getSurface());
+            // 人脸识别
+            previewCaptureRequestBuilder.set(CaptureRequest.STATISTICS_FACE_DETECT_MODE,
+                    CameraMetadata.STATISTICS_FACE_DETECT_MODE_FULL);
             cameraDevice.createCaptureSession(Arrays.asList(surface, previewImageReader.getSurface(), pictureImageReader.getSurface()), new CameraCaptureSession.StateCallback() {
                 @Override
                 public void onConfigured(@NonNull CameraCaptureSession session) {
@@ -205,8 +315,20 @@ public class Camera2Helper {
                         // 开始显示相机预览
                         previewRequest = previewCaptureRequestBuilder.build();
                         // 设置预览时连续捕获图像数据
-                        captureSession.setRepeatingRequest(previewRequest,
-                                null, null);
+                        captureSession.setRepeatingRequest(previewRequest, new CameraCaptureSession.CaptureCallback() {
+
+
+                            @Override
+                            public void onCaptureProgressed(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull CaptureResult partialResult) {
+                                CameraPreviewView.cameraPreviewView.showFaceView(partialResult, cPixelSize);
+
+                            }
+
+                            @Override
+                            public void onCaptureCompleted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull TotalCaptureResult result) {
+                                CameraPreviewView.cameraPreviewView.showFaceView(result, cPixelSize);
+                            }
+                        }, mCameraHandler);
                     } catch (CameraAccessException e) {
                         e.printStackTrace();
                     }
@@ -311,6 +433,38 @@ public class Camera2Helper {
         return sizeMap[0];
     }
 
+
+    // 为Size定义一个比较器Comparator
+    static class CompareSizesByArea implements Comparator<Size> {
+        @Override
+        public int compare(Size lhs, Size rhs) {
+            // 强转为long保证不会发生溢出
+            return Long.signum((long) lhs.getWidth() * lhs.getHeight() -
+                    (long) rhs.getWidth() * rhs.getHeight());
+        }
+    }
+
+
+    private static Size chooseOptimalSize(Size[] choices, int width, int height, Size aspectRatio) {
+        // 收集摄像头支持的大过预览Surface的分辨率
+        List<Size> bigEnough = new ArrayList<>();
+        int w = aspectRatio.getWidth();
+        int h = aspectRatio.getHeight();
+        for (Size option : choices) {
+            if (option.getHeight() == option.getWidth() * h / w &&
+                    option.getWidth() >= width && option.getHeight() >= height) {
+                bigEnough.add(option);
+            }
+        }
+        // 如果找到多个预览尺寸，获取其中面积最小的
+        if (bigEnough.size() > 0) {
+            return Collections.max(bigEnough, new CompareSizesByArea());
+        } else {
+            LogUtil.d("找不到合适的预览尺寸！！！");
+            return choices[0];
+        }
+    }
+
     /**
      * 切換相关方法
      *
@@ -325,13 +479,15 @@ public class Camera2Helper {
                     //前置转后置
                     ConstsUtils.CAMERA_ID = String.valueOf(CameraCharacteristics.LENS_FACING_FRONT);
                     stopCamera();
-                    openCamera(context, HanvonfaceCamera2ShowView.hanvonfaceShowView.getTextureView());
+//                    openCamera(context, HanvonfaceCamera2ShowView.hanvonfaceShowView.getTextureView());
+                    openCamera(context, CameraPreviewView.cameraPreviewView.getTextureView());
                     break;
                 } else if (ConstsUtils.CAMERA_ID.equals(String.valueOf(CameraCharacteristics.LENS_FACING_FRONT)) && characteristics.get(CameraCharacteristics.LENS_FACING) == CameraCharacteristics.LENS_FACING_BACK) {
                     //后置转前置
                     ConstsUtils.CAMERA_ID = String.valueOf(CameraCharacteristics.LENS_FACING_BACK);
                     stopCamera();
-                    openCamera(context, HanvonfaceCamera2ShowView.hanvonfaceShowView.getTextureView());
+//                    openCamera(context, HanvonfaceCamera2ShowView.hanvonfaceShowView.getTextureView());
+                    openCamera(context, CameraPreviewView.cameraPreviewView.getTextureView());
                     break;
                 }
             }
@@ -371,4 +527,5 @@ public class Camera2Helper {
             pictureImageReader = null;
         }
     }
+
 }

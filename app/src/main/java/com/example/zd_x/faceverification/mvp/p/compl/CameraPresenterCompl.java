@@ -45,7 +45,7 @@ public class CameraPresenterCompl implements ICameraPresenter, ImageReader.OnIma
         if (ConstsUtils.iStartX != 0) {
             Camera2Helper.camera2Helper.takePicture((Activity) context, this);
         }else {
-            handler.sendMessage(handler.obtainMessage(ConstsUtils.SHOW_MSG, "未检测到人脸"));
+            handler.sendMessage(handler.obtainMessage(ConstsUtils.WHAT_SHOW_MSG, "未检测到人脸"));
         }
     }
 

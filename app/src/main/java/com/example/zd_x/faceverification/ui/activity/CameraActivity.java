@@ -18,12 +18,14 @@ import com.example.zd_x.faceverification.application.FaceVerificationApplication
 import com.example.zd_x.faceverification.base.BaseActivity;
 import com.example.zd_x.faceverification.mvp.p.compl.CameraPresenterCompl;
 import com.example.zd_x.faceverification.mvp.view.ICameraView;
+import com.example.zd_x.faceverification.ui.widget.CameraPreviewView;
 import com.example.zd_x.faceverification.utils.ButtonUtils;
 import com.example.zd_x.faceverification.utils.ConstsUtils;
 import com.example.zd_x.faceverification.utils.LogUtil;
 import com.example.zd_x.faceverification.utils.SharedPreferencesUtils;
 import com.hanvon.face.HWCoreHelper;
 import com.hanvon.faceRec.Camera2Helper;
+import com.hanvon.faceRec.FaceView;
 import com.hanvon.faceRec.HanvonfaceCamera2ShowView;
 
 import butterknife.BindView;
@@ -43,6 +45,11 @@ public class CameraActivity extends BaseActivity implements ICameraView {
     HanvonfaceCamera2ShowView hcsvCamera2PreviewCamera;
     @BindView(R.id.sfv_faceShow_camera)
     SurfaceView sfvFaceShowCamera;
+    @BindView(R.id.cpv_camera2Preview_camera)
+    CameraPreviewView cpvCamera2PreviewCamera;
+
+    @BindView(R.id.fv_faceShow_camera)
+    FaceView fvFaceShowCamera;
     @BindView(R.id.tv_hintText_camera)
     TextView tvHintTextCamera;
     @BindView(R.id.tv_hint_network)
@@ -53,11 +60,19 @@ public class CameraActivity extends BaseActivity implements ICameraView {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case ConstsUtils.INIT_SUCCESS:
+                case ConstsUtils.WHAT_INIT_SUCCESS:
                     HWCoreHelper.initHWCore(FaceVerificationApplication.getmApplication(), handler);
                     break;
-                case ConstsUtils.SHOW_MSG:
+                case ConstsUtils.WHAT_SHOW_MSG:
                     tvHintTextCamera.setText((String) msg.obj);
+                    break;
+                case ConstsUtils.WHAT_SHOW_FACE_VIEW:
+                    sfvFaceShowCamera.setVisibility(View.VISIBLE);
+                    break;
+                case ConstsUtils.WHAT_HIDDEN_FACE_VIEW:
+                    if (sfvFaceShowCamera.getVisibility() != View.GONE) {
+                        sfvFaceShowCamera.setVisibility(View.GONE);
+                    }
                     break;
                 default:
                     break;
@@ -81,8 +96,9 @@ public class CameraActivity extends BaseActivity implements ICameraView {
 
     @Override
     protected void initEvent() {
-        Camera2Helper.camera2Helper.initCamera(this);
-        hcsvCamera2PreviewCamera.setSurfaceView(sfvFaceShowCamera, handler);
+//        Camera2Helper.camera2Helper.initCamera(this);
+//        hcsvCamera2PreviewCamera.setSurfaceView(sfvFaceShowCamera, handler);
+        cpvCamera2PreviewCamera.setSurfaceView(sfvFaceShowCamera, handler);
     }
 
     @Override
@@ -104,7 +120,7 @@ public class CameraActivity extends BaseActivity implements ICameraView {
             @Override
             public void run() {
                 Log.e(TAG, "run: " + netWorkState);
-                HWCoreHelper.initHWCore(FaceVerificationApplication.getmApplication(), handler);
+//                HWCoreHelper.initHWCore(FaceVerificationApplication.getmApplication(), handler);
             }
         }, 500);
     }
