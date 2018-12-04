@@ -15,8 +15,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.security.auth.login.LoginException;
-
 public class DataManipulation {
     private static DataManipulation instance;
     private DaoSession daoSession;
@@ -62,7 +60,9 @@ public class DataManipulation {
                 compareResultsBean.setName(verificationModel.getOut().getCompareResults().get(i).getIpcBlacklist().getName());
                 compareResultsBean.setSex(verificationModel.getOut().getCompareResults().get(i).getIpcBlacklist().getSex());
                 compareResultsBean.setNation(verificationModel.getOut().getCompareResults().get(i).getIpcBlacklist().getNation());
-                compareResultsBean.setSimilarity(verificationModel.getOut().getCompareResults().get(i).getSimilarity());
+                compareResultsBean.setNote(verificationModel.getOut().getCompareResults().get(i).getIpcBlacklist().getNote());
+                compareResultsBean.setSimilarity(formateRate(verificationModel.getOut().getCompareResults().get(i).getSimilarity() + ""));
+
                 daoSession.insert(compareResultsBean);
             }
         }
@@ -115,6 +115,30 @@ public class DataManipulation {
     }
 
     public String getImageIp(String zfsPath) {
-        return "http://"+ zfsPath.split("@")[0] + APPUrl.IMAGE_IP + zfsPath.split("@")[1]+".jpg";
+        return "http://" + zfsPath.split("@")[0] + APPUrl.IMAGE_IP + zfsPath.split("@")[1] + ".jpg";
+    }
+
+    public String formateRate(String rateStr) {
+        if (rateStr.indexOf(".") != -1) {
+            //获取小数点的位置
+            int num = 0;
+            num = rateStr.indexOf(".");
+
+            //获取小数点后面的数字 是否有两位 不足两位补足两位
+            String dianAfter = rateStr.substring(0, num + 1);
+            String afterData = rateStr.replace(dianAfter, "");
+            if (afterData.length() < 2) {
+                afterData = afterData + "0";
+            } else {
+                afterData = afterData;
+            }
+            return rateStr.substring(0, num) + "." + afterData.substring(0, 2) + "%";
+        } else {
+            if (rateStr == "1") {
+                return "100%";
+            } else {
+                return rateStr + "%";
+            }
+        }
     }
 }

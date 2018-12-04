@@ -1,6 +1,7 @@
 package com.example.zd_x.faceverification.ui.activity;
 
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
@@ -86,7 +87,10 @@ public class DetailsActivity extends BaseActivity implements IDetailsView {
         rvShowDetailsMsgDetails.setLayoutManager(new LinearLayoutManager(this));
 //        rvShowDetailsMsgDetails.addItemDecoration(new SpaceItemDecoration(0, 30));
         //添加自定义分割线
-        rvShowDetailsMsgDetails.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+//        rvShowDetailsMsgDetails.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        DividerItemDecoration divider = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+        divider.setDrawable(ContextCompat.getDrawable(this, R.drawable.custom_divider_shape));
+        rvShowDetailsMsgDetails.addItemDecoration(divider);
         rvShowDetailsMsgDetails.setAdapter(adapter);
     }
 

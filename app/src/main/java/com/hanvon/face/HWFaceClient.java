@@ -154,7 +154,7 @@ public class HWFaceClient {
                                         int funResult = CreatInitKeyCodeFile(bpData, bpData.length);
                                         if (funResult == 0) {
                                             Log.e(TAG, "onserver: in-----666666");
-                                            handler.sendMessage(handler.obtainMessage(ConstsUtils.INIT_SUCCESS, "初始化成功"));
+                                            handler.sendMessage(handler.obtainMessage(ConstsUtils.WHAT_INIT_SUCCESS, "初始化成功"));
                                         }
                                     }
                                     ServerState = false;

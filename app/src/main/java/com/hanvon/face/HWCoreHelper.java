@@ -26,9 +26,9 @@ public class HWCoreHelper {
                 int Result = HWFaceClient.InitFaceClient(IP, port, context,handler);
                 Log.e(TAG, "InitFaceClient"+Result );
                 if (Result == -1) {
-                    handler.sendMessage(handler.obtainMessage(ConstsUtils.SHOW_MSG, "服务器连接失败"));
+                    handler.sendMessage(handler.obtainMessage(ConstsUtils.WHAT_SHOW_MSG, "服务器连接失败"));
                 } else {
-                    handler.sendMessage(handler.obtainMessage(ConstsUtils.SHOW_MSG, "服务器连接成功"));
+                    handler.sendMessage(handler.obtainMessage(ConstsUtils.WHAT_SHOW_MSG, "服务器连接成功"));
                     Log.e(TAG, "HWCoreHelper: 服务器连接成功" );
                 }
             }
@@ -46,7 +46,7 @@ public class HWCoreHelper {
                 //初始化核心
                 int initResult = FaceCoreHelper.HWFaceInitial(FACE_HANDLER, HWFaceClient.bpKeyCode, context);
                 if (initResult == HWFaceClient.HW_OK) {
-                    handler.sendMessage(handler.obtainMessage(ConstsUtils.SHOW_MSG, "初始化成功"));
+                    handler.sendMessage(handler.obtainMessage(ConstsUtils.WHAT_SHOW_MSG, "初始化成功"));
                     Log.e(TAG, "1764033-initFaceCore:初始化成功" );
                     int[] featureSize = new int[1];
                     FaceCoreHelper.HWFaceGetFeatureSize(FACE_HANDLER, featureSize);

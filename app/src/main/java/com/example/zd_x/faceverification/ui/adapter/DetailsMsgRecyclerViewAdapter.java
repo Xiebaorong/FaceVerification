@@ -41,7 +41,7 @@ public class DetailsMsgRecyclerViewAdapter extends RecyclerView.Adapter<DetailsM
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         LogUtil.e("onBindViewHolder: " + mList.get(position).getZfsPath());
-        if (mList.get(position).getZfsPath()==null){
+        if (mList.get(position).getZfsPath() == null) {
             //当ViewHolder复用的时候，如果当前返回的图片url为null，为了防止上一个复用的viewHolder图片
             //遗留，要clear并且将图片设置为空。
             Glide.with(mContext).clear(holder.ivNetworkImageDetailsRecycler);
@@ -51,7 +51,7 @@ public class DetailsMsgRecyclerViewAdapter extends RecyclerView.Adapter<DetailsM
         }
 
         Object tag = holder.ivNetworkImageDetailsRecycler.getTag(R.id.iv_networkImage_details_recycler);
-        if (tag !=null &&(int) tag!= position){
+        if (tag != null && (int) tag != position) {
             //如果tag不是Null,并且同时tag不等于当前的position。
             //说明当前的viewHolder是复用来的
             Glide.with(mContext).clear(holder.ivNetworkImageDetailsRecycler);
@@ -61,14 +61,14 @@ public class DetailsMsgRecyclerViewAdapter extends RecyclerView.Adapter<DetailsM
                 .placeholder(R.drawable.recog_200_middle)
                 .centerCrop()
                 .into(holder.ivNetworkImageDetailsRecycler);
+        String defaultValue = "无";
 //        Gli
         //给ImageView设置唯一标记。
 //        holder.ivNetworkImageDetailsRecycler.setTag(R.id.iv_networkImage_details_recycler, position);
-
         holder.tvMsg1DetailsRecycler.setText(mContext.getString(R.string.verificationSimilarityText) + String.valueOf(mList.get(position).getSimilarity()));
-        holder.tvMsg2DetailsRecycler.setText(mContext.getString(R.string.verificationNameText) + mList.get(position).getName());
-        holder.tvMsg3DetailsRecycler.setText(mContext.getString(R.string.verificationSexText) + mList.get(position).getSex());
-        holder.tvMsg4DetailsRecycler.setText(mContext.getString(R.string.verificationSexText) + mList.get(position).getNation());
+        holder.tvMsg2DetailsRecycler.setText(mList.get(position).getName() == null ? mContext.getString(R.string.verificationNameText) + defaultValue : mContext.getString(R.string.verificationNameText) + mList.get(position).getName());
+        holder.tvMsg3DetailsRecycler.setText(mList.get(position).getNote() == null ? mContext.getString(R.string.verificationNoteText) + defaultValue : mContext.getString(R.string.verificationNoteText) + mList.get(position).getNote());
+//        holder.tvMsg4DetailsRecycler.setText(mContext.getString(R.string.verificationSexText) + mList.get(position).getNation());
     }
 
     @Override

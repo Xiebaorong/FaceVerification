@@ -269,11 +269,24 @@ public class FileUtils {
             mImage.close();
         }
         //
-        Bitmap bitmap1 = shearBitmap(bitmap);
+        Bitmap bitmap1 = newShearBitmap(bitmap);
 
         FileUtils.saveBitmap(FaceVerificationApplication.getmApplication(), bitmap1, "camera/", imageID + ".jpg");
         return bitmap1;
 
+    }
+
+    private static Bitmap newShearBitmap(Bitmap bitmap) {
+        int startX = ConstsUtils.iStartX;
+        int startY = ConstsUtils.iStartY;
+        int width = ConstsUtils.iWidth;
+        int height = ConstsUtils.iHeight;
+        Log.e(TAG, "newShearBitmap: "+bitmap.getWidth()+"----"+bitmap.getHeight()+"-----"+startX+"---:"+startY+"---:"+width+"---:"+height );
+//        Bitmap bitmap1 = Bitmap.createBitmap(bitmap, 0, 0, 1080, 1440);
+
+        Bitmap bitmap1 = Bitmap.createBitmap(bitmap, startX, startY, 500, 500);
+
+        return bitmap1;
     }
 
     private static Bitmap shearBitmap(Bitmap bitmap) {

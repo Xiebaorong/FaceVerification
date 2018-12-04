@@ -1,7 +1,7 @@
 package com.example.zd_x.faceverification.callBack;
 
-import android.media.Image;
+import android.media.ImageReader;
 
 public interface PictureCallBack {
-    void onImageCallback(Image image);
+    void onImageCallback(ImageReader image);
 }

@@ -87,11 +87,21 @@ public class ConstsUtils {
     /**
      * SHOW_MSG 1000 展示信息
      */
-    public static final int SHOW_MSG = 1000;
+    public static final int WHAT_SHOW_MSG = 1;
     /**
      * SHOW_MSG 2000 初始化成功
      */
-    public static final int INIT_SUCCESS = 2000;
+    public static final int WHAT_INIT_SUCCESS = 2;
+
+    /**
+     * SHOW_MSG 2000 显示人脸
+     */
+    public static final int WHAT_SHOW_FACE_VIEW = 3;
+
+    /**
+     * SHOW_MSG 2000 隐藏人脸
+     */
+    public static final int WHAT_HIDDEN_FACE_VIEW = 4;
 
 
 

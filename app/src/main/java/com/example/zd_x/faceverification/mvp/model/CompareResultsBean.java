@@ -20,12 +20,12 @@ public class CompareResultsBean {
     private String nation;
     private int dubious;
     private String note;
-    private Double similarity;//相似度
-    @Generated(hash = 873476401)
+    private String similarity;//相似度
+    @Generated(hash = 105176444)
     public CompareResultsBean(Long id, Long historyId, String compareID,
             String blacklistID, String zfsPath, String imageBase64, String name,
             String sex, long birthday, String nation, int dubious, String note,
-            Double similarity) {
+            String similarity) {
         this.id = id;
         this.historyId = historyId;
         this.compareID = compareID;
@@ -115,13 +115,13 @@ public class CompareResultsBean {
     public void setNote(String note) {
         this.note = note;
     }
-    public Double getSimilarity() {
+    public String getSimilarity() {
         return this.similarity;
     }
-    public void setSimilarity(Double similarity) {
+    public void setSimilarity(String similarity) {
         this.similarity = similarity;
     }
-     
+    
 
 }
 

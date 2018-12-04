@@ -18,11 +18,14 @@ import com.example.zd_x.faceverification.application.FaceVerificationApplication
 import com.example.zd_x.faceverification.base.BaseActivity;
 import com.example.zd_x.faceverification.mvp.p.compl.CameraPresenterCompl;
 import com.example.zd_x.faceverification.mvp.view.ICameraView;
+import com.example.zd_x.faceverification.ui.widget.CameraPreviewView;
+import com.example.zd_x.faceverification.utils.ButtonUtils;
 import com.example.zd_x.faceverification.utils.ConstsUtils;
 import com.example.zd_x.faceverification.utils.LogUtil;
 import com.example.zd_x.faceverification.utils.SharedPreferencesUtils;
 import com.hanvon.face.HWCoreHelper;
 import com.hanvon.faceRec.Camera2Helper;
+import com.hanvon.faceRec.FaceView;
 import com.hanvon.faceRec.HanvonfaceCamera2ShowView;
 
 import butterknife.BindView;
@@ -42,6 +45,11 @@ public class CameraActivity extends BaseActivity implements ICameraView {
     HanvonfaceCamera2ShowView hcsvCamera2PreviewCamera;
     @BindView(R.id.sfv_faceShow_camera)
     SurfaceView sfvFaceShowCamera;
+    @BindView(R.id.cpv_camera2Preview_camera)
+    CameraPreviewView cpvCamera2PreviewCamera;
+
+    @BindView(R.id.fv_faceShow_camera)
+    FaceView fvFaceShowCamera;
     @BindView(R.id.tv_hintText_camera)
     TextView tvHintTextCamera;
     @BindView(R.id.tv_hint_network)
@@ -52,12 +60,19 @@ public class CameraActivity extends BaseActivity implements ICameraView {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case ConstsUtils.INIT_SUCCESS:
-                    Log.e(TAG, "handleMessage: -----");
-                    HWCoreHelper.initHWCore(CameraActivity.this, handler);
+                case ConstsUtils.WHAT_INIT_SUCCESS:
+                    HWCoreHelper.initHWCore(FaceVerificationApplication.getmApplication(), handler);
                     break;
-                case ConstsUtils.SHOW_MSG:
+                case ConstsUtils.WHAT_SHOW_MSG:
                     tvHintTextCamera.setText((String) msg.obj);
+                    break;
+                case ConstsUtils.WHAT_SHOW_FACE_VIEW:
+                    sfvFaceShowCamera.setVisibility(View.VISIBLE);
+                    break;
+                case ConstsUtils.WHAT_HIDDEN_FACE_VIEW:
+                    if (sfvFaceShowCamera.getVisibility() != View.GONE) {
+                        sfvFaceShowCamera.setVisibility(View.GONE);
+                    }
                     break;
                 default:
                     break;
@@ -81,18 +96,21 @@ public class CameraActivity extends BaseActivity implements ICameraView {
 
     @Override
     protected void initEvent() {
-        Camera2Helper.camera2Helper.initCamera(this);
-        hcsvCamera2PreviewCamera.setSurfaceView(sfvFaceShowCamera, handler);
+//        Camera2Helper.camera2Helper.initCamera(this);
+//        hcsvCamera2PreviewCamera.setSurfaceView(sfvFaceShowCamera, handler);
+        cpvCamera2PreviewCamera.setSurfaceView(sfvFaceShowCamera, handler);
     }
 
     @Override
     protected void onNetChanged(int state) {
-       netWorkState = state;
-        if (state<0 ) {
+        netWorkState = state;
+        if (state < 0) {
             tHintNetwork.setVisibility(View.VISIBLE);
         } else {
             tHintNetwork.setVisibility(View.GONE);
         }
+
+
     }
 
     @Override
@@ -101,36 +119,44 @@ public class CameraActivity extends BaseActivity implements ICameraView {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                HWCoreHelper.initHWCore(FaceVerificationApplication.getmApplication(), handler);
+                Log.e(TAG, "run: " + netWorkState);
+//                HWCoreHelper.initHWCore(FaceVerificationApplication.getmApplication(), handler);
             }
         }, 500);
     }
 
     @OnClick({R.id.iv_photograph_camera, R.id.iv_switchoverCamera_camera, R.id.iv_back_camera})
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.iv_photograph_camera:
-                if (SharedPreferencesUtils.getInstance().getPermission(getString(R.string.storePermissions))) {
-                    iCameraPresenter.takePicture(this, handler);
-                }else {
-                    showToast("当前应用需要打开存储权限.");
-                }
-                break;
-            case R.id.iv_switchoverCamera_camera:
-                iCameraPresenter.cameraSwitch(this);
-                break;
-            case R.id.iv_back_camera:
-                Camera2Helper.camera2Helper.isCanDetectFace = false;
-                startActivity(new Intent(this, HomeActivity.class));
-                finish();
-                break;
+        if (!ButtonUtils.isFastDoubleClick()) {
+            switch (view.getId()) {
+                case R.id.iv_photograph_camera:
+                    if (netWorkState >= 0) {
+                        if (SharedPreferencesUtils.getInstance().getPermission(getString(R.string.storePermissions))) {
+                            iCameraPresenter.takePicture(this, handler);
+                        } else {
+                            showToast("当前应用需要打开存储权限.");
+                        }
+                    } else {
+                        showToast("请开启网络");
+                    }
+                    break;
+                case R.id.iv_switchoverCamera_camera:
+                    iCameraPresenter.cameraSwitch(this);
+                    break;
+                case R.id.iv_back_camera:
+                    Camera2Helper.camera2Helper.isCanDetectFace = false;
+                    startActivity(new Intent(this, HomeActivity.class));
+                    finish();
+                    break;
+            }
+        } else {
+            LogUtil.e("多次点击");
         }
     }
 
     @Override
     public void getPhotoResults(int result) {
         if (result == ConstsUtils.FAIL) {
-
             LogUtil.d("未检测到人脸");
         } else if (result == ConstsUtils.SUCCEED) {
             LogUtil.d("发送");
@@ -140,8 +166,7 @@ public class CameraActivity extends BaseActivity implements ICameraView {
 
     @Override
     public void getCameraSwitch(boolean flag) {
-        if (flag) {
-        }
+
     }
 
     @Override
@@ -196,8 +221,8 @@ public class CameraActivity extends BaseActivity implements ICameraView {
         switch (motionEvent.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 if (view.getId() == R.id.iv_photograph_camera) {
-                    ivPhotographCamera.setScaleX(1.3f);
-                    ivPhotographCamera.setScaleY(1.3f);
+                    ivPhotographCamera.setScaleX(1.2f);
+                    ivPhotographCamera.setScaleY(1.2f);
                 }
                 break;
 

@@ -39,7 +39,7 @@ public class CompareResultsBeanDao extends AbstractDao<CompareResultsBean, Long>
         public final static Property Nation = new Property(9, String.class, "nation", false, "NATION");
         public final static Property Dubious = new Property(10, int.class, "dubious", false, "DUBIOUS");
         public final static Property Note = new Property(11, String.class, "note", false, "NOTE");
-        public final static Property Similarity = new Property(12, Double.class, "similarity", false, "SIMILARITY");
+        public final static Property Similarity = new Property(12, String.class, "similarity", false, "SIMILARITY");
     }
 
     private Query<CompareResultsBean> historyVerificationResultModel_CompareResultsQuery;
@@ -68,7 +68,7 @@ public class CompareResultsBeanDao extends AbstractDao<CompareResultsBean, Long>
                 "\"NATION\" TEXT," + // 9: nation
                 "\"DUBIOUS\" INTEGER NOT NULL ," + // 10: dubious
                 "\"NOTE\" TEXT," + // 11: note
-                "\"SIMILARITY\" REAL);"); // 12: similarity
+                "\"SIMILARITY\" TEXT);"); // 12: similarity
     }
 
     /** Drops the underlying database table. */
@@ -133,9 +133,9 @@ public class CompareResultsBeanDao extends AbstractDao<CompareResultsBean, Long>
             stmt.bindString(12, note);
         }
  
-        Double similarity = entity.getSimilarity();
+        String similarity = entity.getSimilarity();
         if (similarity != null) {
-            stmt.bindDouble(13, similarity);
+            stmt.bindString(13, similarity);
         }
     }
 
@@ -195,9 +195,9 @@ public class CompareResultsBeanDao extends AbstractDao<CompareResultsBean, Long>
             stmt.bindString(12, note);
         }
  
-        Double similarity = entity.getSimilarity();
+        String similarity = entity.getSimilarity();
         if (similarity != null) {
-            stmt.bindDouble(13, similarity);
+            stmt.bindString(13, similarity);
         }
     }
 
@@ -221,7 +221,7 @@ public class CompareResultsBeanDao extends AbstractDao<CompareResultsBean, Long>
             cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // nation
             cursor.getInt(offset + 10), // dubious
             cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11), // note
-            cursor.isNull(offset + 12) ? null : cursor.getDouble(offset + 12) // similarity
+            cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12) // similarity
         );
         return entity;
     }
@@ -240,7 +240,7 @@ public class CompareResultsBeanDao extends AbstractDao<CompareResultsBean, Long>
         entity.setNation(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
         entity.setDubious(cursor.getInt(offset + 10));
         entity.setNote(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
-        entity.setSimilarity(cursor.isNull(offset + 12) ? null : cursor.getDouble(offset + 12));
+        entity.setSimilarity(cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12));
      }
     
     @Override
