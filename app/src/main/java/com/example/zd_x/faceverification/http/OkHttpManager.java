@@ -1,5 +1,7 @@
 package com.example.zd_x.faceverification.http;
 
+import android.util.Log;
+
 import com.example.zd_x.faceverification.callBack.BaseCallBack;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -36,6 +38,7 @@ public class OkHttpManager {
     }
 
     public OkHttpManager() {
+        Log.e(TAG, "OkHttpManager: " );
         mOkHttpClient = new OkHttpClient.Builder()
                 .retryOnConnectionFailure(true)//连接失败后是否重新连接
                 .connectTimeout(10, TimeUnit.SECONDS)//超时时间15S

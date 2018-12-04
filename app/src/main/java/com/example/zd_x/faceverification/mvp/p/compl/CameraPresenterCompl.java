@@ -16,6 +16,7 @@ import com.example.zd_x.faceverification.mvp.p.ICameraPresenter;
 import com.example.zd_x.faceverification.mvp.view.ICameraView;
 import com.example.zd_x.faceverification.ui.activity.DetailsActivity;
 import com.example.zd_x.faceverification.utils.APPUrl;
+import com.example.zd_x.faceverification.utils.CameraHelper;
 import com.example.zd_x.faceverification.utils.ConstsUtils;
 import com.example.zd_x.faceverification.utils.FileUtils;
 import com.example.zd_x.faceverification.utils.LogUtil;
@@ -43,7 +44,7 @@ public class CameraPresenterCompl implements ICameraPresenter, ImageReader.OnIma
     @Override
     public void takePicture(Context context, Handler handler) {
         if (ConstsUtils.iStartX != 0) {
-            Camera2Helper.camera2Helper.takePicture((Activity) context, this);
+            CameraHelper.cameraHelper.takePicture((Activity) context, this);
         }else {
             handler.sendMessage(handler.obtainMessage(ConstsUtils.WHAT_SHOW_MSG, "未检测到人脸"));
         }
@@ -56,7 +57,7 @@ public class CameraPresenterCompl implements ICameraPresenter, ImageReader.OnIma
      */
     @Override
     public void cameraSwitch(Activity context) {
-        Camera2Helper.camera2Helper.cameraSwitch(context);
+
     }
 
     @Override
@@ -87,7 +88,7 @@ public class CameraPresenterCompl implements ICameraPresenter, ImageReader.OnIma
 
     @Override
     public void restartPreview(Context context) {
-        Camera2Helper.camera2Helper.restartPreview(context);
+        CameraHelper.cameraHelper.unlockFocus();
     }
 
     private void verificationResult(Context context, final VerificationModel verificationModel) {
@@ -120,7 +121,7 @@ public class CameraPresenterCompl implements ICameraPresenter, ImageReader.OnIma
         iCameraView.showUploadDialog(ConstsUtils.SHOW_DIALOG);
         String base64 = null;
         String imageID = PictureMsgUtils.getInstance().getPictureImageId();
-        Log.e(TAG, "onImageAvailable: "+imageID );
+
         Bitmap bitmap = FileUtils.imageSaver(reader.acquireNextImage(), imageID);
         if (bitmap != null) {
             base64 = FileUtils.bitmapToBase64(bitmap);
@@ -135,6 +136,7 @@ public class CameraPresenterCompl implements ICameraPresenter, ImageReader.OnIma
         PictureMsgUtils.faceBase64 = base64;
         detectionModel = new DetectionModel(PictureMsgUtils.imageID, PictureMsgUtils.deviceID, PictureMsgUtils.deviceName, PictureMsgUtils.faceBase64, PictureMsgUtils.skip,
                 PictureMsgUtils.limit, PictureMsgUtils.strategy, PictureMsgUtils.threshold, PictureMsgUtils.repoIDs);
+        Log.e(TAG, "setImageMsg: "+detectionModel.getImageID() );
         if (detectionModel.getImageID() != null) {
             iCameraView.getPhotoResults(ConstsUtils.SUCCEED);
         }

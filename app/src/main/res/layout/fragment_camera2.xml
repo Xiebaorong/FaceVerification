@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+        <com.example.zd_x.faceverification.ui.widget.AutoFitTextureView
+            android:id="@+id/at_texture_camera2Fragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true" />
+
+
+        <com.example.zd_x.faceverification.ui.widget.FaceFrameTextureView
+            android:id="@+id/tv_faceShow_camera2Fragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/at_texture_camera2Fragment"
+            app:layout_constraintEnd_toEndOf="@+id/at_texture_camera2Fragment"
+            app:layout_constraintStart_toStartOf="@+id/at_texture_camera2Fragment"
+            app:layout_constraintTop_toTopOf="@+id/at_texture_camera2Fragment" />
+
+    <FrameLayout
+        android:id="@+id/control"
+        android:layout_width="match_parent"
+        android:layout_height="112dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:background="@color/gray_EAEEEF"
+
+        >
+
+        <ImageView
+            android:id="@+id/iv_back_camera2Fragment"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/backcamera_check_selector" />
+
+
+        <ImageView
+            android:id="@+id/iv_photograph_camera2Fragment"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_gravity="center"
+            android:src="@drawable/recog_200_middle" />
+
+
+        <ImageView
+            android:id="@+id/iv_switchoverCamera_camera2Fragment"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical|right"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/switchowvercamera_check_selector" />
+    </FrameLayout>
+</RelativeLayout>

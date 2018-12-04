@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <!-- 访问网络状态, 检测网络的可用性. -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:name=".application.FaceVerificationApplication"
         android:allowBackup="true"
@@ -34,6 +35,7 @@
             android:hardwareAccelerated="true" />
         <activity android:name=".ui.activity.StartupActivity" />
         <activity android:name=".ui.activity.DetailsActivity" />
+        <activity android:name=".ui.activity.Camera2Activity"></activity>
     </application>
 
 </manifest>

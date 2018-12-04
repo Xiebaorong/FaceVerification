@@ -243,7 +243,7 @@ public class HomeActivity extends BaseActivity implements IHomeView, PagingScrol
 
     private void startCamera(int cameraId) {
         ivOpenCameraHome.setVisibility(View.GONE);
-        Intent intent = new Intent(HomeActivity.this, CameraActivity.class);
+        Intent intent = new Intent(HomeActivity.this, Camera2Activity.class);
         intent.putExtra("cameraId", cameraId + "");
         startActivity(intent);
     }
